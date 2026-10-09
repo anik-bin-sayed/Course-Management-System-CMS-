@@ -1,7 +1,7 @@
 "use client";
 
 import Loader from "../../utils/Loader";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import FreeCourses from "./index";
 import { useGetAllFreeCoursesQuery } from "../../lib/features/courses/free-course-api";
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Image from "@/components/common/AppImage";
+import { useRouter } from "@/lib/navigation";
 import { IoMdClose } from "react-icons/io";
 import { useUpdateFreeCourseMutation } from "../../../../../lib/features/courses/free-course-api";
 

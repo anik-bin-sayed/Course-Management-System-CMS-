@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/lib/navigation";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer";
 
@@ -16,7 +16,8 @@ export default function LayoutWrapper({ children }) {
     pathname.startsWith("/admin/manage-course") ||
     pathname.startsWith("/admin/users") ||
     pathname.startsWith("/admin/profile") ||
-    pathname.startsWith("/profile");
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/verify-email");
 
   return (
     <>

@@ -2,9 +2,9 @@
 
 import { cloneElement, useEffect, useState } from "react";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "@/components/common/AppLink";
+import Image from "@/components/common/AppImage";
+import { useRouter, useSearchParams } from "@/lib/navigation";
 
 import { RxCross2 } from "react-icons/rx";
 import { TbCategory } from "react-icons/tb";

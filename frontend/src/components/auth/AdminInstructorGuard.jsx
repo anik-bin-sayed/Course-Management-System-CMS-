@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import Loader from "../../utils/Loader";
 import { useEffect } from "react";

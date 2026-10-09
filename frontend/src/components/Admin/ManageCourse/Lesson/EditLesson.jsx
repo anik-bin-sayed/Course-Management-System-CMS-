@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/navigation";
 import { MdLibraryAdd, MdSave, MdClose } from "react-icons/md";
 import { FiType, FiFileText, FiHash } from "react-icons/fi";
 import { GoArrowLeft } from "react-icons/go";

@@ -2,8 +2,8 @@
 
 import { useGetUpcomingCourseEightQuery } from "../../lib/features/courses/paid-course-api";
 import { FiClock, FiArrowRight, FiBookOpen, FiGlobe } from "react-icons/fi";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/common/AppImage";
+import Link from "@/components/common/AppLink";
 
 const UpcomingCourse = () => {
   const {

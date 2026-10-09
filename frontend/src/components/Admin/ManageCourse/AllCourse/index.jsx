@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 import {
   useDeleteCourseMutation,
   useGetAllCourseQuery,
@@ -17,7 +17,7 @@ import AllCourseLoader from "./AllCourseLoader";
 import AllCourseError from "./AllCourseError";
 import Filter from "./Filter";
 import { TbCurrencyTaka } from "react-icons/tb";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { MdLibraryAdd } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";

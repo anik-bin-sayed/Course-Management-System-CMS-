@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 import React, { useEffect, useRef, useState } from "react";
 
 import { useCreateFreeVideoMutation } from "../../../../lib/features/courses/free-course-api";

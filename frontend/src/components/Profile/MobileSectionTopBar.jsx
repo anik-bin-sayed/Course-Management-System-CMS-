@@ -1,6 +1,6 @@
 import React from "react";
 import { IoIosLogOut, IoMdArrowBack } from "react-icons/io";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import {
   authApi,
   useLogoutUserMutation,

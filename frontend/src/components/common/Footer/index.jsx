@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/common/AppLink";
 
 import { FaFacebookF, FaYoutube, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";

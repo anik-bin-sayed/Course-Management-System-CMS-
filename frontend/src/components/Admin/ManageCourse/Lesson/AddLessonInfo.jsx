@@ -12,7 +12,7 @@ import {
   FiLoader,
 } from "react-icons/fi";
 // import { useCreateLessonVideoMutation } from ".././../../lib/features/lesson/lessonVideoApi";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/navigation";
 import { useCreateLessonVideoMutation } from "../../../../lib/features/lesson/lessonVideoApi";
 import { toast } from "sonner";
 

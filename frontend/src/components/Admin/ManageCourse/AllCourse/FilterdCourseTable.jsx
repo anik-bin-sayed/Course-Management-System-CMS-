@@ -2,7 +2,7 @@ import React from 'react'
 import { MdLibraryAdd } from 'react-icons/md'
 import { LuPencil, LuTrash2 } from 'react-icons/lu'
 import { TbCurrencyTaka } from 'react-icons/tb'
-import Image from 'next/image'
+import Image from '@/components/common/AppImage'
 
 const FilterdCourseTable = ({ filteredCourses, handleCreateLessons, handleEdit, handleDeleteCourse, deletingCourseId, role, handleViewLessons }) => {
 

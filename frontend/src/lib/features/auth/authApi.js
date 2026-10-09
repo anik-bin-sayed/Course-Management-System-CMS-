@@ -32,6 +32,15 @@ export const authApi = createApi({
       }),
     }),
 
+    verifyEmail: builder.mutation({
+      query: (data) => ({
+        url: "/auth/verify-email",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     getProfile: builder.query({
       query: () => ({
         url: "/auth/me",
@@ -62,6 +71,7 @@ export const {
   useLoginMutation,
   useCheckEmailMutation,
   useRegisterMutation,
+  useVerifyEmailMutation,
   useGetProfileQuery,
   useLogoutUserMutation,
   useRefreshAccessTokenMutation,

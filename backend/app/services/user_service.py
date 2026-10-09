@@ -85,8 +85,12 @@ class UserService:
         db.commit()
         db.refresh(user)
 
+        access, refresh = UserService._issue_tokens(db, user)
+
         return {
             "message": "Email verified successfully",
+            "access": access,
+            "refresh": refresh,
         }
 
     # Login
@@ -112,6 +116,16 @@ class UserService:
                 "Invalid email or password",
             )
 
+        if not user.is_verified:
+            raise HTTPException(
+                status_code=403,
+                detail="Please verify your email first",
+            )
+
+        return UserService._issue_tokens(db, user)
+
+    @staticmethod
+    def _issue_tokens(db: Session, user: User):
         access = create_access_token(
             {
                 "sub": str(user.id),

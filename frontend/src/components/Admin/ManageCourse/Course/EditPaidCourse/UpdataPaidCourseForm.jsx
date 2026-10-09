@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 
 import React, { useState, useEffect } from "react";
 
@@ -7,7 +7,7 @@ import { TbCurrencyTaka } from "react-icons/tb";
 import { IoMdArrowBack } from "react-icons/io";
 
 import { useGetAllCategoryQuery } from "../../../../../lib/features/category/category-api";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useUpdateCourseMutation } from "../../../../../lib/features/courses/paid-course-api";
 import CreateCategoryModal from "../../category/CategoryModal/CreateCategory";
 

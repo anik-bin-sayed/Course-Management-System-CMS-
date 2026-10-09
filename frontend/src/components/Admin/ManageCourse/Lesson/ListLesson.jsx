@@ -11,7 +11,7 @@ import {
   useDeleteLessonMutation,
   useGetCourseLessonsQuery,
 } from "../../../../lib/features/lesson/lessonApi";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "@/lib/navigation";
 import { GoArrowLeft } from "react-icons/go";
 import { useState } from "react";
 import { MdInfo } from "react-icons/md";

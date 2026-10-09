@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/common/AppImage";
+import Link from "@/components/common/AppLink";
 
 import { FaPlay } from "react-icons/fa";
 import { useGetUpcomingCourseQuery } from "../../lib/features/upcomingCourse/upcomingCourseApi";

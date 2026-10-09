@@ -4,7 +4,7 @@
 import { useState } from "react";
 
 // next
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "@/lib/navigation";
 
 // icons
 import {

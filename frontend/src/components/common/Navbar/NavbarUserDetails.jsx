@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import Link from "next/link";
-import Image from "next/image";
+import Link from "@/components/common/AppLink";
+import Image from "@/components/common/AppImage";
 
 import { IoIosArrowDown } from "react-icons/io";
 import { FiUser, FiLogOut } from "react-icons/fi";

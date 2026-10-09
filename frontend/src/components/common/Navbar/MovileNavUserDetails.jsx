@@ -1,9 +1,9 @@
 "use client";
 
 import { useLogoutUserMutation } from "../../../lib/features/auth/authApi";
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 
-import Link from "next/link";
+import Link from "@/components/common/AppLink";
 import { useState } from "react";
 import {
   FaChevronDown,

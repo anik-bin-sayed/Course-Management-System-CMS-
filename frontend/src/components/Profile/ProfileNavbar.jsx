@@ -4,11 +4,11 @@ import {
   authApi,
   useLogoutUserMutation,
 } from "../../lib/features/auth/authApi";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "@/components/common/AppImage";
+import Link from "@/components/common/AppLink";
+import { usePathname } from "@/lib/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 
 import { useDispatch } from "react-redux";
 

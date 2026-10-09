@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "@/components/common/AppLink";
+import Image from "@/components/common/AppImage";
+import { useRouter } from "@/lib/navigation";
 
 import VideoModal from "../../../Home/VideoModal";
 import SkeletonLoader from "../../../../utils/SkeletonLoader";

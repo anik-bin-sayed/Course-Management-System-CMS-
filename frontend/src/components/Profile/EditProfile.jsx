@@ -2,7 +2,7 @@
 
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import ProfileNavbar from "./ProfileNavbar";
 import {
   FaArrowLeftLong,

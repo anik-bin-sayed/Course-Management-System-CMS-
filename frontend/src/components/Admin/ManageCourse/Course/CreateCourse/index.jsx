@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 
 import { TbCurrencyTaka } from "react-icons/tb";
 import { LuGalleryThumbnails } from "react-icons/lu";

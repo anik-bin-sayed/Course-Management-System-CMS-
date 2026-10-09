@@ -4,7 +4,7 @@ import { useUserProfileQuery } from "../../lib/features/profile/profileApi";
 import { useState } from "react";
 import ProfileNavbar from "../Profile/ProfileNavbar";
 import MobileSectionTopBar from "../Profile/MobileSectionTopBar";
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 import CountryFlag from "../Profile/ui/CountryFlag";
 
 import {

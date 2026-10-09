@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 import Loader from "../../utils/Loader";
 import VideoModal from "./VideoModal";
 import { useSelector } from "react-redux";
-import Link from "next/link";
+import Link from "@/components/common/AppLink";
 import { FiArrowRight } from "react-icons/fi";
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
 import { FaPlay } from "react-icons/fa";

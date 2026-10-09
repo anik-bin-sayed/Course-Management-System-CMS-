@@ -1,4 +1,4 @@
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/navigation";
 import { Suspense } from "react";
 import UpdataPaidCourseForm from "./UpdataPaidCourseForm";
 import { useGetCourseBySlugQuery } from "../../../../../lib/features/courses/paid-course-api";

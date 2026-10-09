@@ -33,12 +33,20 @@ def register(
 @router.post("/verify-email")
 def verify_email(
     data: VerifyEmailRequest,
+    response: Response,
     db: Session = Depends(get_db),
 ):
-    return UserService.verify_email(
+    result = UserService.verify_email(
         db,
         data,
     )
+    set_auth_cookies(
+        response,
+        result["access"],
+        result["refresh"],
+    )
+
+    return {"message": result["message"]}
 
 
 @router.post("/check-email")

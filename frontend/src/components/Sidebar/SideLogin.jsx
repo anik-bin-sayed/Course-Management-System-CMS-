@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LoginRegister from "./Login";
 import Register from "./Register";
 
@@ -167,7 +167,10 @@ const SideLogin = ({ isOpen, onClose }) => {
                       ease: "easeInOut",
                     }}
                   >
-                    <Register setIsLogin={setIsLogin} />
+                    <Register
+                      setIsLogin={setIsLogin}
+                      setShowCloseConfirm={setShowCloseConfirm}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -185,7 +188,7 @@ const SideLogin = ({ isOpen, onClose }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm"
             />
 
             {/* Modal */}

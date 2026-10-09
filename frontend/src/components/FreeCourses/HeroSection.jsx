@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/common/AppImage";
 import React from "react";
 
 import { HiMagnifyingGlass, HiPlay } from "react-icons/hi2";

@@ -2,14 +2,14 @@
 
 import { useEffect, useState, useRef } from "react";
 
-import Link from "next/link";
+import Link from "@/components/common/AppLink";
 
 // redux
 import { useDispatch } from "react-redux";
 
 // rtk
 import { setUser } from "../../../lib/features/auth/authSlice.js";
-import { useGetProfileQuery } from "../../../lib/features/auth/authApi.js";
+import { useGetProfileQuery } from "../../../lib/features/auth/authApi";
 
 // additional
 import Search from "./Search.jsx";
@@ -181,7 +181,6 @@ const Navbar = () => {
                 ) : (
                   <Link
                     href="/admin/manage-course"
-                    // onClick={handleProfile}
                     className=" flex items-center justify-center  bg-black text-white px-4 py-2 rounded-md text-md cursor-pointer"
                   >
                     <span className="">Dashboard</span>
