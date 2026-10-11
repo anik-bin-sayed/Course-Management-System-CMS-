@@ -8,6 +8,7 @@ import { paidCourseApi } from "./features/courses/paid-course-api";
 import { lessonApi } from "./features/lesson/lessonApi";
 import { lessonVideoApi } from "./features/lesson/lessonVideoApi";
 import { upcomingCourse } from "./features/upcomingCourse/upcomingCourseApi";
+import { enrollmentApi } from "./features/enrollment/enrollmentApi";
 
 export const makeStore = () => {
   return configureStore({
@@ -21,6 +22,7 @@ export const makeStore = () => {
       [lessonApi.reducerPath]: lessonApi.reducer,
       [lessonVideoApi.reducerPath]: lessonVideoApi.reducer,
       [upcomingCourse.reducerPath]: upcomingCourse.reducer,
+      [enrollmentApi.reducerPath]: enrollmentApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -32,6 +34,7 @@ export const makeStore = () => {
         .concat(paidCourseApi.middleware)
         .concat(lessonApi.middleware)
         .concat(lessonVideoApi.middleware)
-        .concat(upcomingCourse.middleware),
+        .concat(upcomingCourse.middleware)
+        .concat(enrollmentApi.middleware),
   });
 };

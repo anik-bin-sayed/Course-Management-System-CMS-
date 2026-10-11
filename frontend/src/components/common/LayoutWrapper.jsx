@@ -10,6 +10,7 @@ export default function LayoutWrapper({ children }) {
   const hideNavbar =
     pathname === "/profile" ||
     pathname === "/profile/edit" ||
+    pathname === "/dashboard" ||
     pathname.startsWith("/admin/manage-course");
 
   const hideFooter =
@@ -17,6 +18,7 @@ export default function LayoutWrapper({ children }) {
     pathname.startsWith("/admin/users") ||
     pathname.startsWith("/admin/profile") ||
     pathname.startsWith("/profile") ||
+    pathname === "/dashboard" ||
     pathname.startsWith("/verify-email");
 
   return (

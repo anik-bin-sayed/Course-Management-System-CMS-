@@ -1,13 +1,32 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
+import { useRouter, useSearchParams } from "@/lib/navigation";
 
 const Search = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentQuery = searchParams.get("q") || "";
+  const [query, setQuery] = useState(currentQuery);
+
+  useEffect(() => {
+    setQuery(currentQuery);
+  }, [currentQuery]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const value = query.trim();
+    router.push(value ? `/search?q=${encodeURIComponent(value)}` : "/search");
+  };
+
   return (
-    <div className="relative w-full max-w-md">
+    <form onSubmit={handleSubmit} className="relative w-full max-w-md">
       <div className="group relative">
         <input
           type="text"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
           placeholder="What do you want to learn?"
+          aria-label="Search courses"
           className="
           w-full
           rounded-xl
@@ -46,7 +65,8 @@ const Search = () => {
         />
 
         <button
-          type="button"
+          type="submit"
+          aria-label="Search courses"
           className="
           absolute
           right-1.5
@@ -71,7 +91,7 @@ const Search = () => {
           <HiMagnifyingGlass className="h-5 w-5" />
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 

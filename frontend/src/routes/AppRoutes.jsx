@@ -6,6 +6,8 @@ import FreeCoursesPage from "@/pages/FreeCoursesPage";
 import HomePage from "@/pages/HomePage";
 import ProfileEditPage from "@/pages/ProfileEditPage";
 import ProfilePage from "@/pages/ProfilePage";
+import SearchPage from "@/pages/SearchPage";
+import StudentDashboardPage from "@/pages/StudentDashboardPage";
 import UpcomingCourseDetailsPage from "@/pages/UpcomingCourseDetailsPage";
 import UpcomingCoursesPage from "@/pages/UpcomingCoursesPage";
 import VerifyEmailPage from "@/pages/VerifyEmailPage";
@@ -19,17 +21,29 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route element={<PublicRoute />}>
         <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Route>
       <Route path="/free-courses" element={<FreeCoursesPage />} />
       <Route path="/upcoming-course" element={<UpcomingCoursesPage />} />
-      <Route path="/upcoming-course/:id" element={<UpcomingCourseDetailsPage />} />
+      <Route
+        path="/upcoming-course/:id"
+        element={<UpcomingCourseDetailsPage />}
+      />
       <Route
         path="/profile"
         element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <StudentDashboardPage />
           </ProtectedRoute>
         }
       />

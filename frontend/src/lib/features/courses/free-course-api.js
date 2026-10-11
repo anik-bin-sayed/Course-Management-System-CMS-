@@ -16,10 +16,18 @@ export const freeCourseApi = createApi({
     }),
 
     getAllFreeCourses: builder.query({
-      query: ({ page = 1 } = {}) => ({
-        url: `/free-courses/all?page=${page}`,
-        method: "GET",
-      }),
+      query: ({ page = 1, limit = 16, search = "" } = {}) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+        if (search.trim()) params.set("search", search.trim());
+
+        return {
+          url: `/free-courses/all?${params.toString()}`,
+          method: "GET",
+        };
+      },
       providesTags: ["Course"],
     }),
 

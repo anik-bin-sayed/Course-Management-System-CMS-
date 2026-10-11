@@ -16,10 +16,60 @@ import {
 
 import { getDurationInMonths } from "./CalculateMonth";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { useRouter } from "@/lib/navigation";
+import {
+  useCreateEnrollmentMutation,
+  useCreatePaymentMutation,
+  useGetMyEnrollmentsQuery,
+  useInitiatePaymentMutation,
+} from "@/lib/features/enrollment/enrollmentApi";
 
 const CourseDetails = ({ course }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
-  console.log(isAuthenticated);
+  const router = useRouter();
+  const { data: enrollments = [] } = useGetMyEnrollmentsQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const [createEnrollment, { isLoading: isCreatingEnrollment }] =
+    useCreateEnrollmentMutation();
+  const [createPayment, { isLoading: isCreatingPayment }] =
+    useCreatePaymentMutation();
+  const [initiatePayment, { isLoading: isInitiatingPayment }] =
+    useInitiatePaymentMutation();
+  const isEnrolling =
+    isCreatingEnrollment || isCreatingPayment || isInitiatingPayment;
+  const currentEnrollment = enrollments.find(
+    (enrollment) => enrollment.course_id === course?.id,
+  );
+
+  const handleEnrollment = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please sign in before enrolling.");
+      return;
+    }
+
+    if (["active", "completed"].includes(currentEnrollment?.status)) {
+      router.push("/dashboard");
+      return;
+    }
+
+    try {
+      const enrollment =
+        currentEnrollment || (await createEnrollment(course.id).unwrap());
+
+      if (course.course_type === "free") {
+        router.push("/dashboard");
+        return;
+      }
+
+      const payment = await createPayment(enrollment.id).unwrap();
+      const checkout = await initiatePayment(payment.id).unwrap();
+      window.location.assign(checkout.gateway_url);
+    } catch (error) {
+      toast.error(error?.data?.detail || "Could not start course enrollment.");
+    }
+  };
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -265,31 +315,52 @@ const CourseDetails = ({ course }) => {
 
                 <div className="mt-2 flex items-end gap-3">
                   <span className="text-3xl font-bold text-gray-900">
-                    ৳{course?.discount_price}
+                    {course?.course_type === "free"
+                      ? "Free"
+                      : `৳${course?.discount_price ?? course?.price}`}
                   </span>
 
-                  <span className="pb-1 text-sm text-gray-400 line-through">
-                    ৳{course?.price}
-                  </span>
+                  {course?.course_type !== "free" &&
+                    course?.discount_price &&
+                    course.discount_price < course.price && (
+                      <span className="pb-1 text-sm text-gray-400 line-through">
+                        ৳{course.price}
+                      </span>
+                    )}
                 </div>
 
-                <span className="mt-3 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                  Save ৳ {course?.price - course?.discount_price}
-                </span>
+                {course?.course_type !== "free" &&
+                  course?.discount_price &&
+                  course.discount_price < course.price && (
+                    <span className="mt-3 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                      Save ৳ {course.price - course.discount_price}
+                    </span>
+                  )}
               </div>
 
               {/* Enrollment */}
               <div className="p-6">
                 <button
-                  disabled={!isAuthenticated}
+                  disabled={isEnrolling || !course?.id}
+                  onClick={handleEnrollment}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-5 py-3.5 font-bold text-gray-900 transition duration-300 hover:bg-yellow-500 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-400"
                 >
-                  Enroll Now
+                  {isEnrolling
+                    ? "Starting checkout..."
+                    : ["active", "completed"].includes(
+                          currentEnrollment?.status,
+                        )
+                      ? "Go to my courses"
+                      : currentEnrollment?.status === "pending"
+                        ? "Continue payment"
+                        : "Enroll Now"}
                   <FaArrowRight className="text-sm" />
                 </button>
 
                 <p className="mt-4 text-center text-xs text-gray-400">
-                  Course enrollment will be available soon.
+                  {course?.course_type === "free"
+                    ? "Enroll for free and start learning."
+                    : "Secure checkout powered by SSLCommerz."}
                 </p>
 
                 {/* Includes */}

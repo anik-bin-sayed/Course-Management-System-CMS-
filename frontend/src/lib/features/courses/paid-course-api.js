@@ -17,10 +17,19 @@ export const paidCourseApi = createApi({
     }),
 
     getAllCourse: builder.query({
-      query: ({ page = 1, limit = 10 } = {}) => ({
-        url: `/courses?page=${page}&limit=${limit}`,
-        method: "GET",
-      }),
+      query: ({ page = 1, limit = 10, search = "", status } = {}) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+        if (search.trim()) params.set("search", search.trim());
+        if (status) params.set("status", status);
+
+        return {
+          url: `/courses?${params.toString()}`,
+          method: "GET",
+        };
+      },
       providesTags: ["Course"],
     }),
 

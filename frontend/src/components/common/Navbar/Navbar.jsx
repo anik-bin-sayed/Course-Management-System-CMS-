@@ -35,6 +35,8 @@ const Navbar = () => {
 
   // redux
   const { data: profileData, isLoading } = useGetProfileQuery();
+  const dashboardHref =
+    profileData?.role === "student" ? "/dashboard" : "/admin/manage-course";
 
   // Handle scroll
   const handleScroll = () => {
@@ -169,24 +171,12 @@ const Navbar = () => {
 
             {/* Dashboard */}
             {profileData && (
-              <div>
-                {profileData && profileData?.role === "admin" ? (
-                  <Link
-                    href="/admin/manage-course"
-                    // onClick={handleProfile}
-                    className=" flex items-center justify-center  bg-black text-white px-4 py-2 rounded-md text-md cursor-pointer"
-                  >
-                    <span className="">Dashboard</span>
-                  </Link>
-                ) : (
-                  <Link
-                    href="/admin/manage-course"
-                    className=" flex items-center justify-center  bg-black text-white px-4 py-2 rounded-md text-md cursor-pointer"
-                  >
-                    <span className="">Dashboard</span>
-                  </Link>
-                )}
-              </div>
+              <Link
+                href={dashboardHref}
+                className="flex items-center justify-center bg-black px-4 py-2 text-md text-white"
+              >
+                Dashboard
+              </Link>
             )}
           </div>
           {!isLoading && (
@@ -242,24 +232,13 @@ const Navbar = () => {
           <div className="space-y-2">
             {profileData && (
               <div>
-                {(profileData && profileData?.role === "admin") ||
-                profileData?.role === "instructor" ? (
-                  <Link
-                    href="/admin/manage-course"
-                    // onClick={handleProfile}
-                    className=" flex items-center justify-center  bg-black text-white px-4 py-2 rounded-md text-md cursor-pointer"
-                  >
-                    <span className="">Dashboard</span>
-                  </Link>
-                ) : (
-                  <Link
-                    href="/admin/manage-course"
-                    // onClick={handleProfile}
-                    className=" flex items-center justify-center  bg-black text-white px-4 py-2 rounded-md text-md cursor-pointer"
-                  >
-                    <span className="">Dashboard</span>
-                  </Link>
-                )}
+                <Link
+                  href={dashboardHref}
+                  className="flex items-center justify-center bg-black px-4 py-2 text-md text-white"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
               </div>
             )}
 

@@ -1,5 +1,4 @@
-const AppImage = (props) => {
-  const { fill, priority, style, ...imageProps } = props;
+const AppImage = ({ fill, priority, style, ...imageProps }) => {
   delete imageProps.quality;
   delete imageProps.sizes;
   delete imageProps.unoptimized;
