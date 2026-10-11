@@ -23,12 +23,14 @@ class LessonUpdate(BaseModel):
 
 class LessonResponse(BaseModel):
     id: int
+    course_id: int
     title: str
     description: str | None
     position: int
 
     video_count: int = 0
     total_duration: str = "0s"
+    first_video_url: str | None = None
 
     created_at: datetime
     updated_at: datetime

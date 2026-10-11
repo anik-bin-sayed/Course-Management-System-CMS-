@@ -27,7 +27,7 @@ class LessonService:
 
         result = []
 
-        for lesson, video_count, total_seconds in rows:
+        for lesson, video_count, total_seconds, first_video_url in rows:
 
             hours = total_seconds // 3600
             minutes = (total_seconds % 3600) // 60
@@ -49,6 +49,7 @@ class LessonService:
                     "course_id": lesson.course_id,
                     "video_count": video_count,
                     "total_duration": duration,
+                    "first_video_url": first_video_url,
                     "created_at": lesson.created_at,
                     "updated_at": lesson.updated_at,
                 }

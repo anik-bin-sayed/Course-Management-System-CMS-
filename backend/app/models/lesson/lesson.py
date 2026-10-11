@@ -44,7 +44,8 @@ class Lesson(Base):
         index=True,
     )
 
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[str | None] = mapped_column(
+        String(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=True,
         index=True,

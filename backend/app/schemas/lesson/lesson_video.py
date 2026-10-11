@@ -1,6 +1,8 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from app.utils.youtube import normalize_youtube_video_url
 
 
 class LessonVideoBase(BaseModel):
@@ -30,6 +32,11 @@ class LessonVideoBase(BaseModel):
 class LessonVideoCreate(LessonVideoBase):
     lesson_id: int
 
+    @field_validator("video_url")
+    @classmethod
+    def validate_video_url(cls, value: str) -> str:
+        return normalize_youtube_video_url(value)
+
 
 class LessonVideoUpdate(BaseModel):
     title: str | None = Field(
@@ -55,6 +62,13 @@ class LessonVideoUpdate(BaseModel):
         default=None,
         ge=0,
     )
+
+    @field_validator("video_url")
+    @classmethod
+    def validate_video_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        return normalize_youtube_video_url(value)
 
 
 class LessonVideoResponse(LessonVideoBase):

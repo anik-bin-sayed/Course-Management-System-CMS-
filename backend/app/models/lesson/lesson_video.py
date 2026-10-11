@@ -23,7 +23,7 @@ class LessonVideo(Base):
     )
 
     title: Mapped[str] = mapped_column(
-        String(255),
+        String(),
         nullable=False,
     )
 
@@ -55,7 +55,8 @@ class LessonVideo(Base):
         index=True,
     )
 
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[str | None] = mapped_column(
+        String(),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=True,
         index=True,

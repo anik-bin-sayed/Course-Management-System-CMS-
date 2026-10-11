@@ -23,6 +23,17 @@ from app.schemas.lesson.lesson_video import (
 class LessonVideoService:
 
     @staticmethod
+    def check_manage_access(lesson: Lesson, current_user: User) -> None:
+        if current_user.role == "admin":
+            return
+
+        if lesson.course.instructor_id != current_user.id:
+            raise HTTPException(
+                status_code=403,
+                detail="You are not allowed to manage videos for this course",
+            )
+
+    @staticmethod
     def create_video(
         db: Session,
         data: LessonVideoCreate,
@@ -40,8 +51,7 @@ class LessonVideoService:
         if not lesson:
             raise ValueError("Lesson not found")
 
-        if lesson.user_id != current_user.id and current_user.role != "admin":
-            raise HTTPException(status_code=403, detail="This is not your lesson")
+        LessonVideoService.check_manage_access(lesson, current_user)
 
         return LessonVideoRepository.create(
             db=db,
@@ -80,12 +90,14 @@ class LessonVideoService:
         db: Session,
         video_id: int,
         data: LessonVideoUpdate,
+        current_user: User,
     ) -> LessonVideo:
 
         video = LessonVideoService.get_video_by_id(
             db=db,
             video_id=video_id,
         )
+        LessonVideoService.check_manage_access(video.lesson, current_user)
 
         return LessonVideoRepository.update(
             db=db,
@@ -97,18 +109,19 @@ class LessonVideoService:
     def delete_video(
         db: Session,
         video_id: int,
+        current_user: User,
     ) -> None:
 
         video = LessonVideoService.get_video_by_id(
             db=db,
             video_id=video_id,
         )
+        LessonVideoService.check_manage_access(video.lesson, current_user)
 
         LessonVideoRepository.delete(
             db=db,
             video=video,
         )
-
     @staticmethod
     def get_lesson_video_stats(
         db: Session,
@@ -139,23 +152,3 @@ class LessonVideoService:
             "total_seconds": total_seconds,
         }
 
-    @staticmethod
-    def delete_video(
-        db: Session,
-        video_id: int,
-    ) -> bool:
-
-        video = LessonVideoRepository.get_by_id(
-            db=db,
-            video_id=video_id,
-        )
-
-        if not video:
-            return False
-
-        LessonVideoRepository.delete(
-            db=db,
-            video=video,
-        )
-
-        return True

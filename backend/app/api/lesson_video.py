@@ -120,6 +120,7 @@ def update_video(
     video_id: int,
     data: LessonVideoUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_instructor_required),
 ):
 
     try:
@@ -127,6 +128,7 @@ def update_video(
             db=db,
             video_id=video_id,
             data=data,
+            current_user=current_user,
         )
 
     except ValueError as error:
@@ -143,12 +145,14 @@ def update_video(
 def delete_video(
     video_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_instructor_required),
 ):
 
     try:
         LessonVideoService.delete_video(
             db=db,
             video_id=video_id,
+            current_user=current_user,
         )
 
     except ValueError as error:
@@ -183,24 +187,3 @@ def get_lesson_video_stats(
     )
 
 
-@router.delete(
-    "/{video_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def delete_lesson_video(
-    video_id: int,
-    db: Session = Depends(get_db),
-):
-
-    deleted = LessonVideoService.delete_video(
-        db=db,
-        video_id=video_id,
-    )
-
-    if not deleted:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Lesson video not found",
-        )
-
-    return None

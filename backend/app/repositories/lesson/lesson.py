@@ -29,6 +29,14 @@ class LessonRepository:
         db: Session,
         course_id: int,
     ) -> list[Lesson]:
+        first_video_url = (
+            db.query(LessonVideo.video_url)
+            .filter(LessonVideo.lesson_id == Lesson.id)
+            .order_by(LessonVideo.position.asc(), LessonVideo.id.asc())
+            .limit(1)
+            .correlate(Lesson)
+            .scalar_subquery()
+        )
 
         return (
             db.query(
@@ -38,6 +46,7 @@ class LessonRepository:
                     func.sum(LessonVideo.duration),
                     0,
                 ).label("total_seconds"),
+                first_video_url.label("first_video_url"),
             )
             .outerjoin(
                 LessonVideo,
