@@ -50,15 +50,11 @@ class PaymentService:
                 detail="Enrollment not found",
             )
 
-      
-
         if enrollment.student_id != student_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="You cannot create payment for this enrollment",
             )
-
-        
 
         if enrollment.status == EnrollmentStatus.ACTIVE:
             raise HTTPException(
@@ -66,12 +62,7 @@ class PaymentService:
                 detail="This course is already active",
             )
 
-
-        course = (
-            db.query(Course)
-            .filter(Course.id == enrollment.course_id)
-            .first()
-        )
+        course = db.query(Course).filter(Course.id == enrollment.course_id).first()
 
         if not course:
             raise HTTPException(
@@ -345,9 +336,7 @@ class PaymentService:
         # Generate transaction ID
         # --------------------------------
 
-        transaction_id = generate_transaction_id(
-            payment.id
-        )
+        transaction_id = generate_transaction_id(payment.id)
 
         payment.transaction_id = transaction_id
 
@@ -367,7 +356,8 @@ class PaymentService:
                 current_user,
                 "phone",
                 "",
-            ) or "01700000000",
+            )
+            or "01700000000",
             course_name=course.title,
         )
 
@@ -388,9 +378,7 @@ class PaymentService:
         # Get gateway URL
         # --------------------------------
 
-        gateway_url = gateway_response.get(
-            "GatewayPageURL"
-        )
+        gateway_url = gateway_response.get("GatewayPageURL")
 
         if not gateway_url:
             raise HTTPException(
@@ -408,7 +396,7 @@ class PaymentService:
             "amount": str(payment.amount),
             "gateway_url": gateway_url,
         }
-    
+
     @staticmethod
     async def validate_sslcommerz_payment(
         db: Session,
@@ -430,15 +418,9 @@ class PaymentService:
         if payment.status == PaymentStatus.SUCCESS:
             return payment
 
-        validation_response = (
-            await SSLCommerzService.validate_payment(
-                val_id
-            )
-        )
+        validation_response = await SSLCommerzService.validate_payment(val_id)
 
-        validation_status = validation_response.get(
-            "status"
-        )
+        validation_status = validation_response.get("status")
 
         # SSLCommerz status check
         if validation_status not in {
@@ -447,22 +429,14 @@ class PaymentService:
         }:
             raise HTTPException(
                 status_code=400,
-                detail=(
-                    "SSLCOMMERZ payment validation failed"
-                ),
+                detail=("SSLCOMMERZ payment validation failed"),
             )
 
-        validated_tran_id = validation_response.get(
-            "tran_id"
-        )
+        validated_tran_id = validation_response.get("tran_id")
 
-        validated_amount = validation_response.get(
-            "amount"
-        )
+        validated_amount = validation_response.get("amount")
 
-        validated_currency = validation_response.get(
-            "currency"
-        )
+        validated_currency = validation_response.get("currency")
 
         # Transaction ID check
         if validated_tran_id != payment.transaction_id:
@@ -478,9 +452,7 @@ class PaymentService:
                 detail="Validation response amount missing",
             )
 
-        if Decimal(str(validated_amount)) != Decimal(
-            str(payment.amount)
-        ):
+        if Decimal(str(validated_amount)) != Decimal(str(payment.amount)):
             raise HTTPException(
                 status_code=400,
                 detail="Payment amount mismatch",
@@ -493,17 +465,11 @@ class PaymentService:
                 detail="Payment currency mismatch",
             )
 
-        # Get bank transaction ID
-        bank_transaction_id = (
-            validation_response.get("bank_tran_id")
-        )
-
         # Mark payment success
         PaymentRepository.mark_success(
             db=db,
             payment=payment,
-            transaction_id=bank_transaction_id
-            or payment.transaction_id,
+            transaction_id=payment.transaction_id,
         )
 
         # Activate enrollment

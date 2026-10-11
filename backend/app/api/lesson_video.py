@@ -20,8 +20,10 @@ from app.services.lesson.lesson_video import (
 )
 
 from app.models.user import User
+from app.models.lesson.lesson import Lesson
 
-from app.core.dependencies import admin_instructor_required
+from app.core.dependencies import admin_instructor_required, get_current_user
+from app.services.course_access import CourseAccessService
 
 router = APIRouter(
     prefix="/lesson-videos",
@@ -59,13 +61,23 @@ def create_video(
 def get_video_by_id(
     video_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
 
     try:
-        return LessonVideoService.get_video_by_id(
+        video = LessonVideoService.get_video_by_id(
             db=db,
             video_id=video_id,
         )
+
+        if current_user.role not in {"admin", "instructor"}:
+            CourseAccessService.check_access(
+                db=db,
+                student_id=current_user.id,
+                course_id=video.lesson.course_id,
+            )
+
+        return video
 
     except ValueError as error:
         raise HTTPException(
@@ -81,7 +93,18 @@ def get_video_by_id(
 def get_lesson_videos(
     lesson_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+
+    if current_user.role not in {"admin", "instructor"}:
+        CourseAccessService.check_access(
+            db=db,
+            student_id=current_user.id,
+            course_id=lesson.course_id,
+        )
 
     return LessonVideoService.get_lesson_videos(
         db=db,
@@ -141,7 +164,19 @@ def delete_video(
 def get_lesson_video_stats(
     lesson_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+
+    if current_user.role not in {"admin", "instructor"}:
+        CourseAccessService.check_access(
+            db=db,
+            student_id=current_user.id,
+            course_id=lesson.course_id,
+        )
+
     return LessonVideoService.get_lesson_video_stats(
         db,
         lesson_id,

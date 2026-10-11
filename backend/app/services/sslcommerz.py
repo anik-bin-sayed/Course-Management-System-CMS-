@@ -15,50 +15,29 @@ class SSLCommerzService:
         cus_phone: str,
         course_name: str,
     ):
+        backend_url = settings.BACKEND_URL.rstrip("/")
         payload = {
             "store_id": settings.SSLCOMMERZ_STORE_ID,
             "store_passwd": settings.SSLCOMMERZ_STORE_PASSWORD,
-
             "total_amount": amount,
             "currency": "BDT",
             "tran_id": tran_id,
-
-            "success_url": (
-                f"{settings.BACKEND_URL}"
-                "/api/payments/sslcommerz/success"
-            ),
-
-            "fail_url": (
-                f"{settings.BACKEND_URL}"
-                "/api/payments/sslcommerz/fail"
-            ),
-
-            "cancel_url": (
-                f"{settings.BACKEND_URL}"
-                "/api/payments/sslcommerz/cancel"
-            ),
-
-            "ipn_url": (
-                f"{settings.BACKEND_URL}"
-                "/api/payments/sslcommerz/ipn"
-            ),
-
+            "success_url": (f"{backend_url}" "/api/payments/sslcommerz/success"),
+            "fail_url": (f"{backend_url}" "/api/payments/sslcommerz/fail"),
+            "cancel_url": (f"{backend_url}" "/api/payments/sslcommerz/cancel"),
+            "ipn_url": (f"{backend_url}" "/api/payments/sslcommerz/ipn"),
             "cus_name": cus_name,
             "cus_email": cus_email,
             "cus_phone": cus_phone,
-
             "cus_add1": "Dhaka",
             "cus_city": "Dhaka",
             "cus_postcode": "1000",
             "cus_country": "Bangladesh",
-
             "shipping_method": "NO",
             "num_of_item": 1,
-
             "product_name": course_name,
             "product_category": "Course",
             "product_profile": "general",
-
             "value_a": tran_id,
         }
 

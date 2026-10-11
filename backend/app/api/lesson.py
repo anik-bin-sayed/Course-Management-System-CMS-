@@ -5,8 +5,13 @@ from app.dependencies.database import get_db
 from app.schemas.lesson.lesson import LessonCreate, LessonResponse, LessonUpdate
 from app.services.lesson.lesson import LessonService
 
-from app.core.dependencies import admin_instructor_required, admin_required
+from app.core.dependencies import (
+    admin_instructor_required,
+    admin_required,
+    get_current_user,
+)
 from app.models.user import User
+from app.services.course_access import CourseAccessService
 
 router = APIRouter(
     prefix="/lessons",
@@ -34,7 +39,15 @@ def create_lesson(
 def get_course_lessons(
     course_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    if current_user.role not in {"admin", "instructor"}:
+        CourseAccessService.check_access(
+            db=db,
+            student_id=current_user.id,
+            course_id=course_id,
+        )
+
     return LessonService.get_course_lessons(
         db,
         course_id,
@@ -70,13 +83,23 @@ def delete_lesson(
 def get_lesson_by_id(
     lesson_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
 
     try:
-        return LessonService.get_lesson_by_id(
+        lesson = LessonService.get_lesson_by_id(
             db=db,
             lesson_id=lesson_id,
         )
+
+        if current_user.role not in {"admin", "instructor"}:
+            CourseAccessService.check_access(
+                db=db,
+                student_id=current_user.id,
+                course_id=lesson["course_id"],
+            )
+
+        return lesson
 
     except ValueError as error:
         raise HTTPException(

@@ -6,20 +6,32 @@ from app.dependencies.database import get_db
 from app.schemas.enrollment import (
     EnrollmentCreate,
     EnrollmentResponse,
+    MyEnrollmentResponse,
 )
+from app.repositories.enrollment_repository import EnrollmentRepository
 from app.services.enrollment_service import EnrollmentService
 from app.core.dependencies import (
-    admin_instructor_required,
-    admin_required,
     student_required,
-    get_current_user,
 )
-
 
 router = APIRouter(
     prefix="/enrollments",
     tags=["Enrollments"],
 )
+
+
+@router.get(
+    "/me",
+    response_model=list[MyEnrollmentResponse],
+)
+def get_my_enrollments(
+    db: Session = Depends(get_db),
+    current_user=Depends(student_required),
+):
+    return EnrollmentRepository.get_by_student(
+        db=db,
+        student_id=current_user.id,
+    )
 
 
 @router.post(
@@ -30,7 +42,7 @@ router = APIRouter(
 def create_enrollment(
     data: EnrollmentCreate,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(student_required),
 ):
 
     enrollment = EnrollmentService.create(
@@ -49,7 +61,7 @@ def create_enrollment(
 def get_enrollment(
     enrollment_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(student_required),
 ):
 
     from fastapi import HTTPException

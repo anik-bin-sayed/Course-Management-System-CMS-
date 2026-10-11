@@ -18,11 +18,7 @@ class EnrollmentService:
     ):
 
         # Check course
-        course = (
-            db.query(Course)
-            .filter(Course.id == course_id)
-            .first()
-        )
+        course = db.query(Course).filter(Course.id == course_id).first()
 
         if not course:
             raise HTTPException(
@@ -46,6 +42,8 @@ class EnrollmentService:
                 )
 
             if existing.status == EnrollmentStatus.PENDING:
+                if course.course_type.value == "free":
+                    return EnrollmentService.activate(db=db, enrollment=existing)
                 return existing
 
             if existing.status == EnrollmentStatus.COMPLETED:
@@ -62,6 +60,9 @@ class EnrollmentService:
             db.commit()
             db.refresh(existing)
 
+            if course.course_type.value == "free":
+                return EnrollmentService.activate(db=db, enrollment=existing)
+
             return existing
 
         # Create new enrollment
@@ -70,6 +71,9 @@ class EnrollmentService:
             student_id=student_id,
             course_id=course_id,
         )
+
+        if course.course_type.value == "free":
+            return EnrollmentService.activate(db=db, enrollment=enrollment)
 
         return enrollment
 

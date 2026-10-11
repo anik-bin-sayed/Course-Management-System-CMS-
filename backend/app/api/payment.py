@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Request, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.dependencies.database import get_db
@@ -11,17 +12,21 @@ from app.services.payment import PaymentService
 from app.schemas.payment import PaymentInitiateResponse
 from app.repositories.payment import PaymentRepository
 from app.core.dependencies import (
-    admin_instructor_required,
-    admin_required,
     student_required,
-    get_current_user,
 )
-
+from app.core.config import settings
 
 router = APIRouter(
     prefix="/payments",
     tags=["Payments"],
 )
+
+
+def payment_result_redirect(result: str, payment_id: int | None = None):
+    url = f"{settings.FRONTEND_URL.rstrip('/')}/dashboard?payment={result}"
+    if payment_id is not None:
+        url += f"&payment_id={payment_id}"
+    return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.post(
@@ -32,7 +37,7 @@ router = APIRouter(
 def create_payment(
     data: PaymentCreate,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(student_required),
 ):
 
     payment = PaymentService.create(
@@ -51,7 +56,7 @@ def create_payment(
 def get_payment(
     payment_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(student_required),
 ):
 
     from fastapi import HTTPException
@@ -97,7 +102,7 @@ def get_payment(
 async def initiate_payment(
     payment_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(student_required),
 ):
     return await PaymentService.initiate_sslcommerz_payment(
         db=db,
@@ -105,9 +110,8 @@ async def initiate_payment(
         current_user=current_user,
     )
 
-@router.post(
-    "/sslcommerz/ipn"
-)
+
+@router.post("/sslcommerz/ipn")
 async def sslcommerz_ipn(
     request: Request,
     db: Session = Depends(get_db),
@@ -135,7 +139,7 @@ async def sslcommerz_ipn(
         if payment:
             PaymentService.mark_failed(
                 db,
-                payment,
+                payment.id,
             )
 
         return {
@@ -154,7 +158,7 @@ async def sslcommerz_ipn(
         if payment:
             PaymentService.mark_cancelled(
                 db,
-                payment,
+                payment.id,
             )
 
         return {
@@ -188,9 +192,7 @@ async def sslcommerz_ipn(
     }
 
 
-@router.post(
-    "/sslcommerz/success"
-)
+@router.post("/sslcommerz/success")
 async def sslcommerz_success(
     request: Request,
     db: Session = Depends(get_db),
@@ -212,15 +214,10 @@ async def sslcommerz_success(
         val_id=val_id,
     )
 
-    return {
-        "status": "SUCCESS",
-        "payment_id": payment.id,
-    }
+    return payment_result_redirect("success", payment.id)
 
 
-@router.post(
-    "/sslcommerz/fail"
-)
+@router.post("/sslcommerz/fail")
 async def sslcommerz_fail(
     request: Request,
     db: Session = Depends(get_db),
@@ -239,18 +236,13 @@ async def sslcommerz_fail(
         if payment:
             PaymentService.mark_failed(
                 db,
-                payment,
+                payment.id,
             )
 
-    return {
-        "status": "FAILED",
-        "message": "Payment failed",
-    }
+    return payment_result_redirect("failed")
 
 
-@router.post(
-    "/sslcommerz/cancel"
-)
+@router.post("/sslcommerz/cancel")
 async def sslcommerz_cancel(
     request: Request,
     db: Session = Depends(get_db),
@@ -269,103 +261,7 @@ async def sslcommerz_cancel(
         if payment:
             PaymentService.mark_cancelled(
                 db,
-                payment,
+                payment.id,
             )
 
-    return {
-        "status": "CANCELLED",
-        "message": "Payment cancelled",
-    }
-
-
-@router.post(
-    "/sslcommerz/success"
-)
-async def sslcommerz_success(
-    request: Request,
-    db: Session = Depends(get_db),
-):
-    form_data = await request.form()
-
-    tran_id = form_data.get("tran_id")
-    val_id = form_data.get("val_id")
-
-    if not tran_id or not val_id:
-        return {
-            "status": "FAILED",
-            "message": "Invalid payment callback",
-        }
-
-    payment = (
-        await PaymentService.validate_sslcommerz_payment(
-            db=db,
-            tran_id=tran_id,
-            val_id=val_id,
-        )
-    )
-
-    return {
-        "status": "SUCCESS",
-        "payment_id": payment.id,
-    }
-
-@router.post(
-    "/sslcommerz/fail"
-)
-async def sslcommerz_fail(
-    request: Request,
-    db: Session = Depends(get_db),
-):
-    form_data = await request.form()
-
-    tran_id = form_data.get("tran_id")
-
-    if tran_id:
-        payment = (
-            PaymentRepository.get_by_transaction_id(
-                db,
-                tran_id,
-            )
-        )
-
-        if payment:
-            PaymentService.mark_failed(
-                db,
-                payment,
-            )
-
-    return {
-        "status": "FAILED",
-        "message": "Payment failed",
-    }
-
-
-@router.post(
-    "/sslcommerz/cancel"
-)
-async def sslcommerz_cancel(
-    request: Request,
-    db: Session = Depends(get_db),
-):
-    form_data = await request.form()
-
-    tran_id = form_data.get("tran_id")
-
-    if tran_id:
-        payment = (
-            PaymentRepository.get_by_transaction_id(
-                db,
-                tran_id,
-            )
-        )
-
-        if payment:
-            PaymentService.mark_cancelled(
-                db,
-                payment,
-            )
-
-    return {
-        "status": "CANCELLED",
-        "message": "Payment cancelled",
-    }
+    return payment_result_redirect("cancelled")

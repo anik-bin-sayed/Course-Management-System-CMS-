@@ -131,6 +131,10 @@ uvicorn app.main:app --reload
 
 The backend will be available at **http://127.0.0.1:8000** (interactive docs at `/docs`).
 
+#### SSLCommerz sandbox callbacks
+
+For local sandbox payments, the gateway must be able to reach the backend callback URLs. Expose port `8000` through an HTTPS tunnel (for example, `ngrok http 8000`), set `BACKEND_URL` in `backend/.env` to the tunnel's public HTTPS URL, and keep `FRONTEND_URL` pointed at the local frontend (for example, `http://localhost:3000`). Set `SSLCOMMERZ_IS_SANDBOX=true` and configure the sandbox store credentials before restarting the API.
+
 ### 3. Frontend setup
 
 ```bash
