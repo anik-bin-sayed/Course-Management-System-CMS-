@@ -92,7 +92,7 @@ class LessonService:
         lesson_id: int,
     ):
 
-        result = LessonRepository.get_by_id(
+        result = LessonRepository.get_by_id_with_video_stats(
             db=db,
             lesson_id=lesson_id,
         )

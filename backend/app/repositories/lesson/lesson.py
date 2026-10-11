@@ -68,6 +68,25 @@ class LessonRepository:
         return db.query(Lesson).filter(Lesson.id == lesson_id).first()
 
     @staticmethod
+    def get_by_id_with_video_stats(
+        db: Session,
+        lesson_id: int,
+    ):
+        return (
+            db.query(
+                Lesson,
+                func.count(LessonVideo.id).label("video_count"),
+                func.coalesce(func.sum(LessonVideo.duration), 0).label(
+                    "total_seconds"
+                ),
+            )
+            .outerjoin(LessonVideo, LessonVideo.lesson_id == Lesson.id)
+            .filter(Lesson.id == lesson_id)
+            .group_by(Lesson.id)
+            .first()
+        )
+
+    @staticmethod
     def delete(db: Session, lesson: Lesson) -> None:
         db.delete(lesson)
         db.commit()
