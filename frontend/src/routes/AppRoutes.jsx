@@ -4,6 +4,7 @@ import AdminInstructorGuard from "@/components/auth/AdminInstructorGuard";
 import NotFound from "@/components/NotFound/NotFound";
 import FreeCoursesPage from "@/pages/FreeCoursesPage";
 import HomePage from "@/pages/HomePage";
+import LessonWatchPage from "@/pages/LessonWatchPage";
 import ProfileEditPage from "@/pages/ProfileEditPage";
 import ProfilePage from "@/pages/ProfilePage";
 import SearchPage from "@/pages/SearchPage";
@@ -44,6 +45,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <StudentDashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/watch/:lessonId"
+        element={
+          <ProtectedRoute>
+            <LessonWatchPage />
           </ProtectedRoute>
         }
       />

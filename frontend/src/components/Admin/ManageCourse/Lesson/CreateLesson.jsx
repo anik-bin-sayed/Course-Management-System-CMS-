@@ -1,11 +1,14 @@
 "use client";
 
 import { useSearchParams } from "@/lib/navigation";
-import { MdLibraryAdd, MdSave, MdClose } from "react-icons/md";
+import { MdLibraryAdd, MdSave } from "react-icons/md";
 import { FiType, FiFileText, FiHash } from "react-icons/fi";
 import { GoArrowLeft } from "react-icons/go";
 import { useState } from "react";
 import { useCreateLessonMutation } from "../../../../lib/features/lesson/lessonApi";
+import { useCreateLessonVideoMutation } from "../../../../lib/features/lesson/lessonVideoApi";
+import { getYoutubeVideoId } from "@/lib/youtube";
+import { toast } from "sonner";
 
 const CreateLesson = () => {
   const searchParams = useSearchParams();
@@ -17,9 +20,13 @@ const CreateLesson = () => {
     description: "",
     position: 0,
     course_id: courseId,
+    video_url: "",
   });
 
   const [createLesson, { isLoading }] = useCreateLessonMutation();
+  const [createLessonVideo, { isLoading: isCreatingVideo }] =
+    useCreateLessonVideoMutation();
+  const [videoUrlError, setVideoUrlError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,21 +34,55 @@ const CreateLesson = () => {
       ...prevData,
       [name]: value,
     }));
+    if (name === "video_url") setVideoUrlError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.video_url && !getYoutubeVideoId(formData.video_url)) {
+      setVideoUrlError("Enter a valid YouTube video, Shorts, or share URL.");
+      return;
+    }
+
     try {
-      await createLesson(formData).unwrap();
+      const lesson = await createLesson({
+        title: formData.title,
+        description: formData.description || null,
+        position: Number(formData.position),
+        course_id: Number(courseId),
+      }).unwrap();
+
+      let videoSaved = true;
+      if (formData.video_url) {
+        try {
+          await createLessonVideo({
+            lesson_id: lesson.id,
+            title: lesson.title,
+            description: lesson.description,
+            video_url: formData.video_url,
+            duration: 0,
+            position: 0,
+          }).unwrap();
+        } catch {
+          videoSaved = false;
+        }
+      }
+
+      toast.success(
+        videoSaved
+          ? "Lesson created."
+          : "Lesson created; add its video from lesson management.",
+      );
       // Reset form after successful creation
       setFormData({
         title: "",
         description: "",
         position: 0,
         course_id: courseId,
+        video_url: "",
       });
     } catch (error) {
-      console.error("Error creating lesson:", error);
+      toast.error(error?.data?.detail || "Could not create the lesson.");
     }
   };
 
@@ -151,6 +192,31 @@ const CreateLesson = () => {
               </p>
             </div>
 
+            <div>
+              <label
+                htmlFor="video_url"
+                className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
+              >
+                <FiFileText size={16} className="text-gray-500" />
+                YouTube Video URL <span className="text-gray-400">(optional)</span>
+              </label>
+              <input
+                id="video_url"
+                name="video_url"
+                type="text"
+                value={formData.video_url}
+                onChange={handleChange}
+                placeholder="https://www.youtube.com/watch?v=..."
+                aria-invalid={Boolean(videoUrlError)}
+                aria-describedby="lesson-youtube-help lesson-youtube-error"
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-50"
+              />
+              <p id="lesson-youtube-help" className="mt-1.5 text-xs text-gray-500">
+                Watch, youtu.be, embed, and Shorts links are supported. You can add more videos after creating the lesson.
+              </p>
+              {videoUrlError && <p id="lesson-youtube-error" className="mt-1 text-sm text-red-600" role="alert">{videoUrlError}</p>}
+            </div>
+
             {/* Position */}
             <div>
               <label
@@ -182,11 +248,11 @@ const CreateLesson = () => {
                 {/* Create */}
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || isCreatingVideo}
                   className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 text-sm font-semibold text-black shadow-sm transition hover:bg-yellow-500 active:scale-[0.98] *:disabled:cursor-not-allowed *:disabled:bg-gray-200 *:disabled:text-gray-400"
                 >
                   <MdSave size={19} />
-                  {isLoading ? "Creating..." : "Create Lesson"}
+                  {isLoading || isCreatingVideo ? "Creating..." : "Create Lesson"}
                 </button>
               </div>
             </div>

@@ -9,6 +9,13 @@ import {
   useGetLessonByIdQuery,
   useUpdateLessonMutation,
 } from "../../../../lib/features/lesson/lessonApi";
+import {
+  useCreateLessonVideoMutation,
+  useGetLessonVideosQuery,
+  useUpdateLessonVideoMutation,
+} from "../../../../lib/features/lesson/lessonVideoApi";
+import { getYoutubeVideoId } from "@/lib/youtube";
+import { toast } from "sonner";
 
 const EditLesson = () => {
   const searchParams = useSearchParams();
@@ -21,11 +28,21 @@ const EditLesson = () => {
     description: "",
     position: 0,
     course_id: courseId,
+    video_url: "",
   });
 
   const { data: lesson } = useGetLessonByIdQuery({ id: lessonId });
+  const { data: videos = [] } = useGetLessonVideosQuery(
+    { id: lessonId },
+    { skip: !lessonId },
+  );
   const [updateLesson, { isLoading: isUpdating }] = useUpdateLessonMutation();
-  console.log("lesson", lesson);
+  const [createLessonVideo, { isLoading: isCreatingVideo }] =
+    useCreateLessonVideoMutation();
+  const [updateLessonVideo, { isLoading: isUpdatingVideo }] =
+    useUpdateLessonVideoMutation();
+  const [videoUrlError, setVideoUrlError] = useState("");
+  const isSaving = isUpdating || isCreatingVideo || isUpdatingVideo;
 
   useEffect(() => {
     if (lesson) {
@@ -34,9 +51,21 @@ const EditLesson = () => {
         description: lesson.description || "",
         position: lesson.position || 0,
         course_id: lesson.course_id || courseId,
+        video_url: "",
       });
     }
   }, [lesson, courseId]);
+
+  useEffect(() => {
+    const existingVideoUrl = videos[0]?.video_url;
+    setFormData((previous) => ({
+      ...previous,
+      video_url:
+        existingVideoUrl && getYoutubeVideoId(existingVideoUrl)
+          ? existingVideoUrl
+          : "",
+    }));
+  }, [lessonId, videos]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,16 +73,47 @@ const EditLesson = () => {
       ...prevData,
       [name]: value,
     }));
+    if (name === "video_url") setVideoUrlError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await updateLesson({ id: lessonId, ...formData }).unwrap();
-    } catch (error) {
-      console.error("Failed to update lesson:", error);
+    if (formData.video_url && !getYoutubeVideoId(formData.video_url)) {
+      setVideoUrlError("Enter a valid YouTube video, Shorts, or share URL.");
+      return;
     }
-    console.log("Submitting form data:", formData);
+
+    try {
+      await updateLesson({
+        id: lessonId,
+        title: formData.title,
+        description: formData.description || null,
+        position: Number(formData.position),
+      }).unwrap();
+
+      if (formData.video_url) {
+        const firstVideo = videos[0];
+        const videoData = {
+          title: firstVideo?.title || formData.title,
+          description: firstVideo?.description || formData.description || null,
+          video_url: formData.video_url,
+          duration: firstVideo?.duration || 0,
+          position: firstVideo?.position || 0,
+        };
+
+        if (firstVideo) {
+          await updateLessonVideo({ id: firstVideo.id, video_url: videoData.video_url }).unwrap();
+        } else {
+          await createLessonVideo({
+            ...videoData,
+            lesson_id: Number(lessonId),
+          }).unwrap();
+        }
+      }
+      toast.success("Lesson updated.");
+    } catch (error) {
+      toast.error(error?.data?.detail || "Could not update the lesson.");
+    }
   };
 
   return (
@@ -143,7 +203,7 @@ const EditLesson = () => {
                 htmlFor="description"
                 className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
               >
-                <FiFileText size={16} className="text-gray-500" />
+                  <FiFileText size={16} className="text-gray-500" />
                 Description
               </label>
 
@@ -160,6 +220,31 @@ const EditLesson = () => {
               <p className="mt-1.5 text-xs text-gray-400">
                 Briefly describe what students will learn in this lesson.
               </p>
+            </div>
+
+            <div>
+              <label
+                htmlFor="video_url"
+                className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
+              >
+                <FiFileText size={16} className="text-gray-500" />
+                YouTube Video URL <span className="text-gray-400">(optional)</span>
+              </label>
+              <input
+                id="video_url"
+                name="video_url"
+                type="text"
+                value={formData.video_url}
+                onChange={handleChange}
+                placeholder="https://www.youtube.com/watch?v=..."
+                aria-invalid={Boolean(videoUrlError)}
+                aria-describedby="lesson-youtube-help lesson-youtube-error"
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-50"
+              />
+              <p id="lesson-youtube-help" className="mt-1.5 text-xs text-gray-500">
+                Watch, youtu.be, embed, and Shorts links are supported. Leave empty to keep existing videos unchanged.
+              </p>
+              {videoUrlError && <p id="lesson-youtube-error" className="mt-1 text-sm text-red-600" role="alert">{videoUrlError}</p>}
             </div>
 
             {/* Position */}
@@ -193,11 +278,11 @@ const EditLesson = () => {
                 {/* Create */}
                 <button
                   type="submit"
-                  disabled={isUpdating}
+                  disabled={isSaving}
                   className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 text-sm font-semibold text-black shadow-sm transition hover:bg-yellow-500 active:scale-[0.98] *:disabled:cursor-not-allowed *:disabled:bg-gray-200 *:disabled:text-gray-400"
                 >
                   <MdSave size={19} />
-                  {isUpdating ? "Updating..." : "Update Lesson"}
+                  {isSaving ? "Updating..." : "Update Lesson"}
                 </button>
               </div>
             </div>

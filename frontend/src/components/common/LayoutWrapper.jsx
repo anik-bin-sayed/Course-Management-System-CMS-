@@ -11,6 +11,7 @@ export default function LayoutWrapper({ children }) {
     pathname === "/profile" ||
     pathname === "/profile/edit" ||
     pathname === "/dashboard" ||
+    pathname.startsWith("/watch/") ||
     pathname.startsWith("/admin/manage-course");
 
   const hideFooter =
@@ -19,6 +20,7 @@ export default function LayoutWrapper({ children }) {
     pathname.startsWith("/admin/profile") ||
     pathname.startsWith("/profile") ||
     pathname === "/dashboard" ||
+    pathname.startsWith("/watch/") ||
     pathname.startsWith("/verify-email");
 
   return (

@@ -405,9 +405,9 @@ export default function StudentDashboardPage() {
                             videos.map((video, videoIndex) => (
                               <a
                                 key={video.id}
-                                href={video.video_url}
+                                href={`/watch/${lesson.id}`}
                                 target="_blank"
-                                rel="noreferrer"
+                                rel="noopener noreferrer"
                                 className="flex min-h-12 items-center gap-3 border-b border-slate-100 py-2 text-sm text-slate-700 hover:text-amber-800"
                               >
                                 <FiPlayCircle

@@ -24,6 +24,31 @@ export const lessonVideoApi = createApi({
       providesTags: ["Lesson", "LessonVideo", "Course"],
     }),
 
+    getLessonVideoById: builder.query({
+      query: ({ id }) => ({
+        url: `/lesson-videos/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["LessonVideo"],
+    }),
+
+    updateLessonVideo: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `/lesson-videos/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Lesson", "LessonVideo", "Course"],
+    }),
+
+    deleteLessonVideo: builder.mutation({
+      query: ({ id }) => ({
+        url: `/lesson-videos/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Lesson", "LessonVideo", "Course"],
+    }),
+
     getVideoCountAndDuration: builder.query({
       query: ({ id }) => ({
         url: `/lesson-videos/lesson/${id}/stats`,
@@ -62,6 +87,9 @@ export const lessonVideoApi = createApi({
 export const {
   useCreateLessonVideoMutation,
   useGetLessonVideosQuery,
+  useGetLessonVideoByIdQuery,
+  useUpdateLessonVideoMutation,
+  useDeleteLessonVideoMutation,
   useGetVideoCountAndDurationQuery,
   useDeleteLessonMutation,
   useUpdateLessonMutation,

@@ -1,10 +1,8 @@
 "use client";
 
-// react
-import { useState } from "react";
-
 // next
 import { useRouter, useSearchParams } from "@/lib/navigation";
+import { toast } from "sonner";
 
 // icons
 import {
@@ -21,21 +19,40 @@ import { GoArrowLeft } from "react-icons/go";
 import { MdOndemandVideo } from "react-icons/md";
 
 // additional import
-import WatchLessonModal from "./WatchLessonModal";
 import { useGetLessonByIdQuery } from "../../../../lib/features/lesson/lessonApi";
-import { useGetLessonVideosQuery } from "../../../../lib/features/lesson/lessonVideoApi";
+import {
+  useDeleteLessonVideoMutation,
+  useGetLessonVideosQuery,
+} from "../../../../lib/features/lesson/lessonVideoApi";
 
 const LessonInformation = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const courseId = searchParams.get("lesson_id");
+  const lessonId = searchParams.get("lesson_id");
+  const { data: lesson } = useGetLessonByIdQuery({ id: lessonId });
+  const { data: videos = [] } = useGetLessonVideosQuery({ id: lessonId });
+  const [deleteLessonVideo, { isLoading: isDeleting }] =
+    useDeleteLessonVideoMutation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openVideoForm = (videoId) => {
+    const query = new URLSearchParams({
+      tab: "create-lesson-information",
+      lesson_id: lessonId,
+    });
+    if (videoId) query.set("video_id", videoId);
+    router.push(`/admin/manage-course?${query.toString()}`);
+  };
 
-  const { data: lessons } = useGetLessonByIdQuery({ id: courseId });
-  // const { data } = useGetLessonVideosQuery({ id: courseId });
-  const { data: videos } = useGetLessonVideosQuery({ id: courseId });
+  const handleDeleteVideo = async (video) => {
+    if (!window.confirm(`Delete "${video.title}"?`)) return;
+    try {
+      await deleteLessonVideo({ id: video.id }).unwrap();
+      toast.success("Lesson video deleted.");
+    } catch (error) {
+      toast.error(error?.data?.detail || "Could not delete this video.");
+    }
+  };
 
   const formatDuration = (seconds) => {
     const hours = Math.floor(seconds / 3600);
@@ -86,22 +103,23 @@ const LessonInformation = () => {
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {lessons?.title}
+                    {lesson?.title}
                   </h1>
 
                   <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
-                    Lesson #{lessons?.id}
+                    Lesson #{lesson?.id}
                   </span>
                 </div>
 
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  {lessons?.description}
+                  {lesson?.description}
                 </p>
               </div>
             </div>
 
             <button
               type="button"
+              onClick={() => openVideoForm()}
               className="flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 text-sm font-semibold text-black transition hover:bg-yellow-500"
             >
               <FiPlus size={17} />
@@ -122,7 +140,7 @@ const LessonInformation = () => {
                     Total Videos
                   </p>
                   <p className="text-xl font-bold text-gray-900">
-                    {lessons?.video_count}
+                    {lesson?.video_count}
                   </p>
                 </div>
               </div>
@@ -140,7 +158,7 @@ const LessonInformation = () => {
                     Total Duration
                   </p>
                   <p className="text-xl font-bold text-gray-900">
-                    {lessons?.total_duration}
+                    {lesson?.total_duration}
                   </p>
                 </div>
               </div>
@@ -156,7 +174,7 @@ const LessonInformation = () => {
                 <div>
                   <p className="text-xs font-medium text-gray-500">Created</p>
                   <p className="text-sm font-bold text-gray-900">
-                    {formatDate(lessons?.created_at)}
+                    {lesson?.created_at && formatDate(lesson.created_at)}
                   </p>
                 </div>
               </div>
@@ -177,7 +195,7 @@ const LessonInformation = () => {
               </div>
 
               <span className="w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
-                {/* {videos.length} Videos */}
+                {videos.length} {videos.length === 1 ? "video" : "videos"}
               </span>
             </div>
 
@@ -227,16 +245,20 @@ const LessonInformation = () => {
 
                       {/* Actions */}
                       <div className="flex shrink-0 items-center gap-2">
-                        <button
-                          onClick={() => setIsModalOpen(true)}
+                        <a
+                          href={`/watch/${lessonId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 px-3 text-xs font-semibold text-gray-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                         >
                           <FiExternalLink size={14} />
                           <span className="hidden sm:inline">Watch</span>
-                        </button>
+                        </a>
 
                         <button
                           type="button"
+                          onClick={() => openVideoForm(video.id)}
+                          aria-label={`Edit ${video.title}`}
                           className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                         >
                           <FiEdit2 size={15} />
@@ -244,6 +266,9 @@ const LessonInformation = () => {
 
                         <button
                           type="button"
+                          onClick={() => handleDeleteVideo(video)}
+                          disabled={isDeleting}
+                          aria-label={`Delete ${video.title}`}
                           className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                         >
                           <FiTrash2 size={15} />
@@ -269,22 +294,17 @@ const LessonInformation = () => {
 
                 <button
                   type="button"
+                  onClick={() => openVideoForm()}
                   className="mt-4 inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-500"
                 >
-                  <FiPlus size={16} />s Add Video
+                  <FiPlus size={16} /> Add Video
                 </button>
               </div>
             )}
           </div>
-          <div className="mt-4 flex items-center justify-between rounded-xl border border-blue-100 bg-blue-50 px-4 py-3"></div>
         </div>
       </div>
 
-      <WatchLessonModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        videos={videos || []}
-      />
     </>
   );
 };
