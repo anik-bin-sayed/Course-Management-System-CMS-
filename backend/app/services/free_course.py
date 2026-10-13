@@ -237,11 +237,13 @@ class FreeCourseService:
         db: Session,
         page: int,
         limit: int,
+        search: str | None = None,
     ):
         return FreeCourseRepository.get_all(
             db=db,
             page=page,
             limit=limit,
+            search=search,
         )
 
     @staticmethod

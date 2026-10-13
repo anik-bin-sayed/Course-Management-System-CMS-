@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from math import ceil
@@ -19,8 +19,20 @@ class FreeCourseRepository:
         db: Session,
         page: int = 1,
         limit: int = 9,
+        search: str | None = None,
     ):
         query = db.query(FreeVideo).filter(FreeVideo.status == CourseStatus.PUBLISHED)
+
+        if search:
+            search_term = f"%{search.strip()}%"
+            query = query.filter(
+                or_(
+                    FreeVideo.title.ilike(search_term),
+                    FreeVideo.short_description.ilike(search_term),
+                    FreeVideo.description.ilike(search_term),
+                    FreeVideo.tags.ilike(search_term),
+                )
+            )
 
         total = query.count()
 

@@ -1,7 +1,6 @@
 import re
 from urllib.parse import parse_qs, urlsplit
 
-
 YOUTUBE_VIDEO_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{11}$")
 YOUTUBE_HOSTS = {"youtube.com", "www.youtube.com", "m.youtube.com"}
 
@@ -31,8 +30,7 @@ def extract_youtube_video_id(video_url: str) -> str:
             path_parts = parsed_url.path.strip("/").split("/")
             video_id = (
                 path_parts[1]
-                if len(path_parts) == 2
-                and path_parts[0] in {"embed", "shorts", "live"}
+                if len(path_parts) == 2 and path_parts[0] in {"embed", "shorts", "live"}
                 else ""
             )
     else:

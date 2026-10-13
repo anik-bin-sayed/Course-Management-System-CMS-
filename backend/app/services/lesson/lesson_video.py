@@ -122,6 +122,7 @@ class LessonVideoService:
             db=db,
             video=video,
         )
+
     @staticmethod
     def get_lesson_video_stats(
         db: Session,
@@ -151,4 +152,3 @@ class LessonVideoService:
             "total_duration": duration,
             "total_seconds": total_seconds,
         }
-

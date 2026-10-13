@@ -7,7 +7,6 @@ from app.models.lesson.lesson_video import LessonVideo
 from app.schemas.lesson.lesson_video import LessonVideoCreate, LessonVideoUpdate
 from app.utils.youtube import extract_youtube_video_id
 
-
 VIDEO_ID = "dQw4w9WgXcQ"
 CANONICAL_URL = f"https://www.youtube.com/watch?v={VIDEO_ID}"
 
@@ -15,10 +14,10 @@ CANONICAL_URL = f"https://www.youtube.com/watch?v={VIDEO_ID}"
 class YoutubeVideoUrlTests(unittest.TestCase):
     def test_create_video_normalizes_supported_youtube_urls(self):
         supported_urls = [
-        CANONICAL_URL,
-        f"https://youtu.be/{VIDEO_ID}",
-        f"https://www.youtube.com/embed/{VIDEO_ID}",
-        f"https://www.youtube.com/shorts/{VIDEO_ID}",
+            CANONICAL_URL,
+            f"https://youtu.be/{VIDEO_ID}",
+            f"https://www.youtube.com/embed/{VIDEO_ID}",
+            f"https://www.youtube.com/shorts/{VIDEO_ID}",
         ]
         for video_url in supported_urls:
             with self.subTest(video_url=video_url):
@@ -34,12 +33,12 @@ class YoutubeVideoUrlTests(unittest.TestCase):
 
     def test_create_video_rejects_invalid_youtube_urls(self):
         invalid_urls = [
-        "https://youtube.com.attacker.example/watch?v=dQw4w9WgXcQ",
-        "https://user@www.youtube.com/watch?v=dQw4w9WgXcQ",
-        "https://www.youtube.com:8443/watch?v=dQw4w9WgXcQ",
-        "https://www.youtube.com/watch?v=short",
-        "javascript://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        "https://vimeo.com/123456789",
+            "https://youtube.com.attacker.example/watch?v=dQw4w9WgXcQ",
+            "https://user@www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "https://www.youtube.com:8443/watch?v=dQw4w9WgXcQ",
+            "https://www.youtube.com/watch?v=short",
+            "javascript://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "https://vimeo.com/123456789",
         ]
         for video_url in invalid_urls:
             with self.subTest(video_url=video_url):

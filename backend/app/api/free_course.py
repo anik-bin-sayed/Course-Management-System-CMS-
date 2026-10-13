@@ -67,12 +67,14 @@ def get_free_courses(
 def get_all_free_courses(
     page: int = 1,
     limit: int = 16,
+    search: str | None = None,
     db: Session = Depends(get_db),
 ):
     return FreeCourseService.get_all(
         db=db,
         page=page,
         limit=limit,
+        search=search,
     )
 
 

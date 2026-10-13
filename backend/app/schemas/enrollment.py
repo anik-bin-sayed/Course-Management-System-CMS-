@@ -36,6 +36,8 @@ class EnrollmentCourseSummary(BaseModel):
     id: int
     title: str
     slug: str
+    short_description: str
+    short_description: str
     thumbnail: str | None = None
     price: Decimal
     discount_price: Decimal | None = None

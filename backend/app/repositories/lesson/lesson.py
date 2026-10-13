@@ -76,9 +76,7 @@ class LessonRepository:
             db.query(
                 Lesson,
                 func.count(LessonVideo.id).label("video_count"),
-                func.coalesce(func.sum(LessonVideo.duration), 0).label(
-                    "total_seconds"
-                ),
+                func.coalesce(func.sum(LessonVideo.duration), 0).label("total_seconds"),
             )
             .outerjoin(LessonVideo, LessonVideo.lesson_id == Lesson.id)
             .filter(Lesson.id == lesson_id)

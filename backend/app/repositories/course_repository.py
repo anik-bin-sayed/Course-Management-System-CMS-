@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
-from app.models.course import Course
+from app.models.course import Course, CourseStatus
 from app.models.lesson import Lesson
 
 
@@ -49,13 +49,20 @@ class CourseRepository:
         query = db.query(Course)
 
         if search:
-            query = query.filter(Course.title.ilike(f"%{search}%"))
+            search_term = f"%{search.strip()}%"
+            query = query.filter(
+                or_(
+                    Course.title.ilike(search_term),
+                    Course.short_description.ilike(search_term),
+                    Course.description.ilike(search_term),
+                )
+            )
 
         if category_id:
             query = query.filter(Course.category_id == category_id)
 
         if status:
-            query = query.filter(Course.status == status)
+            query = query.filter(Course.status == CourseStatus(status))
 
         if level:
             query = query.filter(Course.level == level)

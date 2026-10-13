@@ -185,5 +185,3 @@ def get_lesson_video_stats(
         db,
         lesson_id,
     )
-
-

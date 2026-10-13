@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from app.dependencies.database import get_db
 
 from app.models.user import User
-from app.models.course import Course
+from app.models.course import Course, CourseStatus
 
 from app.schemas.course import (
     CourseCreate,
@@ -94,7 +94,7 @@ async def create_course(
 def get_courses(
     search: str | None = Query(None),
     category_id: int | None = Query(None),
-    status: str | None = Query(None),
+    status: CourseStatus | None = Query(None),
     level: str | None = Query(None),
     language: str | None = Query(None),
     page: int = Query(1, ge=1),
