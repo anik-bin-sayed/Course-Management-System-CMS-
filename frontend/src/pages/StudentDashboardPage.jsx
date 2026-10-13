@@ -1,19 +1,11 @@
 import { useState } from "react";
-import {
-  FiBookOpen,
-  FiChevronDown,
-  FiChevronRight,
-  FiPlayCircle,
-  FiRefreshCw,
-} from "react-icons/fi";
+import { FiBookOpen, FiRefreshCw } from "react-icons/fi";
 import { useSearchParams } from "@/lib/navigation";
 import {
   useCreatePaymentMutation,
   useGetMyEnrollmentsQuery,
   useInitiatePaymentMutation,
 } from "@/lib/features/enrollment/enrollmentApi";
-import { useGetCourseLessonsQuery } from "@/lib/features/lesson/lessonApi";
-import { useGetLessonVideosQuery } from "@/lib/features/lesson/lessonVideoApi";
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import { toast } from "sonner";
 import AppLink from "@/components/common/AppLink";
@@ -45,63 +37,6 @@ function CourseCardSkeleton() {
   );
 }
 
-function ProgressBanner({ enrollment, onContinue }) {
-  if (!enrollment) return null;
-  const { course } = enrollment;
-  const progress = enrollment.progress_percentage || 0;
-
-  return (
-    <section className="mb-7 flex flex-col gap-5 border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:p-6">
-      <div className="flex min-w-0 flex-1 items-center gap-4">
-        {course.thumbnail ? (
-          <img
-            src={course.thumbnail}
-            alt=""
-            className="h-16 w-24 shrink-0 object-cover sm:h-20 sm:w-32"
-          />
-        ) : (
-          <span className="flex h-16 w-24 shrink-0 items-center justify-center bg-amber-100 text-amber-900 sm:h-20 sm:w-32">
-            <FiBookOpen size={27} aria-hidden="true" />
-          </span>
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold uppercase text-amber-800">
-            Pick up where you left off
-          </p>
-          <h2 className="mt-1 line-clamp-2 text-lg font-bold text-slate-900 sm:text-xl">
-            {course.title}
-          </h2>
-          <div className="mt-3 flex items-center gap-3">
-            <div
-              className="h-2 min-w-0 flex-1 bg-slate-100"
-              role="progressbar"
-              aria-label={`${course.title} progress`}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={progress}
-            >
-              <div
-                className="h-full bg-emerald-600"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className="shrink-0 text-xs font-semibold tabular-nums text-slate-600">
-              {progress}%
-            </span>
-          </div>
-        </div>
-      </div>
-      <button
-        type="button"
-        onClick={onContinue}
-        className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-700"
-      >
-        <FiPlayCircle aria-hidden="true" /> Continue learning
-      </button>
-    </section>
-  );
-}
-
 export default function StudentDashboardPage() {
   const searchParams = useSearchParams();
   const paymentResult = searchParams.get("payment");
@@ -112,31 +47,11 @@ export default function StudentDashboardPage() {
     refetch: refetchEnrollments,
   } = useGetMyEnrollmentsQuery();
   const { data: profile } = useGetProfileQuery();
-  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [openLessonId, setOpenLessonId] = useState(null);
-  const selectedEnrollment = enrollments.find(
-    (enrollment) => enrollment.id === selectedEnrollmentId,
+  const bannerEnrollment = enrollments.find(
+    (enrollment) => enrollment.status === "active",
   );
-  const bannerEnrollment =
-    selectedEnrollment ||
-    enrollments.find((enrollment) => enrollment.status === "active");
-  const {
-    data: lessons = [],
-    isLoading: lessonsLoading,
-    isError: lessonsError,
-    refetch: refetchLessons,
-  } = useGetCourseLessonsQuery(
-    { id: selectedEnrollment?.course_id },
-    { skip: !selectedEnrollment },
-  );
-  const {
-    data: videos = [],
-    isLoading: videosLoading,
-    isError: videosError,
-    refetch: refetchVideos,
-  } = useGetLessonVideosQuery({ id: openLessonId }, { skip: !openLessonId });
   const [createPayment] = useCreatePaymentMutation();
   const [initiatePayment, { isLoading: isStartingPayment }] =
     useInitiatePaymentMutation();
@@ -149,17 +64,6 @@ export default function StudentDashboardPage() {
     } catch (error) {
       toast.error(error?.data?.detail || "Could not start payment.");
     }
-  };
-
-  const toggleCourse = (enrollmentId) => {
-    setSelectedEnrollmentId((currentId) =>
-      currentId === enrollmentId ? null : enrollmentId,
-    );
-    setOpenLessonId(null);
-  };
-
-  const toggleLesson = (lessonId) => {
-    setOpenLessonId((currentId) => (currentId === lessonId ? null : lessonId));
   };
 
   return (
@@ -178,6 +82,7 @@ export default function StudentDashboardPage() {
           currentCourse={bannerEnrollment?.course}
           onMenuClick={() => setMobileSidebarOpen(true)}
         />
+
         <div className="mx-auto max-w-375 px-4 pb-12 pt-7 sm:px-7 lg:px-9">
           <div className="mb-6 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div>
@@ -218,7 +123,6 @@ export default function StudentDashboardPage() {
               );
             })}
           </div>
-
           {paymentResult && (
             <div
               className={`mb-6 border-l-4 px-4 py-3 text-sm ${paymentResult === "success" ? "border-emerald-600 bg-emerald-50 text-emerald-900" : "border-amber-600 bg-amber-50 text-amber-950"}`}
@@ -231,16 +135,6 @@ export default function StudentDashboardPage() {
                   : "Payment was not completed. You can retry below."}
             </div>
           )}
-
-          {!isLoading && !isError && (
-            <ProgressBanner
-              enrollment={bannerEnrollment}
-              onContinue={() =>
-                bannerEnrollment && toggleCourse(bannerEnrollment.id)
-              }
-            />
-          )}
-
           {isError ? (
             <section
               className="border border-rose-200 bg-white px-6 py-12 text-center"
@@ -296,141 +190,11 @@ export default function StudentDashboardPage() {
                   key={enrollment.id}
                   enrollment={enrollment}
                   index={index}
-                  selected={selectedEnrollmentId === enrollment.id}
-                  onContinue={() => toggleCourse(enrollment.id)}
                   onPay={() => continuePayment(enrollment.id)}
                   paymentLoading={isStartingPayment}
                 />
               ))}
             </div>
-          )}
-
-          {selectedEnrollment && (
-            <section
-              className="mt-8 border border-slate-200 bg-white"
-              aria-labelledby="study-plan-title"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 sm:px-6">
-                <div>
-                  <p className="text-xs font-semibold uppercase text-amber-800">
-                    Study plan
-                  </p>
-                  <h2
-                    id="study-plan-title"
-                    className="mt-1 text-lg font-bold text-slate-950"
-                  >
-                    {selectedEnrollment.course.title}
-                  </h2>
-                </div>
-                <span className="text-xs text-slate-500">
-                  {selectedEnrollment.course.category?.name ||
-                    "Course curriculum"}
-                </span>
-              </div>
-
-              {lessonsError ? (
-                <div className="px-5 py-8 text-center">
-                  <p className="text-sm text-rose-700">
-                    Lessons could not be loaded.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => refetchLessons()}
-                    className="mt-3 text-sm font-semibold text-slate-900 underline"
-                  >
-                    Retry
-                  </button>
-                </div>
-              ) : lessonsLoading ? (
-                <div className="space-y-3 p-5" aria-label="Loading lessons">
-                  <div className="h-12 animate-pulse bg-slate-100" />
-                  <div className="h-12 animate-pulse bg-slate-100" />
-                  <div className="h-12 animate-pulse bg-slate-100" />
-                </div>
-              ) : lessons.length === 0 ? (
-                <p className="px-5 py-8 text-sm text-slate-500">
-                  Lessons are not available yet.
-                </p>
-              ) : (
-                <div className="divide-y divide-slate-100 px-5 sm:px-6">
-                  {lessons.map((lesson, index) => (
-                    <div key={lesson.id}>
-                      <button
-                        type="button"
-                        onClick={() => toggleLesson(lesson.id)}
-                        aria-expanded={openLessonId === lesson.id}
-                        className="flex min-h-17 w-full items-center gap-3 text-left"
-                      >
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-slate-100 text-sm font-semibold text-slate-600">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block font-semibold text-slate-800">
-                            {lesson.title}
-                          </span>
-                          <span className="mt-1 block text-xs text-slate-500">
-                            {lesson.video_count} videos ·{" "}
-                            {lesson.total_duration}
-                          </span>
-                        </span>
-                        {openLessonId === lesson.id ? (
-                          <FiChevronDown />
-                        ) : (
-                          <FiChevronRight />
-                        )}
-                      </button>
-
-                      {openLessonId === lesson.id && (
-                        <div className="mb-4 ml-12 border-l-2 border-amber-300 pl-4">
-                          {videosError ? (
-                            <div className="py-3 text-sm text-rose-700">
-                              Videos could not be loaded.{" "}
-                              <button
-                                type="button"
-                                onClick={() => refetchVideos()}
-                                className="font-semibold underline"
-                              >
-                                Retry
-                              </button>
-                            </div>
-                          ) : videosLoading ? (
-                            <p className="py-3 text-sm text-slate-500">
-                              Loading videos...
-                            </p>
-                          ) : videos.length === 0 ? (
-                            <p className="py-3 text-sm text-slate-500">
-                              No videos in this lesson yet.
-                            </p>
-                          ) : (
-                            videos.map((video, videoIndex) => (
-                              <a
-                                key={video.id}
-                                href={`/watch/${lesson.id}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex min-h-12 items-center gap-3 border-b border-slate-100 py-2 text-sm text-slate-700 hover:text-amber-800"
-                              >
-                                <FiPlayCircle
-                                  className="shrink-0"
-                                  aria-hidden="true"
-                                />
-                                <span className="min-w-0 flex-1 truncate">
-                                  {video.title}
-                                </span>
-                                <span className="shrink-0 text-xs text-slate-500">
-                                  Video {videoIndex + 1} ·{" "}
-                                  {Math.floor(video.duration / 60)} min
-                                </span>
-                              </a>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
           )}
         </div>
       </div>

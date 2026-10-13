@@ -1,5 +1,6 @@
 import { FiBookOpen, FiCheckCircle, FiClock, FiPlay } from "react-icons/fi";
 import AppImage from "@/components/common/AppImage";
+import AppLink from "@/components/common/AppLink";
 
 function formatDate(value) {
   if (!value) return null;
@@ -10,14 +11,7 @@ function formatDate(value) {
   });
 }
 
-export default function EnrolledCourseCard({
-  enrollment,
-  index,
-  selected,
-  onContinue,
-  onPay,
-  paymentLoading,
-}) {
+const EnrolledCourseCard = ({ enrollment, index, onPay, paymentLoading }) => {
   const { course } = enrollment;
   const progress = Math.max(
     0,
@@ -29,34 +23,28 @@ export default function EnrolledCourseCard({
 
   return (
     <article
-      className={`flex h-full flex-col overflow-hidden border bg-white transition-colors ${
-        selected
-          ? "border-amber-500 ring-1 ring-amber-500"
-          : "border-slate-200 hover:border-slate-300"
-      }`}
+      className={`flex h-full flex-col overflow-hidden border bg-white transition-colors rounded-lg ${"border-slate-200 hover:border-slate-300"}`}
     >
       <div className="relative aspect-16/8 overflow-hidden bg-slate-100">
-        {course.thumbnail ? (
-          <AppImage
-            src={course.thumbnail}
-            alt={course.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-slate-400">
-            <FiBookOpen size={34} aria-hidden="true" />
-          </div>
-        )}
-        <span className="absolute left-3 top-3 bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-700">
-          Course {String(index + 1).padStart(2, "0")}
-        </span>
-        {isCompleted && (
-          <span className="absolute right-3 top-3 inline-flex items-center gap-1 bg-emerald-700 px-2.5 py-1 text-xs font-semibold text-white">
-            <FiCheckCircle aria-hidden="true" /> Completed
-          </span>
-        )}
+        {/* thumbnail */}
+        <AppLink
+          href={`/dashboard/${encodeURIComponent(course.slug)}`}
+          className="inline-flex min-h-10 shrink-0 items-center gap-2 bg-slate-900 px-3.5 text-xs font-semibold text-white hover:bg-slate-700 sm:px-4 sm:text-sm"
+        >
+          {course.thumbnail ? (
+            <AppImage
+              src={course.thumbnail}
+              alt={course.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-slate-400">
+              <FiBookOpen size={34} aria-hidden="true" />
+            </div>
+          )}
+        </AppLink>
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
@@ -68,6 +56,7 @@ export default function EnrolledCourseCard({
         <h2 className="mt-2 min-h-12 text-base font-bold leading-6 text-slate-900">
           {course.title}
         </h2>
+
         <p className="mt-1 truncate text-xs text-slate-500">
           {course.instructor?.name
             ? `Instructor: ${course.instructor.name}`
@@ -104,26 +93,14 @@ export default function EnrolledCourseCard({
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-3 pt-5">
-          <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
-            {isCompleted ? (
-              <FiCheckCircle className="text-emerald-700" />
-            ) : (
-              <FiClock />
-            )}
-            {isCompleted
-              ? "Course completed"
-              : `Enrolled ${formatDate(enrollment.enrolled_at) || ""}`}
-          </span>
           {canLearn ? (
-            <button
-              type="button"
-              onClick={onContinue}
-              aria-expanded={selected}
+            <AppLink
+              href={`/dashboard/${encodeURIComponent(course.slug)}`}
               className="inline-flex min-h-10 shrink-0 items-center gap-2 bg-slate-900 px-3.5 text-xs font-semibold text-white hover:bg-slate-700 sm:px-4 sm:text-sm"
             >
               <FiPlay aria-hidden="true" />
-              {selected ? "Close study plan" : "Continue learning"}
-            </button>
+              Continue learning
+            </AppLink>
           ) : (
             <button
               type="button"
@@ -138,4 +115,6 @@ export default function EnrolledCourseCard({
       </div>
     </article>
   );
-}
+};
+
+export default EnrolledCourseCard;

@@ -88,7 +88,10 @@ const AddLessonInfo = () => {
         await updateLessonVideo({ id: videoId, ...payload }).unwrap();
         toast.success("Lesson video updated.");
       } else {
-        await createLessonVideo({ ...payload, lesson_id: Number(lessonId) }).unwrap();
+        await createLessonVideo({
+          ...payload,
+          lesson_id: Number(lessonId),
+        }).unwrap();
         toast.success("Lesson video added.");
         setFormData((previous) => ({
           ...previous,
@@ -137,7 +140,9 @@ const AddLessonInfo = () => {
               </h1>
 
               <p className="mt-1 text-sm text-gray-500">
-                {isEditing ? "Update the video details" : "Add a YouTube video to this lesson"}
+                {isEditing
+                  ? "Update the video details"
+                  : "Add a YouTube video to this lesson"}
               </p>
             </div>
           </div>
@@ -219,9 +224,18 @@ const AddLessonInfo = () => {
               />
 
               <p id="youtube-url-help" className="mt-2 text-xs text-gray-500">
-                Supported: youtube.com/watch, youtu.be, /embed/, and /shorts/ URLs.
+                Supported: youtube.com/watch, youtu.be, /embed/, and /shorts/
+                URLs.
               </p>
-              {videoUrlError && <p id="youtube-url-error" className="mt-1 text-sm text-red-600" role="alert">{videoUrlError}</p>}
+              {videoUrlError && (
+                <p
+                  id="youtube-url-error"
+                  className="mt-1 text-sm text-red-600"
+                  role="alert"
+                >
+                  {videoUrlError}
+                </p>
+              )}
             </div>
 
             {/* Duration + Position */}
@@ -309,7 +323,13 @@ const AddLessonInfo = () => {
               ) : (
                 <FiSave size={18} />
               )}
-              {isLoadingVideo ? "Loading video..." : isSaving ? "Saving..." : isEditing ? "Update Video" : "Save Video"}
+              {isLoadingVideo
+                ? "Loading video..."
+                : isSaving
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Video"
+                    : "Save Video"}
             </button>
           </div>
         </form>

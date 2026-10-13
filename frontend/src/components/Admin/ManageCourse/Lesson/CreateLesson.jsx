@@ -198,7 +198,8 @@ const CreateLesson = () => {
                 className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
               >
                 <FiFileText size={16} className="text-gray-500" />
-                YouTube Video URL <span className="text-gray-400">(optional)</span>
+                YouTube Video URL{" "}
+                <span className="text-gray-400">(optional)</span>
               </label>
               <input
                 id="video_url"
@@ -211,10 +212,22 @@ const CreateLesson = () => {
                 aria-describedby="lesson-youtube-help lesson-youtube-error"
                 className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-50"
               />
-              <p id="lesson-youtube-help" className="mt-1.5 text-xs text-gray-500">
-                Watch, youtu.be, embed, and Shorts links are supported. You can add more videos after creating the lesson.
+              <p
+                id="lesson-youtube-help"
+                className="mt-1.5 text-xs text-gray-500"
+              >
+                Watch, youtu.be, embed, and Shorts links are supported. You can
+                add more videos after creating the lesson.
               </p>
-              {videoUrlError && <p id="lesson-youtube-error" className="mt-1 text-sm text-red-600" role="alert">{videoUrlError}</p>}
+              {videoUrlError && (
+                <p
+                  id="lesson-youtube-error"
+                  className="mt-1 text-sm text-red-600"
+                  role="alert"
+                >
+                  {videoUrlError}
+                </p>
+              )}
             </div>
 
             {/* Position */}
@@ -252,7 +265,9 @@ const CreateLesson = () => {
                   className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 text-sm font-semibold text-black shadow-sm transition hover:bg-yellow-500 active:scale-[0.98] *:disabled:cursor-not-allowed *:disabled:bg-gray-200 *:disabled:text-gray-400"
                 >
                   <MdSave size={19} />
-                  {isLoading || isCreatingVideo ? "Creating..." : "Create Lesson"}
+                  {isLoading || isCreatingVideo
+                    ? "Creating..."
+                    : "Create Lesson"}
                 </button>
               </div>
             </div>

@@ -304,7 +304,6 @@ const LessonInformation = () => {
           </div>
         </div>
       </div>
-
     </>
   );
 };

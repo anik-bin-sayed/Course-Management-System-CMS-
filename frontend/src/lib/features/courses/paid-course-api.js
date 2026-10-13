@@ -43,7 +43,7 @@ export const paidCourseApi = createApi({
 
     getCourseBySlug: builder.query({
       query: (slug) => ({
-        url: `/courses/${slug}`,
+        url: `/courses/${encodeURIComponent(slug)}/`,
         method: "GET",
       }),
       providesTags: ["Course"],

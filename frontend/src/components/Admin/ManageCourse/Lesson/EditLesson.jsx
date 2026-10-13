@@ -102,7 +102,10 @@ const EditLesson = () => {
         };
 
         if (firstVideo) {
-          await updateLessonVideo({ id: firstVideo.id, video_url: videoData.video_url }).unwrap();
+          await updateLessonVideo({
+            id: firstVideo.id,
+            video_url: videoData.video_url,
+          }).unwrap();
         } else {
           await createLessonVideo({
             ...videoData,
@@ -203,7 +206,7 @@ const EditLesson = () => {
                 htmlFor="description"
                 className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
               >
-                  <FiFileText size={16} className="text-gray-500" />
+                <FiFileText size={16} className="text-gray-500" />
                 Description
               </label>
 
@@ -228,7 +231,8 @@ const EditLesson = () => {
                 className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
               >
                 <FiFileText size={16} className="text-gray-500" />
-                YouTube Video URL <span className="text-gray-400">(optional)</span>
+                YouTube Video URL{" "}
+                <span className="text-gray-400">(optional)</span>
               </label>
               <input
                 id="video_url"
@@ -241,10 +245,22 @@ const EditLesson = () => {
                 aria-describedby="lesson-youtube-help lesson-youtube-error"
                 className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-50"
               />
-              <p id="lesson-youtube-help" className="mt-1.5 text-xs text-gray-500">
-                Watch, youtu.be, embed, and Shorts links are supported. Leave empty to keep existing videos unchanged.
+              <p
+                id="lesson-youtube-help"
+                className="mt-1.5 text-xs text-gray-500"
+              >
+                Watch, youtu.be, embed, and Shorts links are supported. Leave
+                empty to keep existing videos unchanged.
               </p>
-              {videoUrlError && <p id="lesson-youtube-error" className="mt-1 text-sm text-red-600" role="alert">{videoUrlError}</p>}
+              {videoUrlError && (
+                <p
+                  id="lesson-youtube-error"
+                  className="mt-1 text-sm text-red-600"
+                  role="alert"
+                >
+                  {videoUrlError}
+                </p>
+              )}
             </div>
 
             {/* Position */}

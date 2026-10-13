@@ -8,6 +8,7 @@ import LessonWatchPage from "@/pages/LessonWatchPage";
 import ProfileEditPage from "@/pages/ProfileEditPage";
 import ProfilePage from "@/pages/ProfilePage";
 import SearchPage from "@/pages/SearchPage";
+import StudentCoursePage from "@/pages/StudentCoursePage";
 import StudentDashboardPage from "@/pages/StudentDashboardPage";
 import UpcomingCourseDetailsPage from "@/pages/UpcomingCourseDetailsPage";
 import UpcomingCoursesPage from "@/pages/UpcomingCoursesPage";
@@ -23,6 +24,22 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/search" element={<SearchPage />} />
+      <Route
+        path="/dashboard/:courseSlug/:lessonId"
+        element={
+          <ProtectedRoute>
+            <StudentCoursePage showLesson />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/:courseSlug"
+        element={
+          <ProtectedRoute>
+            <StudentCoursePage />
+          </ProtectedRoute>
+        }
+      />
       <Route element={<PublicRoute />}>
         <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Route>

@@ -15,7 +15,8 @@ export function getYoutubeVideoId(value) {
       url.username ||
       url.password ||
       url.port
-    ) return null;
+    )
+      return null;
 
     let videoId = "";
     if (hostname === "youtu.be") {
