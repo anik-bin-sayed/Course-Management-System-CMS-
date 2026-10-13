@@ -1,10 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from contextlib import asynccontextmanager
+
 from app.api.routes import api_router
+from app.core.redis import redis_client
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await redis_client.ping()
+    yield
+    await redis_client.aclose()
+
 
 # initialize app
-app = FastAPI(title="Course Management API")
+app = FastAPI(title="Course Management API", lifespan=lifespan)
 
 # cors
 app.add_middleware(

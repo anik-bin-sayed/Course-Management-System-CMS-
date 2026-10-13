@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "http://localhost:3000"
     BACKEND_URL: str = "http://localhost:8000"
 
+    REDIS_URL: str
+
     @property
     def SSLCOMMERZ_INIT_URL(self) -> str:
         if self.SSLCOMMERZ_IS_SANDBOX:
