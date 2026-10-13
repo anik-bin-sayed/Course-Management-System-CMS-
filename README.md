@@ -24,30 +24,32 @@ A modern full-stack web application built with **FastAPI**, **PostgreSQL**, **Ne
 ## 🛠️ Tech Stack
 
 ### Backend
-| Technology | Purpose |
-|---|---|
-| [FastAPI](https://fastapi.tiangolo.com/) | High-performance async Python web framework |
-| [PostgreSQL](https://www.postgresql.org/) | Relational database |
-| [SQLAlchemy](https://www.sqlalchemy.org/) | ORM for database models |
-| [Alembic](https://alembic.sqlalchemy.org/) | Database migrations |
-| [Pydantic / Pydantic Settings](https://docs.pydantic.dev/) | Data validation & settings management |
-| [python-jose](https://github.com/mpdavis/python-jose) | JWT encoding/decoding |
-| [passlib / bcrypt](https://passlib.readthedocs.io/) | Password hashing |
-| [FastAPI-Mail](https://sabuhish.github.io/fastapi-mail/) | Transactional emails |
-| [Uvicorn](https://www.uvicorn.org/) | ASGI server |
+
+| Technology                                                 | Purpose                                     |
+| ---------------------------------------------------------- | ------------------------------------------- |
+| [FastAPI](https://fastapi.tiangolo.com/)                   | High-performance async Python web framework |
+| [PostgreSQL](https://www.postgresql.org/)                  | Relational database                         |
+| [SQLAlchemy](https://www.sqlalchemy.org/)                  | ORM for database models                     |
+| [Alembic](https://alembic.sqlalchemy.org/)                 | Database migrations                         |
+| [Pydantic / Pydantic Settings](https://docs.pydantic.dev/) | Data validation & settings management       |
+| [python-jose](https://github.com/mpdavis/python-jose)      | JWT encoding/decoding                       |
+| [passlib / bcrypt](https://passlib.readthedocs.io/)        | Password hashing                            |
+| [FastAPI-Mail](https://sabuhish.github.io/fastapi-mail/)   | Transactional emails                        |
+| [Uvicorn](https://www.uvicorn.org/)                        | ASGI server                                 |
 
 ### Frontend
-| Technology | Purpose |
-|---|---|
-| [Next.js 16](https://nextjs.org/) | React framework (App Router) |
-| [React 19](https://react.dev/) | UI library |
-| [TypeScript](https://www.typescriptlang.org/) | Static typing |
-| [Tailwind CSS 4](https://tailwindcss.com/) | Utility-first styling |
-| [Redux Toolkit](https://redux-toolkit.js.org/) | State management |
-| [Framer Motion](https://www.framer.com/motion/) | Animations |
-| [React Select](https://react-select.com/) | Advanced select inputs |
-| [Sonner](https://sonner.emilkowal.ski/) | Toast notifications |
-| [jwt-decode](https://github.com/auth0/jwt-decode) | Client-side token decoding |
+
+| Technology                                        | Purpose                      |
+| ------------------------------------------------- | ---------------------------- |
+| [Next.js 16](https://nextjs.org/)                 | React framework (App Router) |
+| [React 19](https://react.dev/)                    | UI library                   |
+| [TypeScript](https://www.typescriptlang.org/)     | Static typing                |
+| [Tailwind CSS 4](https://tailwindcss.com/)        | Utility-first styling        |
+| [Redux Toolkit](https://redux-toolkit.js.org/)    | State management             |
+| [Framer Motion](https://www.framer.com/motion/)   | Animations                   |
+| [React Select](https://react-select.com/)         | Advanced select inputs       |
+| [Sonner](https://sonner.emilkowal.ski/)           | Toast notifications          |
+| [jwt-decode](https://github.com/auth0/jwt-decode) | Client-side token decoding   |
 
 ---
 
