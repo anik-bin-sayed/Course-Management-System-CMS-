@@ -124,6 +124,19 @@ const CourseDetails = ({ course }) => {
                   <span className="capitalize">{course?.level}</span>
                 </div>
               </div>
+
+              <div className="mt-6">
+                <p className="text-xs font-semibold uppercase text-gray-400">
+                  Instructors
+                </p>
+                <p className="mt-1 text-sm text-white">
+                  {course?.instructors?.length
+                    ? course.instructors
+                        .map((instructor) => instructor.name)
+                        .join(", ")
+                    : "To be announced"}
+                </p>
+              </div>
             </div>
 
             {/* Course Thumbnail */}

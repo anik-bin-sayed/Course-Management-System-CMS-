@@ -41,12 +41,11 @@ def get_course_lessons(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if current_user.role not in {"admin", "instructor"}:
-        CourseAccessService.check_access(
-            db=db,
-            student_id=current_user.id,
-            course_id=course_id,
-        )
+    CourseAccessService.require_course_read_access(
+        db=db,
+        current_user=current_user,
+        course_id=course_id,
+    )
 
     return LessonService.get_course_lessons(
         db,
@@ -92,12 +91,11 @@ def get_lesson_by_id(
             lesson_id=lesson_id,
         )
 
-        if current_user.role not in {"admin", "instructor"}:
-            CourseAccessService.check_access(
-                db=db,
-                student_id=current_user.id,
-                course_id=lesson["course_id"],
-            )
+        CourseAccessService.require_course_read_access(
+            db=db,
+            current_user=current_user,
+            course_id=lesson["course_id"],
+        )
 
         return lesson
 
@@ -116,6 +114,7 @@ def update_lesson(
     lesson_id: int,
     data: LessonUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_instructor_required),
 ):
 
     try:
@@ -123,6 +122,7 @@ def update_lesson(
             db=db,
             lesson_id=lesson_id,
             data=data,
+            current_user=current_user,
         )
 
     except ValueError as error:

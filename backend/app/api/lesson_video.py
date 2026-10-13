@@ -70,12 +70,11 @@ def get_video_by_id(
             video_id=video_id,
         )
 
-        if current_user.role not in {"admin", "instructor"}:
-            CourseAccessService.check_access(
-                db=db,
-                student_id=current_user.id,
-                course_id=video.lesson.course_id,
-            )
+        CourseAccessService.require_course_read_access(
+            db=db,
+            current_user=current_user,
+            course_id=video.lesson.course_id,
+        )
 
         return video
 
@@ -99,12 +98,11 @@ def get_lesson_videos(
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
-    if current_user.role not in {"admin", "instructor"}:
-        CourseAccessService.check_access(
-            db=db,
-            student_id=current_user.id,
-            course_id=lesson.course_id,
-        )
+    CourseAccessService.require_course_read_access(
+        db=db,
+        current_user=current_user,
+        course_id=lesson.course_id,
+    )
 
     return LessonVideoService.get_lesson_videos(
         db=db,
@@ -174,12 +172,11 @@ def get_lesson_video_stats(
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
-    if current_user.role not in {"admin", "instructor"}:
-        CourseAccessService.check_access(
-            db=db,
-            student_id=current_user.id,
-            course_id=lesson.course_id,
-        )
+    CourseAccessService.require_course_read_access(
+        db=db,
+        current_user=current_user,
+        course_id=lesson.course_id,
+    )
 
     return LessonVideoService.get_lesson_video_stats(
         db,

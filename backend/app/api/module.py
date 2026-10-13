@@ -34,4 +34,5 @@ def create_module(
         db=db,
         course_id=course_id,
         data=data,
+        current_user=current_user,
     )

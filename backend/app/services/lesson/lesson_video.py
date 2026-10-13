@@ -12,7 +12,7 @@ from app.repositories.lesson.lesson_video import (
 
 from app.models.user import User
 
-from app.core.dependencies import admin_instructor_required
+from app.services.course_access import CourseAccessService
 
 from app.schemas.lesson.lesson_video import (
     LessonVideoCreate,
@@ -23,15 +23,16 @@ from app.schemas.lesson.lesson_video import (
 class LessonVideoService:
 
     @staticmethod
-    def check_manage_access(lesson: Lesson, current_user: User) -> None:
-        if current_user.role == "admin":
-            return
-
-        if lesson.course.instructor_id != current_user.id:
-            raise HTTPException(
-                status_code=403,
-                detail="You are not allowed to manage videos for this course",
-            )
+    def check_manage_access(
+        db: Session,
+        lesson: Lesson,
+        current_user: User,
+    ) -> None:
+        CourseAccessService.require_instructor_assignment(
+            db=db,
+            current_user=current_user,
+            course_id=lesson.course_id,
+        )
 
     @staticmethod
     def create_video(
@@ -51,7 +52,7 @@ class LessonVideoService:
         if not lesson:
             raise ValueError("Lesson not found")
 
-        LessonVideoService.check_manage_access(lesson, current_user)
+        LessonVideoService.check_manage_access(db, lesson, current_user)
 
         return LessonVideoRepository.create(
             db=db,
@@ -97,7 +98,7 @@ class LessonVideoService:
             db=db,
             video_id=video_id,
         )
-        LessonVideoService.check_manage_access(video.lesson, current_user)
+        LessonVideoService.check_manage_access(db, video.lesson, current_user)
 
         return LessonVideoRepository.update(
             db=db,
@@ -116,7 +117,7 @@ class LessonVideoService:
             db=db,
             video_id=video_id,
         )
-        LessonVideoService.check_manage_access(video.lesson, current_user)
+        LessonVideoService.check_manage_access(db, video.lesson, current_user)
 
         LessonVideoRepository.delete(
             db=db,

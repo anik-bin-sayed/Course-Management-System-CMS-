@@ -29,6 +29,26 @@ class CourseCreate(BaseModel):
     end_date: datetime | None = None
 
     category_id: int | None = None
+    instructor_ids: list[str] = Field(default_factory=list)
+
+
+class CourseInstructorSummary(BaseModel):
+    id: str
+    name: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class InstructorOption(BaseModel):
+    id: str
+    name: str
+    email: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CourseInstructorUpdate(BaseModel):
+    instructor_ids: list[str] = Field(default_factory=list)
 
 
 class CategoryResponse(BaseModel):
@@ -63,6 +83,8 @@ class CourseResponse(BaseModel):
     level: CourseLevel
     language: CourseLanguage
     status: CourseStatus
+
+    instructors: list[CourseInstructorSummary] = Field(default_factory=list)
 
     total_lessons: int = 0
 

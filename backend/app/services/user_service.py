@@ -226,6 +226,9 @@ class UserService:
                 detail="Invalid role. Allowed roles: student, instructor, admin",
             )
 
+        if role != "instructor":
+            user.assigned_courses.clear()
+
         return UserRepository.update_role(
             db=db,
             user=user,

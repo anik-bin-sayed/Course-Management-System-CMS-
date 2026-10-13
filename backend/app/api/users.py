@@ -7,6 +7,7 @@ from app.models.user import User
 from app.repositories.user_repository import UserRepository
 
 from app.schemas.user import UserResponse, UserRoleUpdate
+from app.schemas.course import InstructorOption
 
 from app.services.user_service import UserService
 
@@ -14,6 +15,22 @@ router = APIRouter(
     prefix="/users",
     tags=["Users"],
 )
+
+
+@router.get("/instructors", response_model=list[InstructorOption])
+def get_instructors_for_assignment(
+    search: str | None = Query(None),
+    limit: int = Query(500, ge=1, le=1000),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    query = db.query(User).filter(User.role == "instructor")
+    if search:
+        search_term = f"%{search.strip()}%"
+        query = query.filter(
+            User.name.ilike(search_term) | User.email.ilike(search_term)
+        )
+    return query.order_by(User.name.asc()).limit(limit).all()
 
 
 @router.get("")

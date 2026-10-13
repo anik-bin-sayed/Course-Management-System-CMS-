@@ -423,6 +423,17 @@ const StudentCoursePage = ({ showLesson = false }) => {
             </span>
           </button>
 
+          <div className="border-t border-slate-100 px-5 py-3 sm:px-6">
+            <p className="text-xs font-semibold text-slate-500">Instructors</p>
+            <p className="mt-1 text-sm text-slate-700">
+              {course.instructors?.length
+                ? course.instructors
+                    .map((instructor) => instructor.name)
+                    .join(", ")
+                : "To be announced"}
+            </p>
+          </div>
+
           {lessonsLoading ? (
             <div className="grid grid-cols-1 gap-4 border-t border-slate-100 bg-slate-50/50 p-4 sm:grid-cols-2 sm:p-5">
               {[1, 2, 3, 4].map((item) => (

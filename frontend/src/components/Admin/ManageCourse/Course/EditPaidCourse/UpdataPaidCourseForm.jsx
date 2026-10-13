@@ -8,8 +8,15 @@ import { IoMdArrowBack } from "react-icons/io";
 
 import { useGetAllCategoryQuery } from "../../../../../lib/features/category/category-api";
 import { useRouter } from "@/lib/navigation";
-import { useUpdateCourseMutation } from "../../../../../lib/features/courses/paid-course-api";
+import { useGetProfileQuery } from "../../../../../lib/features/auth/authApi";
+import {
+  useGetAssignableInstructorsQuery,
+  useReplaceCourseInstructorsMutation,
+  useUpdateCourseMutation,
+} from "../../../../../lib/features/courses/paid-course-api";
 import CreateCategoryModal from "../../category/CategoryModal/CreateCategory";
+import InstructorMultiSelect from "../InstructorMultiSelect";
+import { toast } from "sonner";
 
 const initialState = {
   title: "",
@@ -32,11 +39,25 @@ const initialState = {
 const UpdataPaidCourseForm = ({ courseData }) => {
   const [formData, setFormData] = useState(initialState);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
+  const [instructorIds, setInstructorIds] = useState([]);
+  const [submitError, setSubmitError] = useState("");
 
   // redux
   const { data: categories, isLoading } = useGetAllCategoryQuery();
   const [updateCourse, { isLoading: Updating }] = useUpdateCourseMutation();
+  const [replaceCourseInstructors, { isLoading: UpdatingInstructors }] =
+    useReplaceCourseInstructorsMutation();
+  const { data: profileData } = useGetProfileQuery();
+  const isAdmin = profileData?.role === "admin";
+  const {
+    data: instructors = [],
+    isLoading: loadingInstructors,
+    isError: instructorsError,
+  } = useGetAssignableInstructorsQuery(undefined, {
+    skip: !isAdmin,
+    refetchOnMountOrArgChange: true,
+  });
+  const isSubmitting = Updating || UpdatingInstructors;
 
   const router = useRouter();
 
@@ -59,6 +80,7 @@ const UpdataPaidCourseForm = ({ courseData }) => {
         end_date: courseData.end_date || "",
         thumbnail: courseData.thumbnail || null,
       });
+      setInstructorIds(courseData.instructors?.map((item) => item.id) || []);
     }
   }, [courseData]);
 
@@ -99,13 +121,56 @@ const UpdataPaidCourseForm = ({ courseData }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setCreating(true);
-    console.log("Form Data (without submit):", formData);
-    setTimeout(() => {
-      setCreating(false);
-    }, 2000);
+    setSubmitError("");
+    const data = new FormData();
+    const updateFields = [
+      "title",
+      "short_description",
+      "description",
+      "price",
+      "discount_price",
+      "level",
+      "language",
+      "course_type",
+      "status",
+      "category_id",
+      "start_date",
+      "end_date",
+    ];
+    updateFields.forEach((field) => {
+      const value = formData[field];
+      if (value !== undefined && value !== null && value !== "") {
+        data.append(field, value);
+      }
+    });
+    if (formData.thumbnail instanceof File) {
+      data.append("thumbnail", formData.thumbnail);
+    }
+
+    try {
+      await updateCourse({ id: courseData.id, data }).unwrap();
+      if (isAdmin) {
+        try {
+          await replaceCourseInstructors({
+            courseId: courseData.id,
+            instructorIds,
+          }).unwrap();
+        } catch (error) {
+          setSubmitError(
+            `Course details were saved, but instructor assignments were not: ${error?.data?.detail || "Please retry."}`,
+          );
+          return;
+        }
+      }
+      toast.success("Course updated successfully.");
+      router.back();
+    } catch (error) {
+      setSubmitError(
+        error?.data?.detail || "Unable to update the course. Please try again.",
+      );
+    }
   };
 
   const handleBack = () => {
@@ -117,7 +182,7 @@ const UpdataPaidCourseForm = ({ courseData }) => {
       <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
         <div className="mx-auto max-w-5xl">
           <button
-            disabled={creating}
+            disabled={isSubmitting}
             className="cursor-pointer py-2 px-4 mb-4 rounded bg-gray-300 flex items-center gap-2 disabled:cursor-not-allowed"
             onClick={handleBack}
           >
@@ -434,6 +499,18 @@ const UpdataPaidCourseForm = ({ courseData }) => {
               </div>
             </div>
 
+            {isAdmin && (
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <InstructorMultiSelect
+                  instructors={instructors}
+                  selectedIds={instructorIds}
+                  onChange={setInstructorIds}
+                  isLoading={loadingInstructors}
+                  isError={instructorsError}
+                />
+              </div>
+            )}
+
             {/* Thumbnail */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-6">
@@ -493,8 +570,8 @@ const UpdataPaidCourseForm = ({ courseData }) => {
             {/* Actions */}
             <div className="flex items-center justify-end gap-3 pb-8">
               <button
-                type="submit"
-                disabled={creating}
+                type="button"
+                disabled={isSubmitting}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-yellow-400 px-7 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-yellow-100 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-yellow-200 disabled:opacity-70"
                 onClick={handleBack}
               >
@@ -502,10 +579,10 @@ const UpdataPaidCourseForm = ({ courseData }) => {
               </button>
               <button
                 type="submit"
-                disabled={creating}
+                disabled={isSubmitting}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-yellow-200 disabled:opacity-70"
               >
-                {creating ? (
+                {isSubmitting ? (
                   <>
                     <span
                       className="h-5 w-5 animate-spin rounded-full border-2 border-black/30 border-t-black"
@@ -518,6 +595,11 @@ const UpdataPaidCourseForm = ({ courseData }) => {
                 )}
               </button>
             </div>
+            {submitError && (
+              <p className="pb-6 text-sm text-red-600" role="alert">
+                {submitError}
+              </p>
+            )}
           </form>
         </div>
       </div>

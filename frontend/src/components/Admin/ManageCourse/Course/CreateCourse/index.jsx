@@ -9,7 +9,11 @@ import { LuGalleryThumbnails } from "react-icons/lu";
 import CreateCategoryModal from "../../category/CategoryModal/CreateCategory";
 
 import { useGetAllCategoryQuery } from "../../../../../lib/features/category/category-api";
-import { useCreateCourseMutation } from "../../../../../lib/features/courses/paid-course-api";
+import {
+  useCreateCourseMutation,
+  useGetAssignableInstructorsQuery,
+} from "../../../../../lib/features/courses/paid-course-api";
+import InstructorMultiSelect from "../InstructorMultiSelect";
 
 const initialState = {
   title: "",
@@ -32,8 +36,18 @@ const initialState = {
 const CreateCourse = () => {
   const [formData, setFormData] = useState(initialState);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [instructorIds, setInstructorIds] = useState([]);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState("");
 
   const { data: categories, isLoading } = useGetAllCategoryQuery();
+  const {
+    data: instructors = [],
+    isLoading: loadingInstructors,
+    isError: instructorsError,
+  } = useGetAssignableInstructorsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const [createCourse, { isLoading: creating }] = useCreateCourseMutation();
 
   const handleChange = (e) => {
@@ -80,6 +94,8 @@ const CreateCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError("");
+    setSubmitSuccess("");
 
     const data = new FormData();
 
@@ -88,18 +104,17 @@ const CreateCourse = () => {
         data.append(key, value);
       }
     });
-
-    for (const [key, value] of data.entries()) {
-      console.log(key, value);
-    }
+    instructorIds.forEach((id) => data.append("instructor_ids", id));
 
     try {
-      const res = await createCourse(data).unwrap();
-
+      await createCourse(data).unwrap();
       setFormData(initialState);
+      setInstructorIds([]);
+      setSubmitSuccess("Course created successfully.");
     } catch (error) {
-      console.log("Status:", error?.status);
-      console.log("Error:", error?.data);
+      setSubmitError(
+        error?.data?.detail || "Unable to create the course. Please try again.",
+      );
     }
   };
   return (
@@ -454,6 +469,16 @@ const CreateCourse = () => {
               </div>
             </div>
 
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <InstructorMultiSelect
+                instructors={instructors}
+                selectedIds={instructorIds}
+                onChange={setInstructorIds}
+                isLoading={loadingInstructors}
+                isError={instructorsError}
+              />
+            </div>
+
             {/* Thumbnail */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-6">
@@ -515,6 +540,14 @@ const CreateCourse = () => {
 
             {/* Actions */}
             <div className="flex items-center justify-end gap-3 pb-8">
+              {(submitError || submitSuccess) && (
+                <p
+                  className={`mr-auto text-sm ${submitError ? "text-red-600" : "text-green-700"}`}
+                  role={submitError ? "alert" : "status"}
+                >
+                  {submitError || submitSuccess}
+                </p>
+              )}
               <button
                 type="submit"
                 disabled={creating}

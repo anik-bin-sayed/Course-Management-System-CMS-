@@ -24,11 +24,15 @@ from app.schemas.course import (
     CourseResponse,
     CourseListResponse,
     UpdateCourse,
+    CourseInstructorSummary,
+    CourseInstructorUpdate,
 )
 from app.schemas.module import ModuleResponse
 
 from app.services.module import ModuleService
 from app.services.course import CourseService
+from app.services.course_access import CourseAccessService
+from app.services.course_instructors import CourseInstructorService
 
 from app.core.dependencies import (
     admin_instructor_required,
@@ -58,6 +62,7 @@ async def create_course(
     course_type: str = Form(...),
     status: str = Form(...),
     category_id: int = Form(...),
+    instructor_ids: list[str] = Form(default=[]),
     start_date: datetime | None = Form(None),
     end_date: datetime | None = Form(None),
     thumbnail: UploadFile | None = File(None),
@@ -75,6 +80,7 @@ async def create_course(
         status=status,
         course_type=course_type,
         category_id=category_id,
+        instructor_ids=instructor_ids,
         start_date=start_date,
         end_date=end_date,
     )
@@ -84,6 +90,89 @@ async def create_course(
         data,
         thumbnail,
         current_user,
+    )
+
+
+@router.get(
+    "/instructors/{instructor_id}/courses",
+    response_model=list[CourseResponse],
+)
+def get_instructor_courses(
+    instructor_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != "admin" and current_user.id != instructor_id:
+        raise HTTPException(status_code=403, detail="Not allowed to view these courses")
+
+    return CourseInstructorService.get_instructor_courses(db, instructor_id)
+
+
+@router.get(
+    "/{course_id}/instructors",
+    response_model=list[CourseInstructorSummary],
+)
+def get_course_instructors(
+    course_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    CourseAccessService.require_instructor_assignment(
+        db=db,
+        current_user=current_user,
+        course_id=course_id,
+    )
+    return CourseInstructorService.get_instructors(db, course_id)
+
+
+@router.put(
+    "/{course_id}/instructors",
+    response_model=list[CourseInstructorSummary],
+)
+def replace_course_instructors(
+    course_id: int,
+    data: CourseInstructorUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    return CourseInstructorService.replace_instructors(
+        db=db,
+        course_id=course_id,
+        instructor_ids=data.instructor_ids,
+    )
+
+
+@router.post(
+    "/{course_id}/instructors/{instructor_id}",
+    response_model=list[CourseInstructorSummary],
+)
+def add_course_instructor(
+    course_id: int,
+    instructor_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    return CourseInstructorService.add_instructor(
+        db=db,
+        course_id=course_id,
+        instructor_id=instructor_id,
+    )
+
+
+@router.delete(
+    "/{course_id}/instructors/{instructor_id}",
+    response_model=list[CourseInstructorSummary],
+)
+def remove_course_instructor(
+    course_id: int,
+    instructor_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    return CourseInstructorService.remove_instructor(
+        db=db,
+        course_id=course_id,
+        instructor_id=instructor_id,
     )
 
 
@@ -120,12 +209,12 @@ def get_courses(
 def get_course_modules(
     course_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(student_required),
+    current_user: User = Depends(get_current_user),
 ):
     return ModuleService.get_course_modules(
         db=db,
         course_id=course_id,
-        student_id=current_user.id,
+        current_user=current_user,
     )
 
 
@@ -142,7 +231,7 @@ async def delete_paid_course(
     )
 
 
-@router.get("/{slug}/")
+@router.get("/{slug}/", response_model=CourseResponse)
 async def get_course_slug(
     slug: str,
     db: Session = Depends(get_db),
@@ -159,7 +248,7 @@ async def get_course_slug(
     return course
 
 
-@router.put("/{course_id}/update")
+@router.put("/{course_id}/update", response_model=CourseResponse)
 async def update_course(
     course_id: int,
     title: str = Form(...),

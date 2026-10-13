@@ -11,6 +11,8 @@ from app.utils.slug import generate_slug
 from app.schemas.course import CourseCreate, UpdateCourse, CourseResponse
 from app.utils.cloudinary import upload_image, delete_image
 from app.core.dependencies import admin_instructor_required
+from app.services.course_access import CourseAccessService
+from app.services.course_instructors import CourseInstructorService
 
 
 class CourseService:
@@ -47,6 +49,20 @@ class CourseService:
                 detail="Discount price cannot be greater than price.",
             )
 
+        instructor_ids = data.instructor_ids
+        if current_user.role == "instructor":
+            if instructor_ids and set(instructor_ids) != {current_user.id}:
+                raise HTTPException(
+                    status_code=403,
+                    detail="Instructors cannot assign other instructors",
+                )
+            instructor_ids = [current_user.id]
+
+        instructors = CourseInstructorService.resolve_instructors(
+            db=db,
+            instructor_ids=instructor_ids,
+        )
+
         # Generate slug
         slug = generate_slug(data.title)
 
@@ -80,6 +96,7 @@ class CourseService:
             status=data.status,
             category_id=data.category_id,
             instructor_id=current_user.id,
+            instructors=instructors,
             start_date=data.start_date,
             end_date=data.end_date,
             thumbnail=image["secure_url"] if image else None,
@@ -172,11 +189,11 @@ class CourseService:
         if not course:
             raise HTTPException(status_code=404, detail="Course not found")
 
-        if course.instructor_id != current_user.id:
-            raise HTTPException(
-                status_code=403,
-                detail="You are not allowed to update this course.",
-            )
+        CourseAccessService.require_instructor_assignment(
+            db=db,
+            current_user=current_user,
+            course_id=course.id,
+        )
 
         if not data.category_id:
             raise HTTPException(

@@ -3,16 +3,44 @@ from decimal import Decimal
 from enum import Enum
 
 from sqlalchemy import (
+    Column,
     DateTime,
     Enum as SqlEnum,
     ForeignKey,
+    Integer,
     Numeric,
     String,
     Text,
+    Table,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+
+course_instructors = Table(
+    "course_instructors",
+    Base.metadata,
+    Column("id", Integer, primary_key=True),
+    Column(
+        "course_id",
+        ForeignKey("courses.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    ),
+    Column(
+        "instructor_id",
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    ),
+    Column("created_at", DateTime, default=datetime.utcnow, nullable=False),
+    UniqueConstraint(
+        "course_id",
+        "instructor_id",
+        name="uq_course_instructors_course_instructor",
+    ),
+)
 
 
 class CourseStatus(str, Enum):
@@ -172,4 +200,10 @@ class Course(Base):
         "Lesson",
         back_populates="course",
         cascade="all, delete-orphan",
+    )
+
+    instructors: Mapped[list["User"]] = relationship(
+        "User",
+        secondary=course_instructors,
+        back_populates="assigned_courses",
     )

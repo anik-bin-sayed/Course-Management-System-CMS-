@@ -111,6 +111,12 @@ class User(Base):
         back_populates="user",
     )
 
+    assigned_courses = relationship(
+        "Course",
+        secondary="course_instructors",
+        back_populates="instructors",
+    )
+
     refresh_token: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True,

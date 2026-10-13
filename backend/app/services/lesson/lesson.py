@@ -7,12 +7,18 @@ from app.repositories.lesson.lesson import LessonRepository
 from app.schemas.lesson.lesson import LessonCreate, LessonUpdate
 
 from app.core.dependencies import admin_instructor_required, admin_required
+from app.services.course_access import CourseAccessService
 
 
 class LessonService:
 
     @staticmethod
     def create_lesson(db: Session, data: LessonCreate, current_user: User):
+        CourseAccessService.require_instructor_assignment(
+            db=db,
+            current_user=current_user,
+            course_id=data.course_id,
+        )
         return LessonRepository.create(db=db, data=data, current_user=current_user)
 
     @staticmethod
@@ -76,10 +82,11 @@ class LessonService:
                 "Lesson not found",
             )
 
-        if lesson.user_id != current_user.id and current_user.role != "admin":
-            raise HTTPException(
-                status_code=403, detail="You are not allowed to modify this lesson"
-            )
+        CourseAccessService.require_instructor_assignment(
+            db=db,
+            current_user=current_user,
+            course_id=lesson.course_id,
+        )
 
         LessonRepository.delete(
             db=db,
@@ -133,6 +140,7 @@ class LessonService:
         db: Session,
         lesson_id: int,
         data: LessonUpdate,
+        current_user: User,
     ):
 
         lesson = LessonRepository.get_by_id(
@@ -144,6 +152,12 @@ class LessonService:
             raise ValueError(
                 "Lesson not found",
             )
+
+        CourseAccessService.require_instructor_assignment(
+            db=db,
+            current_user=current_user,
+            course_id=lesson.course_id,
+        )
 
         return LessonRepository.update(
             db=db,

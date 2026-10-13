@@ -5,8 +5,58 @@ export const paidCourseApi = createApi({
   reducerPath: "paidCourseApi",
 
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Auth", "Course"],
+  tagTypes: ["Auth", "Course", "Instructor"],
   endpoints: (builder) => ({
+    getAssignableInstructors: builder.query({
+      query: ({ search = "" } = {}) => ({
+        url: "/users/instructors",
+        method: "GET",
+        params: search ? { search } : undefined,
+      }),
+      providesTags: ["Instructor"],
+    }),
+
+    getCourseInstructors: builder.query({
+      query: (courseId) => ({
+        url: `/courses/${courseId}/instructors`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
+
+    replaceCourseInstructors: builder.mutation({
+      query: ({ courseId, instructorIds }) => ({
+        url: `/courses/${courseId}/instructors`,
+        method: "PUT",
+        body: { instructor_ids: instructorIds },
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
+    addCourseInstructor: builder.mutation({
+      query: ({ courseId, instructorId }) => ({
+        url: `/courses/${courseId}/instructors/${instructorId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
+    removeCourseInstructor: builder.mutation({
+      query: ({ courseId, instructorId }) => ({
+        url: `/courses/${courseId}/instructors/${instructorId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
+    getCoursesForInstructor: builder.query({
+      query: (instructorId) => ({
+        url: `/courses/instructors/${instructorId}/courses`,
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
+
     createCourse: builder.mutation({
       query: (data) => ({
         url: "/courses",
@@ -85,6 +135,12 @@ export const paidCourseApi = createApi({
 });
 
 export const {
+  useGetAssignableInstructorsQuery,
+  useGetCourseInstructorsQuery,
+  useReplaceCourseInstructorsMutation,
+  useAddCourseInstructorMutation,
+  useRemoveCourseInstructorMutation,
+  useGetCoursesForInstructorQuery,
   useCreateCourseMutation,
   useGetAllCourseQuery,
   useDeleteCourseMutation,
