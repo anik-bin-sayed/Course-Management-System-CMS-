@@ -1,8 +1,9 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { useParams } from "@/lib/navigation";
 import { useGetCourseByIdQuery } from "@/lib/features/courses/paid-course-api";
-import CourseDetails from "@/components/Upcoming/CourseDetails";
 import CourseDetailsSkeleton from "@/components/Upcoming/CourseDetailsSkeleton";
+
+const CourseDetails = lazy(() => import("@/components/Upcoming/CourseDetails"));
 
 export default function UpcomingCourseDetailsPage() {
   const { id } = useParams();

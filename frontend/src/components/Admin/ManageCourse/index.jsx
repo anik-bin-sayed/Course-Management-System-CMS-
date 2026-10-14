@@ -1,7 +1,8 @@
-import { cloneElement, useEffect, useState } from "react";
+import { cloneElement, lazy, Suspense, useEffect, useState } from "react";
 
 import Link from "@/components/common/AppLink";
 import Image from "@/components/common/AppImage";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 import { useRouter, useSearchParams } from "@/lib/navigation";
 
 import { RxCross2 } from "react-icons/rx";
@@ -11,18 +12,19 @@ import { CiCirclePlus, CiVideoOn } from "react-icons/ci";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { IoCreateOutline, IoReorderThreeOutline } from "react-icons/io5";
 
-import FreeVideoList from "./FreeCourse/FreeVideoList";
-import CreateFreeVideos from "./FreeCourse/CreateFreeVideos";
-import CreateCourse from "./Course/CreateCourse";
-import EditCourse from "./Course/EditCourse";
-import EditPaidCourse from "./Course/EditPaidCourse";
-import CategoryList from "./category/CategoryList";
-import CreateLesson from "./Lesson/CreateLesson";
-import ListLesson from "./Lesson/ListLesson";
-import EditLesson from "./Lesson/EditLesson";
-import AddLessonInfo from "./Lesson/AddLessonInfo";
-import LessonInformation from "./Lesson/LessonInformation";
-import AllCourse from "./ListPaidCourse";
+
+const FreeVideoList = lazy(() => import("./FreeCourse/FreeVideoList"));
+const CreateFreeVideos = lazy(() => import("./FreeCourse/CreateFreeVideos"));
+const CreateCourse = lazy(() => import("./Course/CreateCourse"));
+const EditCourse = lazy(() => import("./Course/EditCourse"));
+const EditPaidCourse = lazy(() => import("./Course/EditPaidCourse"));
+const CategoryList = lazy(() => import("./category/CategoryList"));
+const CreateLesson = lazy(() => import("./Lesson/CreateLesson"));
+const ListLesson = lazy(() => import("./Lesson/ListLesson"));
+const EditLesson = lazy(() => import("./Lesson/EditLesson"));
+const AddLessonInfo = lazy(() => import("./Lesson/AddLessonInfo"));
+const LessonInformation = lazy(() => import("./Lesson/LessonInformation"));
+const AllCourse = lazy(() => import("./ListPaidCourse"));
 
 const ManageCourse = ({ profileData }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -263,7 +265,16 @@ const ManageCourse = ({ profileData }) => {
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6">
-          {renderContent()}
+          <Suspense
+            fallback={
+              <LoadingFallback
+                label="Loading dashboard section..."
+                variant="inline"
+              />
+            }
+          >
+            {renderContent()}
+          </Suspense>
         </main>
       </div>
     </div>

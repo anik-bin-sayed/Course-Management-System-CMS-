@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import { toast } from "sonner";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 
 import { CiStickyNote } from "react-icons/ci";
 
@@ -8,7 +9,8 @@ import {
   useDeleteCategoryMutation,
   useGetAllCategoryQuery,
 } from "../../../../../lib/features/category/category-api";
-import UpdateCategoryModal from "../UpdateCategoryModal";
+
+const UpdateCategoryModal = lazy(() => import("../UpdateCategoryModal"));
 
 const CategoryList = () => {
   const [deleteCatId, setDeleteCatId] = useState(null);
@@ -166,12 +168,18 @@ const CategoryList = () => {
         </div>
       </div>
       {openUpdateModal && (
-        <UpdateCategoryModal
-          isOpen={openUpdateModal}
-          categoryData={categoryData}
-          setCategoryData={setCategoryData}
-          onClose={() => setOpenUpdateModal(false)}
-        />
+        <Suspense
+          fallback={
+            <LoadingFallback label="Loading dialog..." variant="modal" />
+          }
+        >
+          <UpdateCategoryModal
+            isOpen={openUpdateModal}
+            categoryData={categoryData}
+            setCategoryData={setCategoryData}
+            onClose={() => setOpenUpdateModal(false)}
+          />
+        </Suspense>
       )}
     </>
   );

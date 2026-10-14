@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   FiChevronLeft,
@@ -9,12 +9,13 @@ import {
 import { toast } from "sonner";
 import AppImage from "@/components/common/AppImage";
 import AppLink from "@/components/common/AppLink";
-import VideoModal from "@/components/Home/VideoModal";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 import { useSearchParams, useRouter } from "@/lib/navigation";
 import { useGetAllCourseQuery } from "@/lib/features/courses/paid-course-api";
 import { useGetFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
 
 const PAGE_SIZE = 8;
+const VideoModal = lazy(() => import("@/components/Home/VideoModal"));
 
 function SectionPagination({ page, totalPages, onChange }) {
   if (totalPages < 2) return null;
@@ -337,11 +338,17 @@ export default function SearchPage() {
         )}
       </div>
       {selectedCourse && (
-        <VideoModal
-          videoUrl={selectedCourse.video_url}
-          title={selectedCourse.title}
-          onClose={() => setSelectedCourse(null)}
-        />
+        <Suspense
+          fallback={
+            <LoadingFallback label="Loading video..." variant="modal" />
+          }
+        >
+          <VideoModal
+            videoUrl={selectedCourse.video_url}
+            title={selectedCourse.title}
+            onClose={() => setSelectedCourse(null)}
+          />
+        </Suspense>
       )}
     </main>
   );

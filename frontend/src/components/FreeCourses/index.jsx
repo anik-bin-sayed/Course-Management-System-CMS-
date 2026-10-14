@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import Image from "@/components/common/AppImage";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 import { useSelector } from "react-redux";
-import VideoModal from "../Home/VideoModal";
 
 import { FaPlay } from "react-icons/fa";
 
 import { toast } from "sonner";
 
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
-import { RiVideoUploadFill } from "react-icons/ri";
+
+const VideoModal = lazy(() => import("../Home/VideoModal"));
 
 const FreeCourses = ({
   allFreeCourse,
@@ -209,11 +210,17 @@ const FreeCourses = ({
         </div>
       )}
       {selectedCourse && (
-        <VideoModal
-          videoUrl={selectedCourse.video_url}
-          title={selectedCourse.title}
-          onClose={() => setSelectedCourse(null)}
-        />
+        <Suspense
+          fallback={
+            <LoadingFallback label="Loading video..." variant="modal" />
+          }
+        >
+          <VideoModal
+            videoUrl={selectedCourse.video_url}
+            title={selectedCourse.title}
+            onClose={() => setSelectedCourse(null)}
+          />
+        </Suspense>
       )}
     </div>
   );

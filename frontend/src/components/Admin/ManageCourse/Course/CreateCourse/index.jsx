@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import Image from "@/components/common/AppImage";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 
 import { TbCurrencyTaka } from "react-icons/tb";
 import { LuGalleryThumbnails } from "react-icons/lu";
-
-import CreateCategoryModal from "../../category/CategoryModal/CreateCategory";
 
 import { useGetAllCategoryQuery } from "../../../../../lib/features/category/category-api";
 import {
@@ -14,6 +13,10 @@ import {
   useGetAssignableInstructorsQuery,
 } from "../../../../../lib/features/courses/paid-course-api";
 import InstructorMultiSelect from "../InstructorMultiSelect";
+
+const CreateCategoryModal = lazy(
+  () => import("../../category/CategoryModal/CreateCategory"),
+);
 
 const initialState = {
   title: "",
@@ -571,10 +574,18 @@ const CreateCourse = () => {
         </div>
       </div>
 
-      <CreateCategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-      />
+      {isCategoryModalOpen && (
+        <Suspense
+          fallback={
+            <LoadingFallback label="Loading dialog..." variant="modal" />
+          }
+        >
+          <CreateCategoryModal
+            isOpen={isCategoryModalOpen}
+            onClose={() => setIsCategoryModalOpen(false)}
+          />
+        </Suspense>
+      )}
     </>
   );
 };

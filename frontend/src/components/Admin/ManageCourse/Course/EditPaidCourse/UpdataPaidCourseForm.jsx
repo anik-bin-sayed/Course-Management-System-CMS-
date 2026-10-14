@@ -1,6 +1,7 @@
 import Image from "@/components/common/AppImage";
 
-import React, { useState, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 
 import { LuGalleryThumbnails } from "react-icons/lu";
 import { TbCurrencyTaka } from "react-icons/tb";
@@ -14,9 +15,12 @@ import {
   useReplaceCourseInstructorsMutation,
   useUpdateCourseMutation,
 } from "../../../../../lib/features/courses/paid-course-api";
-import CreateCategoryModal from "../../category/CategoryModal/CreateCategory";
 import InstructorMultiSelect from "../InstructorMultiSelect";
 import { toast } from "sonner";
+
+const CreateCategoryModal = lazy(
+  () => import("../../category/CategoryModal/CreateCategory"),
+);
 
 const initialState = {
   title: "",
@@ -604,10 +608,18 @@ const UpdataPaidCourseForm = ({ courseData }) => {
         </div>
       </div>
 
-      <CreateCategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-      />
+      {isCategoryModalOpen && (
+        <Suspense
+          fallback={
+            <LoadingFallback label="Loading dialog..." variant="modal" />
+          }
+        >
+          <CreateCategoryModal
+            isOpen={isCategoryModalOpen}
+            onClose={() => setIsCategoryModalOpen(false)}
+          />
+        </Suspense>
+      )}
     </>
   );
 };

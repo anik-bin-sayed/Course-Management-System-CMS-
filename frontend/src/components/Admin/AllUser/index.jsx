@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
-import RoleChangeModal from "./RoleChangeModal";
+import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 import Pagination from "./Pagination";
 import UserTable from "./UserTable";
 import Search from "./Search";
+
+const RoleChangeModal = lazy(() => import("./RoleChangeModal"));
 
 const AllUser = ({
   users = [],
@@ -68,10 +70,16 @@ const AllUser = ({
 
       {/* Role Change Modal */}
       {showRoleModal && selectedUser && (
-        <RoleChangeModal
-          selectedUser={selectedUser}
-          setShowRoleModal={setShowRoleModal}
-        />
+        <Suspense
+          fallback={
+            <LoadingFallback label="Loading dialog..." variant="modal" />
+          }
+        >
+          <RoleChangeModal
+            selectedUser={selectedUser}
+            setShowRoleModal={setShowRoleModal}
+          />
+        </Suspense>
       )}
     </div>
   );
