@@ -151,7 +151,6 @@ class UserService:
     @staticmethod
     def me(db, user_id: str):
         user = UserRepository.get_by_id(db, user_id)
-        print("user", user)
 
         if not user:
             raise HTTPException(

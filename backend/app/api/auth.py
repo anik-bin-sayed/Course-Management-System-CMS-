@@ -96,12 +96,8 @@ def login(
 )
 def me(
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
 ):
-    return UserService.me(
-        db=db,
-        user_id=current_user.id,
-    )
+    return current_user
 
 
 @router.post("/logout")
