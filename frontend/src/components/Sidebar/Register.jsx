@@ -6,7 +6,6 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 import { useRegisterMutation } from "../../lib/features/auth/authApi";
-import { useRouter } from "@/lib/navigation";
 
 const initialFormData = {
   email: "",
@@ -14,9 +13,12 @@ const initialFormData = {
   password: "",
   confirmPassword: "",
 };
-const RegisterComponent = ({ setShowCloseConfirm }) => {
+const RegisterComponent = ({ onRegistered, initialEmail = "" }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(() => ({
+    ...initialFormData,
+    email: initialEmail,
+  }));
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const [register, { isLoading }] = useRegisterMutation();
@@ -28,8 +30,6 @@ const RegisterComponent = ({ setShowCloseConfirm }) => {
     confirmPassword: "",
     agreeTerms: "",
   });
-
-  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -170,13 +170,9 @@ const RegisterComponent = ({ setShowCloseConfirm }) => {
 
     try {
       const { confirmPassword, ...formDataToSubmit } = formData;
-      const res = await register(formDataToSubmit).unwrap();
-      console.log(res);
-      setShowCloseConfirm(false);
-
-      router.push(`/verify-email?email=${encodeURIComponent(res.user.email)}`);
+      const response = await register(formDataToSubmit).unwrap();
+      onRegistered?.(response.user.email);
     } catch (error) {
-      console.log(error);
       toast.error(
         error?.data?.detail ||
           error?.data?.message ||

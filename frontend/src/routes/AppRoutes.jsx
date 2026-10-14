@@ -16,21 +16,17 @@ const ProfileEditPage = lazy(() => import("@/pages/ProfileEditPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const SearchPage = lazy(() => import("@/pages/SearchPage"));
 const StudentCoursePage = lazy(() => import("@/pages/StudentCoursePage"));
-const StudentDashboardPage = lazy(() =>
-  import("@/pages/StudentDashboardPage"),
-);
-const UpcomingCourseDetailsPage = lazy(() =>
-  import("@/pages/UpcomingCourseDetailsPage"),
+const StudentDashboardPage = lazy(() => import("@/pages/StudentDashboardPage"));
+const UpcomingCourseDetailsPage = lazy(
+  () => import("@/pages/UpcomingCourseDetailsPage"),
 );
 const UpcomingCoursesPage = lazy(() => import("@/pages/UpcomingCoursesPage"));
 const VerifyEmailPage = lazy(() => import("@/pages/VerifyEmailPage"));
-const ManageCoursesPage = lazy(() =>
-  import("@/pages/admin/ManageCoursesPage"),
-);
+const ManageCoursesPage = lazy(() => import("@/pages/admin/ManageCoursesPage"));
 const UserDetailsPage = lazy(() => import("@/pages/admin/UserDetailsPage"));
 const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
 
-export default function AppRoutes() {
+const AppRoutes = () => {
   return (
     <LazyLoadBoundary>
       <Suspense fallback={<LoadingFallback />}>
@@ -53,9 +49,7 @@ export default function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          <Route element={<PublicRoute />}>
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
-          </Route>
+
           <Route path="/free-courses" element={<FreeCoursesPage />} />
           <Route path="/upcoming-course" element={<UpcomingCoursesPage />} />
           <Route
@@ -123,5 +117,6 @@ export default function AppRoutes() {
       </Suspense>
     </LazyLoadBoundary>
   );
-}
+};
 
+export default AppRoutes;

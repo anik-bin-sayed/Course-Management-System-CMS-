@@ -8,12 +8,13 @@ import { MdOutlineMail } from "react-icons/md";
 import OtpForm from "./OtpForm";
 import Link from "@/components/common/AppLink";
 import { useVerifyEmailMutation } from "../../lib/features/auth/authApi";
+import { toast } from "sonner";
 
-const VerifyEmail = () => {
+const VerifyEmail = ({ email: providedEmail, onBack, onVerified }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const email = searchParams.get("email");
+  const email = providedEmail || searchParams.get("email");
 
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [feedback, setFeedback] = useState(null);
@@ -22,6 +23,8 @@ const VerifyEmail = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+
     const verificationCode = code.join("");
 
     if (!email || verificationCode.length !== 6) {
@@ -37,7 +40,13 @@ const VerifyEmail = () => {
     setFeedback(null);
     try {
       await verifyEmail({ email, code: verificationCode }).unwrap();
-      router.replace("/");
+      toast.success("Email verified successfully.");
+
+      if (onVerified) {
+        onVerified();
+      } else {
+        router.replace("/");
+      }
     } catch (error) {
       setFeedback({
         type: "error",
@@ -108,17 +117,25 @@ const VerifyEmail = () => {
 
         {/* Resend */}
         <p className="text-center text-sm text-gray-500 mt-6">
-          Didn&apost receive the code?{" "}
-          <button className="text-yellow-600 font-semibold hover:underline cursor-pointer">
-            Resend
-          </button>
+          Verification codes expire after 10 minutes. Code resend is not
+          available yet.
         </p>
 
         {/* Back */}
         <p className="text-center text-sm text-gray-400 mt-2">
-          <Link href="/" className="hover:text-gray-500 transition">
-            ← Back to Home
-          </Link>
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              className="hover:text-gray-500 transition"
+            >
+              ← Back to Sign In
+            </button>
+          ) : (
+            <Link href="/" className="hover:text-gray-500 transition">
+              ← Back to Home
+            </Link>
+          )}
         </p>
       </div>
     </div>

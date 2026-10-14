@@ -12,13 +12,7 @@ import { useRouter } from "@/lib/navigation";
 
 import { useDispatch } from "react-redux";
 
-import {
-  FaUserCircle,
-  FaSignOutAlt,
-  FaChevronDown,
-  FaTachometerAlt,
-  FaUserCog,
-} from "react-icons/fa";
+import { FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 
 const ProfileNavbar = ({ profile }) => {
   const pathname = usePathname();
@@ -172,56 +166,6 @@ const ProfileNavbar = ({ profile }) => {
                     <p className="text-sm text-gray-500">{profile?.email}</p>
                   </div>
                 </div>
-              </div>
-
-              {/* Navigation Links */}
-              <div className="p-2">
-                {pathname === "/profile" ? (
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-gray-100 text-gray-600 hover:text-black"
-                  >
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200">
-                      <FaTachometerAlt />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">Dashboard</p>
-                      <p className="text-xs text-gray-400">
-                        Go to your dashboard
-                      </p>
-                    </div>
-                  </Link>
-                ) : (
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-gray-100 text-gray-600 hover:text-black"
-                  >
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200">
-                      <FaUserCircle />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">Profile</p>
-                      <p className="text-xs text-gray-400">
-                        View and edit your profile
-                      </p>
-                    </div>
-                  </Link>
-                )}
-
-                <Link
-                  href="/settings"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-gray-100 text-gray-600 hover:text-black"
-                >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200">
-                    <FaUserCog />
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Settings</p>
-                    <p className="text-xs text-gray-400">
-                      Manage your preferences
-                    </p>
-                  </div>
-                </Link>
               </div>
 
               {/* Divider */}

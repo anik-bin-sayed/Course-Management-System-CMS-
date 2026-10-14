@@ -3,14 +3,40 @@
 import { useEffect, useState } from "react";
 import LoginRegister from "./Login";
 import Register from "./Register";
+import VerifyEmail from "@/components/VerifyEmail";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { HiXMark } from "react-icons/hi2";
 
 const SideLogin = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const [showCloseConfirm, setShowCloseConfirm] = useState(false);
+
+  const handleRegistrationSuccess = (email) => {
+    setRegisteredEmail(email);
+    setIsVerifyingEmail(true);
+    setShowCloseConfirm(false);
+  };
+
+  const handleNeedsVerification = (email) => {
+    setRegisteredEmail(email);
+    setIsVerifyingEmail(true);
+  };
+
+  const handleBackToLogin = () => {
+    setIsVerifyingEmail(false);
+    setIsLogin(true);
+  };
+
+  const handleVerificationSuccess = () => {
+    setIsVerifyingEmail(false);
+    setIsLogin(true);
+    setShowCloseConfirm(false);
+    onClose();
+  };
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -108,38 +134,56 @@ const SideLogin = ({ isOpen, onClose }) => {
         <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center p-4">
           <div className="w-full max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
             {/* Header */}
-            <div className="border-b border-gray-200 bg-gray-50 p-5">
-              <div className="relative mx-auto flex h-14 w-full max-w-md rounded-xl bg-white p-1 shadow-sm">
-                {/* Active Background */}
-                <span
-                  className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)]
+            {!isVerifyingEmail && (
+              <div className="border-b border-gray-200 bg-gray-50 p-5">
+                <div className="relative mx-auto flex h-14 w-full max-w-md rounded-xl bg-white p-1 shadow-sm">
+                  {/* Active Background */}
+                  <span
+                    className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)]
           rounded-lg bg-yellow-500 shadow-md
           transition-all duration-300 ease-in-out
           ${isLogin ? "translate-x-0" : "translate-x-full"}`}
-                />
+                  />
 
-                <button
-                  onClick={() => setIsLogin(true)}
-                  className={`relative z-10 flex-1 rounded-lg text-sm font-semibold transition-colors duration-300 cursor-pointer
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(true)}
+                    className={`relative z-10 flex-1 rounded-lg text-sm font-semibold transition-colors duration-300 cursor-pointer
             ${isLogin ? "text-black" : "text-gray-600 hover:text-black"}`}
-                >
-                  Sign In
-                </button>
+                  >
+                    Sign In
+                  </button>
 
-                <button
-                  onClick={() => setIsLogin(false)}
-                  className={`relative z-10 flex-1 rounded-lg text-sm font-semibold transition-colors duration-300 cursor-pointer
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(false)}
+                    className={`relative z-10 flex-1 rounded-lg text-sm font-semibold transition-colors duration-300 cursor-pointer
             ${!isLogin ? "text-black" : "text-gray-600 hover:text-black"}`}
-                >
-                  Create Account
-                </button>
+                  >
+                    Create Account
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Body */}
             <div>
               <AnimatePresence mode="wait">
-                {isLogin ? (
+                {isVerifyingEmail ? (
+                  <motion.div
+                    key="verify-email"
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -40 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                  >
+                    <VerifyEmail
+                      email={registeredEmail}
+                      onBack={handleBackToLogin}
+                      onVerified={handleVerificationSuccess}
+                    />
+                  </motion.div>
+                ) : isLogin ? (
                   <motion.div
                     key="login"
                     initial={{ opacity: 0, x: -40 }}
@@ -151,9 +195,10 @@ const SideLogin = ({ isOpen, onClose }) => {
                     }}
                   >
                     <LoginRegister
-                      setIsLogin={setIsLogin}
                       setShowCloseConfirm={setShowCloseConfirm}
                       onClose={onClose}
+                      initialEmail={registeredEmail}
+                      onNeedsVerification={handleNeedsVerification}
                     />
                   </motion.div>
                 ) : (
@@ -168,8 +213,8 @@ const SideLogin = ({ isOpen, onClose }) => {
                     }}
                   >
                     <Register
-                      setIsLogin={setIsLogin}
-                      setShowCloseConfirm={setShowCloseConfirm}
+                      initialEmail={registeredEmail}
+                      onRegistered={handleRegistrationSuccess}
                     />
                   </motion.div>
                 )}

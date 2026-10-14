@@ -17,6 +17,22 @@ const OtpForm = ({ handleSubmit, code, setCode, isLoading }) => {
     }
   };
 
+  const handlePaste = (e) => {
+    const pastedCode = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, code.length);
+
+    if (!pastedCode) return;
+
+    e.preventDefault();
+    setCode([
+      ...pastedCode,
+      ...Array(code.length - pastedCode.length).fill(""),
+    ]);
+    document.getElementById(`code-${pastedCode.length - 1}`)?.focus();
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex justify-between gap-2">
@@ -27,9 +43,13 @@ const OtpForm = ({ handleSubmit, code, setCode, isLoading }) => {
             type="text"
             inputMode="numeric"
             maxLength={1}
+            autoComplete={index === 0 ? "one-time-code" : "off"}
+            aria-label={`Verification code digit ${index + 1}`}
             value={digit}
+            disabled={isLoading}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
+            onPaste={index === 0 ? handlePaste : undefined}
             className="w-12 h-14 text-center text-2xl font-semibold text-gray-800 bg-gray-100 border-2 border-transparent rounded-xl focus:border-yellow-400 focus:bg-white focus:outline-none transition-all duration-200 shadow-sm"
           />
         ))}

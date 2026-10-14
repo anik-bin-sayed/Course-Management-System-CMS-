@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
@@ -12,11 +12,16 @@ import {
   useLoginMutation,
 } from "../../lib/features/auth/authApi";
 
-const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
+const LoginRegister = ({
+  onClose,
+  setShowCloseConfirm,
+  initialEmail = "",
+  onNeedsVerification,
+}) => {
   const [step, setStep] = useState(1);
 
   // FORM DATA
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
 
   const [rememberMe, setRememberMe] = useState(false);
@@ -33,6 +38,10 @@ const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
   const [checkEmail, { isLoading: isCheckingEmail }] = useCheckEmailMutation();
   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
   const { data: profileData, refetch: refetchProfile } = useGetProfileQuery();
+
+  useEffect(() => {
+    if (initialEmail) setEmail(initialEmail);
+  }, [initialEmail]);
 
   // EMAIL VALIDATION
   const validateEmail = () => {
@@ -120,6 +129,14 @@ const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
         }));
       }
     } catch (error) {
+      if (
+        error?.status === 403 &&
+        /verify/i.test(error?.data?.detail || error?.data?.message || "")
+      ) {
+        onNeedsVerification?.(email.trim().toLowerCase());
+        return;
+      }
+
       if (error?.status === 404) {
         toast.error("No account found with this email.");
       } else {
@@ -148,6 +165,14 @@ const LoginRegister = ({ onClose, setShowCloseConfirm }) => {
       refetchProfile();
     } catch (error) {
       console.error("Login failed:", error);
+
+      if (
+        error?.status === 403 &&
+        /verify/i.test(error?.data?.detail || error?.data?.message || "")
+      ) {
+        onNeedsVerification?.(email.trim().toLowerCase());
+        return;
+      }
 
       if (error?.status === 401) {
         toast.error("Invalid email or password.");
