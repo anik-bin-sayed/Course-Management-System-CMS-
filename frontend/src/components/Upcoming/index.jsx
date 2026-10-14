@@ -1,13 +1,10 @@
-"use client";
-
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 
-import { FaPlay } from "react-icons/fa";
 import { useGetUpcomingCourseQuery } from "../../lib/features/upcomingCourse/upcomingCourseApi";
 import UpcomingCourseSkeleton from "./UpcomingCourseSkeleton";
-import { FiArrowRight, FiGlobe } from "react-icons/fi";
+import { FiGlobe } from "react-icons/fi";
 
 const UpcomingCourse = () => {
   const [page, setPage] = useState(1);
@@ -19,8 +16,6 @@ const UpcomingCourse = () => {
 
   const categories = upcomingCourseData?.data;
   const pagination = upcomingCourseData?.pagination;
-
-  console.log(categories);
 
   if (isLoading) return <UpcomingCourseSkeleton />;
 

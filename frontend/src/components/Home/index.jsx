@@ -1,13 +1,21 @@
 import Hero from "./Hero";
 import FreeCourses from "./FreeCourses";
 import UpcomingCourse from "./UpcomingCourse";
+import { useGetFreeCoursesQuery } from "../../lib/features/courses/free-course-api";
 
-const Home = ({ freeCourseData, freeCourseLoading, upcomingCourseData }) => {
+const Home = () => {
+  const { data: freeCourseData, isLoading: freeCourseLoading } =
+    useGetFreeCoursesQuery({
+      page: 1,
+      limit: 8,
+    });
+
+  const data = freeCourseData?.data || [];
   return (
     <>
       <Hero />
       <UpcomingCourse />
-      <FreeCourses data={freeCourseData} loading={freeCourseLoading} />
+      <FreeCourses data={data} loading={freeCourseLoading} />
     </>
   );
 };

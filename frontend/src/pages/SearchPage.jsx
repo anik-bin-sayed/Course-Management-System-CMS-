@@ -12,7 +12,7 @@ import AppLink from "@/components/common/AppLink";
 import VideoModal from "@/components/Home/VideoModal";
 import { useSearchParams, useRouter } from "@/lib/navigation";
 import { useGetAllCourseQuery } from "@/lib/features/courses/paid-course-api";
-import { useGetAllFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
+import { useGetFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
 
 const PAGE_SIZE = 8;
 
@@ -235,7 +235,7 @@ export default function SearchPage() {
     { search: query, status: "published", page: paidPage, limit: PAGE_SIZE },
     { skip: !query },
   );
-  const freeResults = useGetAllFreeCoursesQuery(
+  const freeResults = useGetFreeCoursesQuery(
     { search: query, page: freePage, limit: PAGE_SIZE },
     { skip: !query },
   );

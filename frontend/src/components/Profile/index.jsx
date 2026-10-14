@@ -1,13 +1,10 @@
-"use client";
-
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import { useUploadAvatarMutation } from "../../lib/features/profile/profileApi";
 
-import Loader from "../../utils/Loader";
 import ProfileNavbar from "./ProfileNavbar";
 import MobileSectionTopBar from "./MobileSectionTopBar";
 import CountryFlag from "./ui/CountryFlag";
@@ -30,11 +27,12 @@ import {
   FaCheck,
   FaCopy,
   FaCamera,
-  FaTimes,
   FaExternalLinkAlt,
   FaEdit,
 } from "react-icons/fa";
+
 import PreviewImage from "./PreviewImage";
+import ProfileLoader from "./ProfileLoader";
 
 const Profile = () => {
   const [copied, setCopied] = useState(false);
@@ -52,8 +50,6 @@ const Profile = () => {
   });
 
   const [uploadAvatar, { isLoading: uploading }] = useUploadAvatarMutation();
-
-  if (isLoading) return <Loader />;
 
   const copyId = async () => {
     try {
@@ -87,6 +83,9 @@ const Profile = () => {
     }
   };
 
+  if (isLoading) {
+    return <ProfileLoader />;
+  }
   return (
     <div className="min-h-screen bg-slate-50">
       <ProfileNavbar profile={profile} />

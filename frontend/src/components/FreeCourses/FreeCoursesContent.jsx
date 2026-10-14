@@ -1,14 +1,12 @@
-"use client";
-
 import Loader from "../../utils/Loader";
 import { useRouter } from "@/lib/navigation";
 import FreeCourses from "./index";
-import { useGetAllFreeCoursesQuery } from "../../lib/features/courses/free-course-api";
+import { useGetFreeCoursesQuery } from "../../lib/features/courses/free-course-api";
 
 const FreeCoursesContent = ({ currentPage }) => {
   const router = useRouter();
 
-  const { data, isLoading, isFetching } = useGetAllFreeCoursesQuery({
+  const { data, isLoading, isFetching } = useGetFreeCoursesQuery({
     page: currentPage,
   });
 

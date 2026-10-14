@@ -9,7 +9,7 @@ import SkeletonLoader from "../../../../utils/SkeletonLoader";
 
 import {
   useDeleteFreeCourseMutation,
-  useGetAllFreeCoursesQuery,
+  useGetFreeCoursesQuery,
 } from "../../../../lib/features/courses/free-course-api";
 
 const FreeVideoList = () => {
@@ -24,7 +24,7 @@ const FreeVideoList = () => {
     data: freeCoursesData,
     isLoading: isFreeCoursesLoading,
     refetch,
-  } = useGetAllFreeCoursesQuery();
+  } = useGetFreeCoursesQuery();
   const [deleteFreeCourse, { isLoading: deleting }] =
     useDeleteFreeCourseMutation();
 

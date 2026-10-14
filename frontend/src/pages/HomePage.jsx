@@ -1,14 +1,7 @@
-import Home from "@/components/Home";
-import { useGetSomeFreeCourseQuery } from "@/lib/features/courses/free-course-api";
+import Home from "../components/Home";
 
-export default function HomePage() {
-  const { data: someFreeCourseData, isLoading: freeCourseLoading } =
-    useGetSomeFreeCourseQuery();
+const HomePage = () => {
+  return <Home />;
+};
 
-  return (
-    <Home
-      freeCourseData={someFreeCourseData}
-      freeCourseLoading={freeCourseLoading}
-    />
-  );
-}
+export default HomePage;

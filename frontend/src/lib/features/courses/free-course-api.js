@@ -7,15 +7,7 @@ export const freeCourseApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Auth", "Course"],
   endpoints: (builder) => ({
-    getSomeFreeCourse: builder.query({
-      query: () => ({
-        url: `/free-courses`,
-        method: "GET",
-      }),
-      providesTags: ["Course"],
-    }),
-
-    getAllFreeCourses: builder.query({
+    getFreeCourses: builder.query({
       query: ({ page = 1, limit = 16, search = "" } = {}) => {
         const params = new URLSearchParams({
           page: String(page),
@@ -69,8 +61,7 @@ export const freeCourseApi = createApi({
 });
 
 export const {
-  useGetSomeFreeCourseQuery,
-  useGetAllFreeCoursesQuery,
+  useGetFreeCoursesQuery,
   useCreateFreeVideoMutation,
   useDeleteFreeCourseMutation,
   useGetCourseBySlugQuery,

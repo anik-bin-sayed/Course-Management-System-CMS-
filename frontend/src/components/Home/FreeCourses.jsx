@@ -1,14 +1,12 @@
-"use client";
+import { useState } from "react";
 
-import React, { useState } from "react";
-import Image from "@/components/common/AppImage";
-import Loader from "../../utils/Loader";
 import VideoModal from "./VideoModal";
+import Image from "@/components/common/AppImage";
 import { useSelector } from "react-redux";
 import Link from "@/components/common/AppLink";
-import { FiArrowRight } from "react-icons/fi";
-import { SiGoogledisplayandvideo360 } from "react-icons/si";
+
 import { FaPlay } from "react-icons/fa";
+import { SiGoogledisplayandvideo360 } from "react-icons/si";
 
 import { toast } from "sonner";
 
@@ -102,7 +100,7 @@ const FreeCourses = ({ data, loading }) => {
 
         {/* Course Grid */}
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {data.map((course) => (
+          {data?.map((course) => (
             <div
               key={course.id}
               className="group flex flex-col overflow-hidden rounded ring-1 ring-yellow-100 bg-white shadow-lg transition-all duration-300 hover:ring-0 "

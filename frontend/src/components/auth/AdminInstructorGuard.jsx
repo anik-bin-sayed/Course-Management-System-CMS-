@@ -9,8 +9,6 @@ export default function AdminInstructorGuard({ children }) {
   const { data: user, isLoading, isError } = useGetProfileQuery();
   const router = useRouter();
 
-  console.log(user?.role);
-
   useEffect(() => {
     if (
       !isLoading &&
