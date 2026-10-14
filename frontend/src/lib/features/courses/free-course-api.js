@@ -62,6 +62,7 @@ export const freeCourseApi = createApi({
 
 export const {
   useGetFreeCoursesQuery,
+
   useCreateFreeVideoMutation,
   useDeleteFreeCourseMutation,
   useGetCourseBySlugQuery,

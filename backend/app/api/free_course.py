@@ -89,36 +89,6 @@ async def create_course(
     return result
 
 
-@router.get("/")
-async def get_free_courses(
-    db: Session = Depends(get_db),
-):
-    try:
-        cached_courses = await redis_client.get(FIRST_EIGHT_CACHE_KEY)
-
-        if cached_courses:
-            return json.loads(cached_courses)
-
-    except Exception:
-        pass
-
-    courses = FreeCourseService.get_first_eight(db)
-
-    try:
-        cache_data = jsonable_encoder(courses)
-
-        await redis_client.set(
-            name=FIRST_EIGHT_CACHE_KEY,
-            value=json.dumps(cache_data),
-            ex=CACHE_TTL,
-        )
-
-    except Exception:
-        pass
-
-    return courses
-
-
 @router.get("/all")
 async def get_all_free_courses(
     page: int = 1,
@@ -126,7 +96,6 @@ async def get_all_free_courses(
     search: str | None = None,
     db: Session = Depends(get_db),
 ):
-    # Each pagination/search combination gets a separate cache key.
     normalized_search = (search or "").strip().casefold()
 
     cache_key = f"{ALL_COURSES_CACHE_PREFIX}" f"{page}:{limit}:{normalized_search}"

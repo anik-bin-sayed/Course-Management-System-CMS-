@@ -1,5 +1,3 @@
-"use client";
-
 import { cloneElement, useEffect, useState } from "react";
 
 import Link from "@/components/common/AppLink";
@@ -13,7 +11,6 @@ import { CiCirclePlus, CiVideoOn } from "react-icons/ci";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { IoCreateOutline, IoReorderThreeOutline } from "react-icons/io5";
 
-import AllCourse from "./AllCourse";
 import FreeVideoList from "./FreeCourse/FreeVideoList";
 import CreateFreeVideos from "./FreeCourse/CreateFreeVideos";
 import CreateCourse from "./Course/CreateCourse";
@@ -25,6 +22,7 @@ import ListLesson from "./Lesson/ListLesson";
 import EditLesson from "./Lesson/EditLesson";
 import AddLessonInfo from "./Lesson/AddLessonInfo";
 import LessonInformation from "./Lesson/LessonInformation";
+import AllCourse from "./ListPaidCourse";
 
 const ManageCourse = ({ profileData }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

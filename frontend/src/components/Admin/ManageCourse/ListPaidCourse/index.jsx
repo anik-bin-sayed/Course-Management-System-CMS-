@@ -1,25 +1,15 @@
-"use client";
-
 import React, { useMemo, useState } from "react";
-import Image from "@/components/common/AppImage";
+
 import {
   useDeleteCourseMutation,
   useGetAllCourseQuery,
 } from "../../../../lib/features/courses/paid-course-api";
-import {
-  LuBookOpen,
-  LuPencil,
-  LuPlus,
-  LuTrash2,
-  LuX,
-} from "react-icons/lu";
+import { LuBookOpen, LuPlus, LuX } from "react-icons/lu";
 import AllCourseLoader from "./AllCourseLoader";
 import AllCourseError from "./AllCourseError";
 import Filter from "./Filter";
-import { TbCurrencyTaka } from "react-icons/tb";
 import { useRouter } from "@/lib/navigation";
-import { MdLibraryAdd } from "react-icons/md";
-import { useSelector } from "react-redux";
+
 import { toast } from "sonner";
 import { useGetProfileQuery } from "../../../../lib/features/auth/authApi";
 import FilterdCourseTable from "./FilterdCourseTable";
@@ -278,7 +268,6 @@ const AllCourse = () => {
               deletingCourseId={deletingCourseId}
               role={role}
               handleViewLessons={handleViewLessons}
-
             />
           </div>
         ) : (

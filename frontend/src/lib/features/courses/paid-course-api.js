@@ -123,14 +123,6 @@ export const paidCourseApi = createApi({
       }),
       providesTags: ["Course"],
     }),
-
-    getUpcomingCourseEight: builder.query({
-      query: () => ({
-        url: `/courses/upcoming-eight`,
-        method: "GET",
-      }),
-      providesTags: ["Course"],
-    }),
   }),
 });
 
@@ -151,5 +143,4 @@ export const {
   useGetCourseByIdQuery,
 
   useGetUpcomingCourseQuery,
-  useGetUpcomingCourseEightQuery,
 } = paidCourseApi;

@@ -5,12 +5,12 @@ import Image from "@/components/common/AppImage";
 import { useRouter } from "@/lib/navigation";
 
 import VideoModal from "../../../Home/VideoModal";
-import SkeletonLoader from "../../../../utils/SkeletonLoader";
 
 import {
   useDeleteFreeCourseMutation,
   useGetFreeCoursesQuery,
 } from "../../../../lib/features/courses/free-course-api";
+import FreeCourseListLoader from "./FreeCourseListLoader";
 
 const FreeVideoList = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -25,11 +25,10 @@ const FreeVideoList = () => {
     isLoading: isFreeCoursesLoading,
     refetch,
   } = useGetFreeCoursesQuery();
-  const [deleteFreeCourse, { isLoading: deleting }] =
-    useDeleteFreeCourseMutation();
+  const [deleteFreeCourse] = useDeleteFreeCourseMutation();
 
   if (isFreeCoursesLoading) {
-    return <SkeletonLoader />;
+    return <FreeCourseListLoader />;
   }
 
   const handleEdit = (course) => {
