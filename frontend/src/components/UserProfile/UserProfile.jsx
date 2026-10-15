@@ -68,9 +68,6 @@ const UserProfile = ({ userId }) => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Navbar */}
-      <ProfileNavbar profile={currentUser} />
-
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <MobileSectionTopBar />
 
@@ -185,7 +182,7 @@ const UserProfile = ({ userId }) => {
 
           {/* RIGHT INFORMATION CARD */}
 
-          <section className="min-w-0">
+          <section className="min-w-0 mt-10 ">
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               {/* Header */}
               <div className="border-b border-slate-100 px-5 py-5 sm:px-7">

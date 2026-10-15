@@ -1,5 +1,3 @@
-"use client";
-
 import {
   authApi,
   useLogoutUserMutation,
@@ -15,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 
 const ProfileNavbar = ({ profile }) => {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 

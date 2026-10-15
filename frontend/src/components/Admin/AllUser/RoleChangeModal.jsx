@@ -1,7 +1,13 @@
-"use client";
+// React
+import { useState } from "react";
 
-import React, { useState } from "react";
+// Third Party
+import { toast } from "sonner";
+
+// Icons
 import { FaUserShield, FaChevronDown } from "react-icons/fa";
+
+// Redux
 import { useUserRoleChangeMutation } from "../../../lib/features/profile/profileApi";
 
 const RoleChangeModal = ({ selectedUser, setShowRoleModal }) => {
@@ -12,14 +18,14 @@ const RoleChangeModal = ({ selectedUser, setShowRoleModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await userRoleChange({
+      await userRoleChange({
         user_id: selectedUser.id,
         formData: {
           role,
         },
       }).unwrap();
     } catch (error) {
-      console.log(error);
+      toast.error(error?.data?.detail || "Failed to update role");
     } finally {
       setShowRoleModal(false);
     }
