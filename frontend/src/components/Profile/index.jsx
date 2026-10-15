@@ -1,15 +1,7 @@
+// React
 import { useRef, useState } from "react";
-import Image from "@/components/common/AppImage";
-import Link from "@/components/common/AppLink";
 
-import { useGetProfileQuery } from "../../lib/features/auth/authApi";
-import { useUploadAvatarMutation } from "../../lib/features/profile/profileApi";
-
-import ProfileNavbar from "./ProfileNavbar";
-import MobileSectionTopBar from "./MobileSectionTopBar";
-import CountryFlag from "./ui/CountryFlag";
-import InfoCard from "./InfoCard";
-
+// Icons
 import {
   FaUser,
   FaEnvelope,
@@ -31,8 +23,19 @@ import {
   FaEdit,
 } from "react-icons/fa";
 
+// Local
+import InfoCard from "./InfoCard";
 import PreviewImage from "./PreviewImage";
+import CountryFlag from "./ui/CountryFlag";
+import ProfileNavbar from "./ProfileNavbar";
 import ProfileLoader from "./ProfileLoader";
+import Link from "@/components/common/AppLink";
+import Image from "@/components/common/AppImage";
+import MobileSectionTopBar from "./MobileSectionTopBar";
+
+// Redux
+import { useGetProfileQuery } from "../../lib/features/auth/authApi";
+import { useUploadAvatarMutation } from "../../lib/features/profile/profileApi";
 
 const Profile = () => {
   const [copied, setCopied] = useState(false);

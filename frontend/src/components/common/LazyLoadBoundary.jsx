@@ -1,9 +1,6 @@
 import { Component } from "react";
 
-export function LoadingFallback({
-  label = "Loading page",
-  variant = "route",
-}) {
+const LoadingFallback = ({ label = "Loading page", variant = "route" }) => {
   const containerClass =
     variant === "modal"
       ? "fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
@@ -28,7 +25,7 @@ export function LoadingFallback({
       </div>
     </div>
   );
-}
+};
 
 export default class LazyLoadBoundary extends Component {
   state = { hasError: false };
@@ -64,3 +61,5 @@ export default class LazyLoadBoundary extends Component {
     return this.props.children;
   }
 }
+
+export { LoadingFallback };

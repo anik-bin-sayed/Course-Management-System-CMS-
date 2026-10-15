@@ -1,12 +1,15 @@
+// React
 import { lazy, Suspense } from "react";
+// Third Party
 import { Route, Routes } from "react-router-dom";
+
 import AdminGuard from "@/components/auth/AdminGuard";
 import AdminInstructorGuard from "@/components/auth/AdminInstructorGuard";
 import LazyLoadBoundary, {
   LoadingFallback,
 } from "@/components/common/LazyLoadBoundary";
 import ProtectedRoute from "@/routes/ProtectedRoute";
-import PublicRoute from "@/routes/PublicRoute";
+import StudentGuard from "../components/auth/StudentGuard";
 
 const NotFound = lazy(() => import("@/components/NotFound/NotFound"));
 const FreeCoursesPage = lazy(() => import("@/pages/FreeCoursesPage"));
@@ -21,7 +24,7 @@ const UpcomingCourseDetailsPage = lazy(
   () => import("@/pages/UpcomingCourseDetailsPage"),
 );
 const UpcomingCoursesPage = lazy(() => import("@/pages/UpcomingCoursesPage"));
-const VerifyEmailPage = lazy(() => import("@/pages/VerifyEmailPage"));
+
 const ManageCoursesPage = lazy(() => import("@/pages/admin/ManageCoursesPage"));
 const UserDetailsPage = lazy(() => import("@/pages/admin/UserDetailsPage"));
 const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
@@ -29,7 +32,7 @@ const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
 const AppRoutes = () => {
   return (
     <LazyLoadBoundary>
-      <Suspense fallback={<LoadingFallback />}>
+      <Suspense fallback={<></>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
@@ -67,9 +70,9 @@ const AppRoutes = () => {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <StudentGuard>
                 <StudentDashboardPage />
-              </ProtectedRoute>
+              </StudentGuard>
             }
           />
           <Route

@@ -1,17 +1,15 @@
-"use client";
-
 import { useEffect } from "react";
 import { useRouter } from "@/lib/navigation";
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import Loader from "../../utils/Loader";
 
-export default function AdminGuard({ children }) {
+const AdminGuard = ({ children }) => {
   const { data: user, isLoading, isError } = useGetProfileQuery();
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && (isError || user?.role !== "admin")) {
-      router.push("/");
+      router.back();
     }
   }, [isLoading, isError, user, router]);
 
@@ -19,4 +17,6 @@ export default function AdminGuard({ children }) {
   if (isError || user?.role !== "admin") return null;
 
   return <>{children}</>;
-}
+};
+
+export default AdminGuard;

@@ -1,11 +1,9 @@
-"use client";
-
 import { useRouter } from "@/lib/navigation";
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import Loader from "../../utils/Loader";
 import { useEffect } from "react";
 
-export default function AdminInstructorGuard({ children }) {
+const AdminInstructorGuard = ({ children }) => {
   const { data: user, isLoading, isError } = useGetProfileQuery();
   const router = useRouter();
 
@@ -14,7 +12,7 @@ export default function AdminInstructorGuard({ children }) {
       !isLoading &&
       (isError || (user?.role !== "admin" && user?.role !== "instructor"))
     ) {
-      router.push("/");
+      router.back();
     }
   }, [isLoading, isError, user, router]);
 
@@ -23,4 +21,5 @@ export default function AdminInstructorGuard({ children }) {
     return null;
 
   return <>{children}</>;
-}
+};
+export default AdminInstructorGuard;
