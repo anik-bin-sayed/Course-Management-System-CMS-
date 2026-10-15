@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.dependencies.database import get_db
@@ -73,6 +73,20 @@ async def change_user_role(
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_required),
 ):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    if not user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot change role. User email is not verified.",
+        )
+
     return UserService.change_role(
         db=db,
         user_id=user_id,
