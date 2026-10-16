@@ -1,18 +1,20 @@
 import { lazy } from "react";
-import { useSearchParams } from "@/lib/navigation";
 
-const FreeVideoList = lazy(() => import("./FreeCourse/FreeVideoList"));
-const CreateFreeVideos = lazy(() => import("./FreeCourse/CreateFreeVideos"));
-const CreateCourse = lazy(() => import("./Course/CreateCourse"));
-const EditCourse = lazy(() => import("./Course/EditCourse"));
-const EditPaidCourse = lazy(() => import("./Course/EditPaidCourse"));
-const CategoryList = lazy(() => import("./category/CategoryList"));
-const CreateLesson = lazy(() => import("./Lesson/CreateLesson"));
-const ListLesson = lazy(() => import("./Lesson/ListLesson"));
-const EditLesson = lazy(() => import("./Lesson/EditLesson"));
-const AddLessonInfo = lazy(() => import("./Lesson/AddLessonInfo"));
-const LessonInformation = lazy(() => import("./Lesson/LessonInformation"));
+import { useSearchParams } from "@/lib/navigation";
+import LessonWatchPage from "../../../pages/LessonWatchPage";
+
 const AllCourse = lazy(() => import("./ListPaidCourse"));
+const ListLesson = lazy(() => import("./Lesson/ListLesson"));
+const EditCourse = lazy(() => import("./Course/EditCourse"));
+const EditLesson = lazy(() => import("./Lesson/EditLesson"));
+const CreateCourse = lazy(() => import("./Course/CreateCourse"));
+const CreateLesson = lazy(() => import("./Lesson/CreateLesson"));
+const CategoryList = lazy(() => import("./category/CategoryList"));
+const AddLessonInfo = lazy(() => import("./Lesson/AddLessonInfo"));
+const EditPaidCourse = lazy(() => import("./Course/EditPaidCourse"));
+const FreeVideoList = lazy(() => import("./FreeCourse/FreeVideoList"));
+const LessonInformation = lazy(() => import("./Lesson/LessonInformation"));
+const CreateFreeVideos = lazy(() => import("./FreeCourse/CreateFreeVideos"));
 
 const ManageCourse = () => {
   const searchParams = useSearchParams();
@@ -56,8 +58,8 @@ const ManageCourse = () => {
       case "lesson-information":
         return <LessonInformation />;
 
-      // case "lesson-information":
-      //   return <LessonInformation />;
+      case "watch":
+        return <LessonWatchPage />;
 
       default:
         return <div className="p-6">Select an option</div>;

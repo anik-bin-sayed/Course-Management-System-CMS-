@@ -1,5 +1,3 @@
-"use client";
-
 import {
   FiEdit2,
   FiTrash2,
@@ -7,32 +5,34 @@ import {
   FiPlus,
   FiClock,
 } from "react-icons/fi";
+import { useState } from "react";
+import { MdInfo } from "react-icons/md";
+import { GoArrowLeft } from "react-icons/go";
+
 import {
   useDeleteLessonMutation,
   useGetCourseLessonsQuery,
 } from "../../../../lib/features/lesson/lessonApi";
-import { useRouter, useSearchParams } from "@/lib/navigation";
-import { GoArrowLeft } from "react-icons/go";
-import { useState } from "react";
-import { MdInfo } from "react-icons/md";
+
+import { useSearchParams } from "@/lib/navigation";
 
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const ListLesson = () => {
   const [deleteLessonId, setDeleteLessonId] = useState(null);
 
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const courseId = searchParams.get("course_id");
   const { data: lessons = [] } = useGetCourseLessonsQuery({ id: courseId });
 
   const [deleteLesson] = useDeleteLessonMutation();
-  // useGetVideoCountAndDurationQuery;
 
   const handleCreateLessons = (course) => {
-    router.push(
-      `/manage-course?tab=create-lessons&course_id=${encodeURIComponent(course.id)}`,
+    navigate(
+      `/admin/manage-course?tab=create-lessons&course_id=${encodeURIComponent(course.id)}`,
     );
   };
 
@@ -49,7 +49,7 @@ const ListLesson = () => {
   };
 
   const handleEditLesson = (lesson) => {
-    router.push(
+    navigate(
       `/manage-course?tab=edit-lesson&course_id=${encodeURIComponent(
         courseId,
       )}&lesson_id=${encodeURIComponent(lesson.id)}`,
@@ -57,13 +57,13 @@ const ListLesson = () => {
   };
 
   const handleInformation = (lesson) => {
-    router.push(
+    navigate(
       `/admin/manage-course?tab=create-lesson-information&lesson_id=${encodeURIComponent(lesson.id)}`,
     );
   };
 
   const handleGetInformation = (lesson) => {
-    router.push(
+    navigate(
       `/admin/manage-course?tab=lesson-information&lesson_id=${encodeURIComponent(lesson.id)}&course_id=${encodeURIComponent(
         courseId,
       )}`,

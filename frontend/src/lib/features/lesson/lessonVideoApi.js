@@ -87,6 +87,7 @@ export const lessonVideoApi = createApi({
 export const {
   useCreateLessonVideoMutation,
   useGetLessonVideosQuery,
+  useLazyGetLessonVideosQuery,
   useGetLessonVideoByIdQuery,
   useUpdateLessonVideoMutation,
   useDeleteLessonVideoMutation,

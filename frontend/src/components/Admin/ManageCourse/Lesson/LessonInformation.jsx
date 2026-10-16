@@ -24,10 +24,12 @@ import {
   useDeleteLessonVideoMutation,
   useGetLessonVideosQuery,
 } from "../../../../lib/features/lesson/lessonVideoApi";
+import { useNavigate } from "react-router-dom";
 
 const LessonInformation = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
+
+  const navigate = useNavigate();
 
   const lessonId = searchParams.get("lesson_id");
   const { data: lesson } = useGetLessonByIdQuery({ id: lessonId });
@@ -35,13 +37,15 @@ const LessonInformation = () => {
   const [deleteLessonVideo, { isLoading: isDeleting }] =
     useDeleteLessonVideoMutation();
 
+  console.log("lessonId", videos);
+
   const openVideoForm = (videoId) => {
     const query = new URLSearchParams({
       tab: "create-lesson-information",
       lesson_id: lessonId,
     });
     if (videoId) query.set("video_id", videoId);
-    router.push(`/admin/manage-course?${query.toString()}`);
+    navigate(`/admin/manage-course?${query.toString()}`);
   };
 
   const handleDeleteVideo = async (video) => {
@@ -78,12 +82,26 @@ const LessonInformation = () => {
     });
   };
 
+  const handleWatchVideo = (videoId) => {
+    navigate(
+      `/admin/manage-course?tab=watch&lesson_id=${encodeURIComponent(lessonId)}&video_id=${encodeURIComponent(videoId)}`,
+    );
+  };
+
+  const handleGetInformation = (lesson) => {
+    navigate(
+      `/admin/manage-course?tab=lesson-information&lesson_id=${encodeURIComponent(lesson.id)}&course_id=${encodeURIComponent(
+        courseId,
+      )}`,
+    );
+  };
+
   return (
     <>
       <div className="min-h-[calc(100vh-80px)] bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <button
-            onClick={() => router.back()}
+            onClick={() => navigate(-1)}
             className="group inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:shadow-md active:scale-95 mb-4"
           >
             <GoArrowLeft
@@ -245,15 +263,16 @@ const LessonInformation = () => {
 
                       {/* Actions */}
                       <div className="flex shrink-0 items-center gap-2">
-                        <a
-                          href={`/watch/${lessonId}`}
-                          target="_blank"
+                        <button
+                          type="button"
                           rel="noopener noreferrer"
-                          className="flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 px-3 text-xs font-semibold text-gray-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+                          onClick={() => handleWatchVideo(video.id)}
+                          aria-label={`Watch ${video.title}`}
+                          className="flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 px-3 text-xs font-semibold text-gray-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 cursor-pointer"
                         >
                           <FiExternalLink size={14} />
                           <span className="hidden sm:inline">Watch</span>
-                        </a>
+                        </button>
 
                         <button
                           type="button"

@@ -14,6 +14,7 @@ const StudentGuard = ({ children }) => {
     refetch,
     error,
   } = useGetProfileQuery();
+
   const location = useLocation();
 
   if (isUninitialized || isLoading || (isFetching && !user)) return <Loader />;

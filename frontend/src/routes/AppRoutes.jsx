@@ -76,14 +76,14 @@ const AppRoutes = () => {
               </StudentGuard>
             }
           />
-          <Route
+          {/* <Route
             path="/watch/:lessonId"
             element={
               <ProtectedRoute>
                 <LessonWatchPage />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/profile/edit"
             element={
