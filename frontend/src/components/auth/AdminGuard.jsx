@@ -1,20 +1,33 @@
-import { useEffect } from "react";
-import { useRouter } from "@/lib/navigation";
+import { Navigate, useLocation } from "react-router-dom";
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import Loader from "../../utils/Loader";
+import AuthCheckFallback from "./AuthCheckFallback";
+import { isDefinitiveAuthError } from "../../lib/features/auth/authErrors";
 
 const AdminGuard = ({ children }) => {
-  const { data: user, isLoading, isError } = useGetProfileQuery();
-  const router = useRouter();
+  const {
+    data: user,
+    isError,
+    isFetching,
+    isLoading,
+    isUninitialized,
+    refetch,
+    error,
+  } = useGetProfileQuery();
+  const location = useLocation();
 
-  useEffect(() => {
-    if (!isLoading && (isError || user?.role !== "admin")) {
-      router.back();
-    }
-  }, [isLoading, isError, user, router]);
+  if (isUninitialized || isLoading || (isFetching && !user)) return <Loader />;
 
-  if (isLoading) return <Loader />;
-  if (isError || user?.role !== "admin") return null;
+  if (isError && !isDefinitiveAuthError(error)) {
+    if (user?.role === "admin") return <>{children}</>;
+    return <AuthCheckFallback onRetry={refetch} />;
+  }
+
+  if (isError || user?.role !== "admin") {
+    return <Navigate to="/" replace state={{ from: location }} />;
+  }
+
+  if (!user) return <AuthCheckFallback onRetry={refetch} />;
 
   return <>{children}</>;
 };

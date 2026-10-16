@@ -1,8 +1,4 @@
-"use client";
-
 import { useSearchParams } from "@/lib/navigation";
-
-import React, { Suspense } from "react";
 
 import Loader from "../../../../../utils/Loader";
 import EditCourseForm from "./EditCourseForm";
@@ -14,13 +10,9 @@ const EditCourse = () => {
   const slug = searchParams.get("slug");
   const { data, isLoading } = useGetCourseBySlugQuery(slug);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader variant="inline" />;
 
-  return (
-    <Suspense fallback={<Loader />}>
-      <EditCourseForm editData={data} />
-    </Suspense>
-  );
+  return <EditCourseForm editData={data} />;
 };
 
 export default EditCourse;

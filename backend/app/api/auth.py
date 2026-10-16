@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from fastapi import Response
 
@@ -10,6 +10,7 @@ from app.services.user_service import UserService
 from app.utils.cookies import set_auth_cookies
 from app.core.dependencies import get_current_user
 from app.repositories.user_repository import UserRepository
+from app.services.profile_cache import invalidate_user_profile_cache
 
 router = APIRouter(
     prefix="/auth",
@@ -34,12 +35,14 @@ def register(
 def verify_email(
     data: VerifyEmailRequest,
     response: Response,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     result = UserService.verify_email(
         db,
         data,
     )
+    background_tasks.add_task(invalidate_user_profile_cache, result["user_id"])
     set_auth_cookies(
         response,
         result["access"],
@@ -103,6 +106,7 @@ def me(
 @router.post("/logout")
 def logout(
     response: Response,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -110,6 +114,7 @@ def logout(
         db=db,
         user=current_user,
     )
+    background_tasks.add_task(invalidate_user_profile_cache, current_user.id)
 
     response.delete_cookie(
         key="access_token",

@@ -1,4 +1,5 @@
 import json
+import logging
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -16,6 +17,8 @@ router = APIRouter(
     tags=["Categories"],
 )
 
+logger = logging.getLogger(__name__)
+
 CATEGORY_CACHE_KEY = "categories:all"
 CATEGORY_CACHE_TTL = 300
 
@@ -24,7 +27,7 @@ async def invalidate_category_cache():
     try:
         await redis_client.delete(CATEGORY_CACHE_KEY)
     except Exception:
-        pass
+        logger.warning("Redis category cache invalidation failed", exc_info=True)
 
 
 @router.post(
@@ -81,7 +84,7 @@ async def get_categories(
             return json.loads(cached_categories)
 
     except Exception:
-        pass
+        logger.warning("Redis category cache read failed", exc_info=True)
 
     categories = CategoryService.get_all(db)
 
@@ -97,7 +100,7 @@ async def get_categories(
             ex=CATEGORY_CACHE_TTL,
         )
     except Exception:
-        pass
+        logger.warning("Redis category cache write failed", exc_info=True)
 
     return category_data
 

@@ -1,22 +1,9 @@
-import { lazy, Suspense } from "react";
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
-import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
-import Loader from "@/utils/Loader";
+import { lazy } from "react";
 
-const ManageCourse = lazy(() => import("@/components/Admin/ManageCourse"));
+const ManageCourse = lazy(() => import("../../components/Admin/ManageCourse"));
 
-export default function ManageCoursesPage() {
-  const { data, isLoading } = useGetProfileQuery();
+const ManageCoursesPage = () => {
+  return <ManageCourse />;
+};
 
-  if (isLoading) return <Loader />;
-
-  return (
-    <Suspense
-      fallback={
-        <LoadingFallback label="Loading course manager..." variant="inline" />
-      }
-    >
-      <ManageCourse profileData={data} />
-    </Suspense>
-  );
-}
+export default ManageCoursesPage;

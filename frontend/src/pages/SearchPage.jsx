@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   FiChevronLeft,
@@ -11,7 +11,10 @@ import AppImage from "@/components/common/AppImage";
 import AppLink from "@/components/common/AppLink";
 import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 import { useSearchParams, useRouter } from "@/lib/navigation";
-import { useGetAllCourseQuery } from "@/lib/features/courses/paid-course-api";
+import {
+  getCachedPaidCourses,
+  useGetAllCourseQuery,
+} from "@/lib/features/courses/paid-course-api";
 import { useGetFreeCoursesQuery } from "@/lib/features/courses/free-course-api";
 
 const PAGE_SIZE = 8;
@@ -232,10 +235,20 @@ export default function SearchPage() {
     setFreePage(1);
   }, [query]);
 
-  const paidResults = useGetAllCourseQuery(
-    { search: query, status: "published", page: paidPage, limit: PAGE_SIZE },
-    { skip: !query },
+  const paidQueryArgs = useMemo(
+    () => ({
+      search: query,
+      status: "published",
+      page: paidPage,
+      limit: PAGE_SIZE,
+    }),
+    [query, paidPage],
   );
+  const cachedPaidData = useMemo(
+    () => getCachedPaidCourses(paidQueryArgs),
+    [paidQueryArgs],
+  );
+  const paidResults = useGetAllCourseQuery(paidQueryArgs, { skip: !query });
   const freeResults = useGetFreeCoursesQuery(
     { search: query, page: freePage, limit: PAGE_SIZE },
     { skip: !query },
@@ -313,12 +326,14 @@ export default function SearchPage() {
               title="Paid courses"
               description="Structured courses with one-time pricing."
               kind="paid"
-              courses={paidResults.data?.data || []}
-              total={paidResults.data?.total || 0}
+              courses={(paidResults.data || cachedPaidData)?.data || []}
+              total={(paidResults.data || cachedPaidData)?.total || 0}
               page={paidPage}
-              totalPages={paidResults.data?.total_pages || 1}
-              isLoading={paidResults.isLoading}
-              isError={paidResults.isError}
+              totalPages={
+                (paidResults.data || cachedPaidData)?.total_pages || 1
+              }
+              isLoading={paidResults.isLoading && !cachedPaidData}
+              isError={paidResults.isError && !cachedPaidData}
               onPageChange={setPaidPage}
             />
             <ResultsSection

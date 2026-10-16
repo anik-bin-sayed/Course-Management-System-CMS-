@@ -1,17 +1,10 @@
-import { useGetUpcomingCourseQuery } from "../../lib/features/courses/paid-course-api";
 import { FiClock, FiArrowRight, FiBookOpen, FiGlobe } from "react-icons/fi";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 import CourseCardLoader from "./CourseCardLoader";
 
-const UpcomingCourse = () => {
-  const {
-    data: upcomingCourseData,
-    isLoading: upcoming,
-    isError,
-  } = useGetUpcomingCourseQuery();
-
-  const courses = upcomingCourseData || [];
+const UpcomingCourse = ({ data, loading, isError }) => {
+  const courses = data || [];
 
   const getDaysLeft = (date) => {
     if (!date) return "";
@@ -27,7 +20,7 @@ const UpcomingCourse = () => {
     return `${days} days left`;
   };
 
-  if (upcoming) {
+  if (loading) {
     return <CourseCardLoader />;
   }
 

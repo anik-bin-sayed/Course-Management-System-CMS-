@@ -1,4 +1,5 @@
 import json
+import logging
 
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -23,6 +24,8 @@ router = APIRouter(
     prefix="/lessons",
     tags=["Lessons"],
 )
+
+logger = logging.getLogger(__name__)
 
 CACHE_TTL = 300  # 5 minutes
 
@@ -50,7 +53,7 @@ async def invalidate_lesson_cache():
             await redis_client.delete(*keys_to_delete)
 
     except Exception:
-        pass
+        logger.warning("Redis lesson cache invalidation failed", exc_info=True)
 
 
 @router.post(
@@ -98,7 +101,7 @@ async def get_course_lessons(
             return json.loads(cached_lessons)
 
     except Exception:
-        pass
+        logger.warning("Redis lesson-list cache read failed", exc_info=True)
 
     lessons = LessonService.get_course_lessons(
         db,
@@ -115,7 +118,7 @@ async def get_course_lessons(
         )
 
     except Exception:
-        pass
+        logger.warning("Redis lesson-list cache write failed", exc_info=True)
 
     return lessons
 
@@ -166,6 +169,7 @@ async def get_lesson_by_id(
 
     except Exception:
         lesson = None
+        logger.warning("Redis lesson-detail cache read failed", exc_info=True)
 
     if lesson is None:
         try:
@@ -194,7 +198,7 @@ async def get_lesson_by_id(
         )
 
     except Exception:
-        pass
+        logger.warning("Redis lesson-detail cache write failed", exc_info=True)
 
     return lesson
 

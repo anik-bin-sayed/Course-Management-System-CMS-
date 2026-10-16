@@ -1,8 +1,13 @@
 import React from "react";
 
-const Loader = () => {
+const Loader = ({ variant = "fullscreen" }) => {
+  const containerClass =
+    variant === "inline"
+      ? "flex min-h-48 w-full items-center justify-center bg-white"
+      : "fixed inset-0 flex items-center justify-center bg-white";
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white">
+    <div className={containerClass}>
       <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-yellow-400 shadow-lg">
         {/* LH Logo */}
         <span className="text-3xl font-black tracking-tight text-black">L</span>

@@ -2,17 +2,21 @@ import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 import { HiArrowDown, HiCheck, HiPlay } from "react-icons/hi2";
 
+const HERO_IMAGE_URL =
+  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80";
+
 const Hero = () => {
   return (
     <section className="relative min-h-[40vh] flex items-center overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+          src={HERO_IMAGE_URL}
           alt="Background"
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           fill
           priority
+          fetchPriority="high"
         />
 
         {/* Gradient Overlay */}
@@ -111,7 +115,7 @@ const Hero = () => {
               {/* Main Image Card */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20 border border-white/10 aspect-4/3">
                 <Image
-                  src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  src={HERO_IMAGE_URL}
                   alt="Students learning"
                   fill
                   className="object-cover"

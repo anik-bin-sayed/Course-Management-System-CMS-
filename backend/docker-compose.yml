@@ -9,7 +9,10 @@ services:
       - .env
     environment:
       REDIS_URL: redis://redis:6379/0
-      DATABASE_URL: ${DATABASE_URL_DOCKER}
+      DATABASE_URL: ${DATABASE_URL_DOCKER:-${DATABASE_URL}}
+      DATABASE_URL_DOCKER: ${DATABASE_URL_DOCKER:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       redis:
         condition: service_healthy

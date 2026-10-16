@@ -17,14 +17,6 @@ const FreeCourses = ({ data, loading }) => {
 
   const { isAuthenticated } = useSelector((state) => state?.auth);
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="py-20 text-center text-gray-600">
-        No free courses available at the moment.
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <section className="bg-gray-50 py-16">
@@ -54,6 +46,14 @@ const FreeCourses = ({ data, loading }) => {
           </div>
         </div>
       </section>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="py-20 text-center text-gray-600">
+        No free courses available at the moment.
+      </div>
     );
   }
 

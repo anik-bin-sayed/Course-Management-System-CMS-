@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -6,12 +8,26 @@ from contextlib import asynccontextmanager
 from app.api.routes import api_router
 from app.core.redis import redis_client
 
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await redis_client.ping()
-    yield
-    await redis_client.aclose()
+    try:
+        await redis_client.ping()
+    except Exception:
+        logger.warning(
+            "Redis unavailable at startup; continuing without cache",
+            exc_info=True,
+        )
+
+    try:
+        yield
+    finally:
+        try:
+            await redis_client.aclose()
+        except Exception:
+            logger.warning("Failed to close Redis connection cleanly", exc_info=True)
 
 
 # initialize app

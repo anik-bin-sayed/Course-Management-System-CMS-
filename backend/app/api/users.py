@@ -10,6 +10,7 @@ from app.schemas.user import UserResponse, UserRoleUpdate
 from app.schemas.course import InstructorOption
 
 from app.services.user_service import UserService
+from app.services.profile_cache import invalidate_user_profile_cache
 
 router = APIRouter(
     prefix="/users",
@@ -87,8 +88,10 @@ async def change_user_role(
             detail="Cannot change role. User email is not verified.",
         )
 
-    return UserService.change_role(
+    user = UserService.change_role(
         db=db,
         user_id=user_id,
         role=data.role,
     )
+    await invalidate_user_profile_cache(user_id)
+    return user

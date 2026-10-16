@@ -5,15 +5,16 @@ import { Route, Routes } from "react-router-dom";
 
 import AdminGuard from "@/components/auth/AdminGuard";
 import AdminInstructorGuard from "@/components/auth/AdminInstructorGuard";
+import AdminLayout from "@/components/Admin/AdminLayout";
 import LazyLoadBoundary, {
   LoadingFallback,
 } from "@/components/common/LazyLoadBoundary";
+import HomePage from "@/pages/HomePage";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import StudentGuard from "../components/auth/StudentGuard";
 
 const NotFound = lazy(() => import("@/components/NotFound/NotFound"));
 const FreeCoursesPage = lazy(() => import("@/pages/FreeCoursesPage"));
-const HomePage = lazy(() => import("@/pages/HomePage"));
 const LessonWatchPage = lazy(() => import("@/pages/LessonWatchPage"));
 const ProfileEditPage = lazy(() => import("@/pages/ProfileEditPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
@@ -107,14 +108,16 @@ const AppRoutes = () => {
               </AdminGuard>
             }
           />
-          <Route
-            path="/admin/manage-course"
-            element={
-              <AdminInstructorGuard>
-                <ManageCoursesPage />
-              </AdminInstructorGuard>
-            }
-          />
+          <Route path="/admin/manage-course" element={<AdminLayout />}>
+            <Route
+              index
+              element={
+                <AdminInstructorGuard>
+                  <ManageCoursesPage />
+                </AdminInstructorGuard>
+              }
+            />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

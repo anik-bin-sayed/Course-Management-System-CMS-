@@ -10,7 +10,7 @@ const CourseCardLoader = () => {
 
         {/* Cards Skeleton */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {[...Array(8)].map((_, index) => (
+          {[...Array(4)].map((_, index) => (
             <div
               key={index}
               className="overflow-hidden rounded-2xl border border-gray-200 bg-white"

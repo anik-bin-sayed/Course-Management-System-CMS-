@@ -1,8 +1,8 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Mutex } from "async-mutex";
-import { logout, setAccessToken } from "../auth/authSlice";
+import { logout } from "../auth/authSlice";
+import { isDefinitiveAuthError } from "../auth/authErrors";
 
-const mutex = new Mutex();
+let refreshPromise;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:8000/api",
@@ -10,36 +10,47 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
-  await mutex.waitForUnlock();
-
   let result = await baseQuery(args, api, extraOptions);
+  const requestUrl = typeof args === "string" ? args : args?.url;
+  const shouldSkipRefresh =
+    typeof requestUrl === "string" &&
+    /^\/?auth\/(login|register|check-email|verify-email|refresh)$/.test(
+      requestUrl,
+    );
 
-  if (result.error && result?.error?.status === 401) {
-    if (!mutex.isLocked()) {
-      const release = await mutex.acquire();
+  if (result.error?.status !== 401 || shouldSkipRefresh) return result;
 
-      try {
-        const refreshResult = await baseQuery(
-          {
-            url: "/auth/refresh",
-            method: "POST",
-          },
-          api,
-          extraOptions,
-        );
+  if (!refreshPromise) {
+    refreshPromise = baseQuery(
+      {
+        url: "/auth/refresh",
+        method: "POST",
+      },
+      api,
+      extraOptions,
+    );
+  }
 
-        if (refreshResult?.data) {
-          result = await baseQuery(args, api, extraOptions);
-        } else {
-          api.dispatch(logout());
-        }
-      } finally {
-        release();
-      }
-    } else {
-      await mutex.waitForUnlock();
-      result = await baseQuery(args, api, extraOptions);
+  const currentRefreshPromise = refreshPromise;
+  let refreshResult;
+  try {
+    refreshResult = await currentRefreshPromise;
+  } finally {
+    if (refreshPromise === currentRefreshPromise) {
+      refreshPromise = undefined;
     }
+  }
+
+  if (!refreshResult.data) {
+    if (isDefinitiveAuthError(refreshResult.error)) {
+      api.dispatch(logout());
+    }
+    return refreshResult;
+  }
+
+  result = await baseQuery(args, api, extraOptions);
+  if (result.error?.status === 401) {
+    api.dispatch(logout());
   }
 
   return result;

@@ -1,12 +1,30 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import Loader from "@/utils/Loader";
+import AuthCheckFallback from "@/components/auth/AuthCheckFallback";
+import { isDefinitiveAuthError } from "@/lib/features/auth/authErrors";
 
 const ProtectedRoute = ({ children }) => {
-  const { isLoading, isError } = useGetProfileQuery();
+  const {
+    data: user,
+    isError,
+    isFetching,
+    isLoading,
+    isUninitialized,
+    refetch,
+    error,
+  } = useGetProfileQuery();
+  const location = useLocation();
 
-  if (isLoading) return <Loader />;
-  if (isError) return <Navigate to="/" replace />;
+  if (isUninitialized || isLoading || (isFetching && !user)) return <Loader />;
+  if (isError && !isDefinitiveAuthError(error)) {
+    if (user) return children;
+    return <AuthCheckFallback onRetry={refetch} />;
+  }
+  if (isError || !user) {
+    return <Navigate to="/" replace state={{ from: location }} />;
+  }
+
   return children;
 };
 

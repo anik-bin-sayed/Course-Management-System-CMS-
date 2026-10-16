@@ -3,9 +3,15 @@ import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import Loader from "@/utils/Loader";
 
 export default function PublicRoute() {
-  const { data: user, isLoading, isError } = useGetProfileQuery();
+  const {
+    data: user,
+    isError,
+    isFetching,
+    isLoading,
+    isUninitialized,
+  } = useGetProfileQuery();
 
-  if (isLoading) return <Loader />;
+  if (isUninitialized || isLoading || (isFetching && !user)) return <Loader />;
   if (!isError && user) return <Navigate to="/" replace />;
   return <Outlet />;
 }

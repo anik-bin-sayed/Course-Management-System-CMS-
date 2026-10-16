@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException
@@ -11,6 +12,8 @@ from app.utils.jwt import create_access_token, create_refresh_token, decode_toke
 from app.utils.generate_verification_code import generate_verification_code
 
 from app.services.email_service import send_verification_email
+
+logger = logging.getLogger(__name__)
 
 
 class UserService:
@@ -91,6 +94,7 @@ class UserService:
             "message": "Email verified successfully",
             "access": access,
             "refresh": refresh,
+            "user_id": user.id,
         }
 
     # Login
@@ -178,12 +182,14 @@ class UserService:
         payload = decode_token(refresh_token)
 
         if not payload:
+            logger.info("Refresh rejected: token is invalid or expired")
             raise HTTPException(
                 status_code=401,
                 detail="Invalid or expired refresh token",
             )
 
-        if payload["type"] != "refresh":
+        if payload.get("type") != "refresh" or not payload.get("sub"):
+            logger.info("Refresh rejected: token type or subject is invalid")
             raise HTTPException(status_code=401, detail="Invalid token type")
 
         user = UserRepository.get_by_refresh_token(
@@ -192,6 +198,7 @@ class UserService:
         )
 
         if not user:
+            logger.info("Refresh rejected: token is no longer the active user token")
             raise HTTPException(
                 status_code=401,
                 detail="Refresh token expired",

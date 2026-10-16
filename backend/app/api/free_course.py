@@ -1,4 +1,5 @@
 import json
+import logging
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -21,6 +22,8 @@ router = APIRouter(
     prefix="/free-courses",
     tags=["Free Courses"],
 )
+
+logger = logging.getLogger(__name__)
 
 CACHE_TTL = 300
 
@@ -49,7 +52,7 @@ async def invalidate_free_course_cache():
             await redis_client.delete(*keys_to_delete)
 
     except Exception:
-        pass
+        logger.warning("Redis free-course cache invalidation failed", exc_info=True)
 
 
 @router.post("/")
@@ -107,7 +110,7 @@ async def get_all_free_courses(
             return json.loads(cached_courses)
 
     except Exception:
-        pass
+        logger.warning("Redis free-course cache read failed", exc_info=True)
 
     courses = FreeCourseService.get_all(
         db=db,
@@ -126,7 +129,7 @@ async def get_all_free_courses(
         )
 
     except Exception:
-        pass
+        logger.warning("Redis free-course cache write failed", exc_info=True)
 
     return courses
 
@@ -201,7 +204,7 @@ async def get_course_by_slug(
             return json.loads(cached_course)
 
     except Exception:
-        pass
+        logger.warning("Redis free-course detail cache read failed", exc_info=True)
 
     course = FreeCourseRepository.get_by_slug(
         db=db,
@@ -224,6 +227,6 @@ async def get_course_by_slug(
         )
 
     except Exception:
-        pass
+        logger.warning("Redis free-course detail cache write failed", exc_info=True)
 
     return course

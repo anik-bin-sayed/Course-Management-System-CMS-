@@ -1,24 +1,36 @@
-import { useRouter } from "@/lib/navigation";
+import { Navigate, useLocation } from "react-router-dom";
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
 import Loader from "../../utils/Loader";
-import { useEffect } from "react";
+import AuthCheckFallback from "./AuthCheckFallback";
+import { isDefinitiveAuthError } from "../../lib/features/auth/authErrors";
 
 const AdminInstructorGuard = ({ children }) => {
-  const { data: user, isLoading, isError } = useGetProfileQuery();
-  const router = useRouter();
+  const {
+    data: user,
+    isError,
+    isFetching,
+    isLoading,
+    isUninitialized,
+    refetch,
+    error,
+  } = useGetProfileQuery();
+  const location = useLocation();
+  const allowedRole = user?.role === "admin" || user?.role === "instructor";
 
-  useEffect(() => {
-    if (
-      !isLoading &&
-      (isError || (user?.role !== "admin" && user?.role !== "instructor"))
-    ) {
-      router.back();
-    }
-  }, [isLoading, isError, user, router]);
+  if (isUninitialized || isLoading || (isFetching && !user)) {
+    return <Loader variant="inline" />;
+  }
 
-  if (isLoading) return <Loader />;
-  if (isError || (user?.role !== "admin" && user?.role !== "instructor"))
-    return null;
+  if (isError && !isDefinitiveAuthError(error)) {
+    if (user && allowedRole) return <>{children}</>;
+    return <AuthCheckFallback inline onRetry={refetch} />;
+  }
+
+  if (isError || !allowedRole) {
+    return <Navigate to="/" replace state={{ from: location }} />;
+  }
+
+  if (!user) return <AuthCheckFallback inline onRetry={refetch} />;
 
   return <>{children}</>;
 };

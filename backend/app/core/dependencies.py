@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
@@ -5,6 +7,8 @@ from app.dependencies.database import get_db
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.utils.jwt import decode_token
+
+logger = logging.getLogger(__name__)
 
 
 def get_current_user(
@@ -14,6 +18,7 @@ def get_current_user(
     token = request.cookies.get("access_token")
 
     if not token:
+        logger.info("Authentication rejected: access cookie is missing")
         raise HTTPException(
             status_code=401,
             detail="Not authenticated",
@@ -21,7 +26,8 @@ def get_current_user(
 
     payload = decode_token(token)
 
-    if not payload:
+    if not payload or payload.get("type") != "access" or not payload.get("sub"):
+        logger.info("Authentication rejected: access token is invalid or expired")
         raise HTTPException(
             status_code=401,
             detail="Invalid token",
@@ -33,6 +39,7 @@ def get_current_user(
     )
 
     if not user:
+        logger.info("Authentication rejected: token subject no longer exists")
         raise HTTPException(
             status_code=404,
             detail="User not found",

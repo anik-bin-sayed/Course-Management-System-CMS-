@@ -19,6 +19,7 @@ from app.schemas.profile import UpdateProfileSchema
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserResponse
 from app.core.redis import redis_client
+from app.services.profile_cache import invalidate_user_profile_cache
 
 router = APIRouter(
     prefix="/profile",
@@ -28,16 +29,6 @@ router = APIRouter(
 logger = logging.getLogger(__name__)
 
 PROFILE_CACHE_TTL = 300
-
-
-async def invalidate_user_profile_cache(user_id: str) -> None:
-    try:
-        await redis_client.delete(f"user:profile:{user_id}")
-    except Exception:
-        logger.exception(
-            "Failed to invalidate profile cache for user %s",
-            user_id,
-        )
 
 
 @router.patch("/avatar")
