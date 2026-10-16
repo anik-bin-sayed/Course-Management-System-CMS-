@@ -278,7 +278,7 @@ const StudentCoursePage = ({ showLesson = false }) => {
 
       const nextLesson = lessonIndex >= 0 ? lessons[lessonIndex + 1] : null;
 
-      const watchLink = `/watch/${lesson.id}`;
+      const watchLink = `/dashboard/${encodeURIComponent(course.slug)}/${encodeURIComponent(lesson.id)}/watch?lesson_id=${encodeURIComponent(lesson.id)}&video_id=${encodeURIComponent(videos[0]?.id || "")}`;
 
       return (
         <>
@@ -288,7 +288,6 @@ const StudentCoursePage = ({ showLesson = false }) => {
           >
             <FiArrowLeft aria-hidden="true" /> {course.title}
           </AppLink>
-
           <section className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
@@ -346,10 +345,9 @@ const StudentCoursePage = ({ showLesson = false }) => {
                 ) : (
                   <div className="mt-3 divide-y divide-slate-100">
                     {videos.map((video, index) => (
-                      <a
+                      <AppLink
                         key={video.id}
                         href={watchLink}
-                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex min-h-12 items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-700 transition hover:bg-white hover:text-amber-800"
                       >
@@ -360,7 +358,7 @@ const StudentCoursePage = ({ showLesson = false }) => {
                         </span>
 
                         <FiExternalLink aria-hidden="true" />
-                      </a>
+                      </AppLink>
                     ))}
                   </div>
                 )}
@@ -522,8 +520,7 @@ const StudentCoursePage = ({ showLesson = false }) => {
                   <div className="mt-auto pt-5">
                     {item.video_count > 0 ? (
                       <a
-                        href={`/watch/${item.id}`}
-                        target="_blank"
+                        href={`/dashboard/${encodeURIComponent(course.slug)}/${item.id}`}
                         rel="noopener noreferrer"
                         className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950 transition-colors hover:bg-amber-500 focus-visible:outline-2 focus-visible:outline-amber-600"
                       >

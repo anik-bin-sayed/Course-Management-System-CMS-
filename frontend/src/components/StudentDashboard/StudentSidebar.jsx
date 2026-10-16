@@ -81,9 +81,11 @@ export default function StudentSidebar({
             className="flex min-w-0 items-center gap-2"
             aria-label="LearnHub dashboard"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-amber-300 text-slate-950">
-              <FiBookOpen size={19} aria-hidden="true" />
-            </span>
+            {!collapsed && (
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-amber-300 text-slate-950">
+                <FiBookOpen size={19} aria-hidden="true" />
+              </span>
+            )}
             {!collapsed && (
               <span className="truncate text-lg font-bold text-slate-950">
                 Learn<span className="text-amber-700">Hub</span>
@@ -101,7 +103,7 @@ export default function StudentSidebar({
           <button
             type="button"
             onClick={onToggle}
-            className="hidden p-2 text-slate-500 hover:bg-slate-100 lg:block"
+            className="hidden p-2 text-slate-500 hover:bg-slate-100 lg:block border"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
@@ -112,7 +114,6 @@ export default function StudentSidebar({
             )}
           </button>
         </div>
-
         <nav className="flex-1 overflow-y-auto px-3 py-5">
           <p
             className={`mb-2 px-3 text-[11px] font-semibold uppercase text-slate-400 ${

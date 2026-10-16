@@ -45,6 +45,15 @@ const AppRoutes = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/dashboard/:courseSlug/:lessonId/watch"
+            element={
+              <ProtectedRoute>
+                <LessonWatchPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard/:courseSlug"
             element={

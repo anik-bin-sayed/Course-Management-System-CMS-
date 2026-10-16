@@ -16,17 +16,34 @@ import { useRouter, useSearchParams } from "@/lib/navigation";
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 
 const navItems = [
-  { id: "all-courses", label: "All Courses", icon: <LiaBookSolid /> },
-  { id: "all-free-videos", label: "Free Videos", icon: <CiVideoOn /> },
+  {
+    id: "all-courses",
+    activeIds: ["all-courses", "watch", "list-lessons", "lesson-information"],
+    label: "All Courses",
+    icon: <LiaBookSolid />,
+  },
+  {
+    id: "all-free-videos",
+    activeIds: ["all-free-videos", "edit-free-video"],
+    label: "Free Videos",
+    icon: <CiVideoOn />,
+  },
   {
     id: "create-free-video",
     label: "Create Free Video",
     icon: <CiCirclePlus />,
   },
-  { id: "create-course", label: "Create Course", icon: <IoCreateOutline /> },
-  { id: "category-list", label: "Categories", icon: <TbCategory /> },
+  {
+    id: "create-course",
+    label: "Create Course",
+    icon: <IoCreateOutline />,
+  },
+  {
+    id: "category-list",
+    label: "Categories",
+    icon: <TbCategory />,
+  },
 ];
-
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -119,7 +136,7 @@ const AdminLayout = () => {
                   ? "justify-center px-0"
                   : "justify-start px-3"
               } ${
-                activeTab === item.id
+                (item.activeIds || [item.id]).includes(activeTab)
                   ? "bg-yellow-400 text-black"
                   : "text-gray-500 hover:bg-gray-100"
               }`}
@@ -155,8 +172,10 @@ const AdminLayout = () => {
             <IoReorderThreeOutline />
           </button>
           <h1 className="ml-3 text-lg font-semibold">
-            {navItems.find((item) => item.id === activeTab)?.label ||
-              "Dashboard"}
+            {["watch", "list-lessons"].includes(activeTab)
+              ? "All Courses"
+              : navItems.find((item) => item.id === activeTab)?.label ||
+                "Dashboard"}
           </h1>
           <div className="ml-auto flex items-center space-x-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-2">
             <span className="text-sm text-gray-600">
