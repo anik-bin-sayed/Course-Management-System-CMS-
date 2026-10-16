@@ -14,7 +14,6 @@ import AppLink from "@/components/common/AppLink";
 
 const primaryItems = [
   { label: "My Courses", href: "/dashboard", icon: FiBookOpen },
-  { label: "Explore Courses", href: "/upcoming-course", icon: FiCalendar },
 ];
 
 const unavailableItems = [
