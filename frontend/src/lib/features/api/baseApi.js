@@ -5,7 +5,7 @@ import { isDefinitiveAuthError } from "../auth/authErrors";
 let refreshPromise;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:8000/api",
+  baseUrl: "https://asset-management-fastapi-nextjs.onrender.com/api",
   credentials: "include",
 });
 
