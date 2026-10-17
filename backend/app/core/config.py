@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     SSLCOMMERZ_IS_SANDBOX: bool = True
 
-    FRONTEND_URL: str = "http://localhost:3000"
+    FRONTEND_URL: str = "http://localhost:5173"
     BACKEND_URL: str = "http://localhost:8000"
 
     REDIS_URL: str

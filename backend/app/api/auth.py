@@ -42,6 +42,7 @@ def verify_email(
         db,
         data,
     )
+
     background_tasks.add_task(invalidate_user_profile_cache, result["user_id"])
     set_auth_cookies(
         response,
@@ -53,7 +54,7 @@ def verify_email(
 
 
 @router.post("/check-email")
-async def check_email(data: CheckEmailSchema, db: Session = Depends(get_db)):
+def check_email(data: CheckEmailSchema, db: Session = Depends(get_db)):
     user = UserRepository.get_by_email(
         db,
         data.email,

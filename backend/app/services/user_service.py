@@ -26,6 +26,8 @@ class UserService:
             data.email,
         )
 
+        print("existing", existing)
+
         if existing:
             raise HTTPException(
                 status_code=400,
