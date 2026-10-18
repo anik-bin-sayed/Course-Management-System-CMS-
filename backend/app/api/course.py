@@ -41,10 +41,26 @@ from app.core.dependencies import (
     get_current_user,
 )
 
+from app.core.redis import redis_client
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
 router = APIRouter(
     prefix="/courses",
     tags=["Courses"],
 )
+
+
+async def clear_course_cache():
+    try:
+        keys = await redis_client.keys("paid_course")
+        if keys:
+            await redis_client.delete(*keys)
+            logger.info(f"Cache invalidated:{len(keys)} keys deleted")
+    except Exception as e:
+        logger.warning(f"Redis cache clear failed:{e}")
 
 
 @router.post(
@@ -85,12 +101,16 @@ async def create_course(
         end_date=end_date,
     )
 
-    return await CourseService.create(
+    result = await CourseService.create(
         db,
         data,
         thumbnail,
         current_user,
     )
+
+    await clear_course_cache()
+
+    return result
 
 
 @router.get(
@@ -176,11 +196,12 @@ def remove_course_instructor(
     )
 
 
+#  get course data
 @router.get(
     "",
     response_model=CourseListResponse,
 )
-def get_courses(
+async def get_courses(
     search: str | None = Query(None),
     category_id: int | None = Query(None),
     status: CourseStatus | None = Query(None),
@@ -190,7 +211,27 @@ def get_courses(
     limit: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
-    return CourseService.get_all(
+    cache_key_parts = [
+        "paid_courses",
+        search or "",
+        str(category_id) if category_id else "",
+        status.value if status else "",
+        level or "",
+        language or "",
+        str(page),
+        str(limit),
+    ]
+    cache_key = ":".join(cache_key_parts)
+
+    try:
+        cached = await redis_client.get(cache_key)
+        if cached:
+            logger.info(f"Cache HIT for key: {cache_key}")
+            return CourseListResponse.model_validate_json(cached)
+    except Exception as e:
+        logger.warning(f"Redis GET failed: {e}. Falling back to DB.")
+
+    result = CourseService.get_all(
         db=db,
         search=search,
         category_id=category_id,
@@ -200,6 +241,18 @@ def get_courses(
         page=page,
         limit=limit,
     )
+
+    try:
+        if hasattr(result, "model_dump_json"):
+            data_to_cache = result.model_dump_json()
+        else:
+            data_to_cache = json.dumps(result, default=str)
+        await redis_client.set(cache_key, data_to_cache, ex=300)
+        logger.info(f"Cache set for key : {cache_key}")
+    except Exception as e:
+        logger.warning(f"Redis set failed: {e}")
+
+    return result
 
 
 @router.get(
@@ -226,9 +279,13 @@ async def delete_paid_course(
     admin: User = Depends(admin_required),
 ):
 
-    return await CourseService.delete_course(
+    result = await CourseService.delete_course(
         db=db, course_id=course_id, current_user=current_user
     )
+
+    await clear_course_cache()
+
+    return result
 
 
 @router.get("/{slug}/", response_model=CourseResponse)

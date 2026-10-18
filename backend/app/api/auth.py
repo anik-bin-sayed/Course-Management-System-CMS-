@@ -2,6 +2,8 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from fastapi import Response
 
+from app.utils.cookies import COOKIE_DOMAIN
+
 
 from app.dependencies.database import get_db
 from app.schemas.user import *
@@ -11,6 +13,7 @@ from app.utils.cookies import set_auth_cookies
 from app.core.dependencies import get_current_user
 from app.repositories.user_repository import UserRepository
 from app.services.profile_cache import invalidate_user_profile_cache
+from app.core.config import settings
 
 router = APIRouter(
     prefix="/auth",
@@ -111,25 +114,39 @@ def logout(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    print("==================================", "token")
     UserService.logout(
         db=db,
         user=current_user,
     )
-    background_tasks.add_task(invalidate_user_profile_cache, current_user.id)
+
+    background_tasks.add_task(
+        invalidate_user_profile_cache,
+        current_user.id,
+    )
+
+    is_secure = settings.ENVIRONMENT != "development"
+    same_site_policy = "none" if is_secure else "lax"
 
     response.delete_cookie(
         key="access_token",
+        path="/",
+        domain=COOKIE_DOMAIN,
+        secure=is_secure,
         httponly=True,
-        samesite="lax",
+        samesite=same_site_policy,
     )
 
     response.delete_cookie(
         key="refresh_token",
+        path="/",
+        domain=COOKIE_DOMAIN,
+        secure=is_secure,
         httponly=True,
-        samesite="lax",
+        samesite=same_site_policy,
     )
 
-    return {"message": "Logout successful"}
+    return {"message": "Logged out successfully"}
 
 
 @router.post("/refresh")
