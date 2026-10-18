@@ -2,6 +2,8 @@ from fastapi import Response
 
 from app.core.config import settings
 
+COOKIE_DOMAIN = ".vercel.app"
+
 
 def set_auth_cookies(
     response: Response,
@@ -15,6 +17,7 @@ def set_auth_cookies(
         secure=True,
         samesite="none",
         path="/",
+        domain=COOKIE_DOMAIN,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     )
 
@@ -25,5 +28,6 @@ def set_auth_cookies(
         secure=True,
         samesite="none",
         path="/",
+        domain=COOKIE_DOMAIN,
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
     )
