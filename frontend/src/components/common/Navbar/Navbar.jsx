@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-
 import Link from "@/components/common/AppLink";
-
-// redux
 import { useDispatch } from "react-redux";
-
-// rtk
 import { setUser } from "../../../lib/features/auth/authSlice.js";
 import { useGetProfileQuery } from "../../../lib/features/auth/authApi";
+
+// Icons
+import { FaSearch, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { HiOutlineUserCircle } from "react-icons/hi";
 
 // additional
 import Search from "./Search.jsx";
@@ -23,8 +22,6 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-
-  //  show login sidebar
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navRef = useRef();
@@ -56,7 +53,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY, mobileMenuOpen, searchOpen]);
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -73,7 +69,6 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mobileMenuOpen]);
 
-  // Close search on Escape key
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape" && searchOpen) {
@@ -84,7 +79,6 @@ const Navbar = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [searchOpen]);
 
-  //    When search opens, focus the input
   useEffect(() => {
     if (searchOpen && searchInputRef.current) {
       setTimeout(() => searchInputRef.current.focus(), 200);
@@ -93,22 +87,19 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) setMobileMenuOpen(false);
+      if (window.innerWidth >= 1024) setMobileMenuOpen(false); // Changed to lg
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -127,7 +118,7 @@ const Navbar = () => {
       {/* Overlay for mobile menu */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -135,135 +126,171 @@ const Navbar = () => {
       {/* Navbar */}
       <nav
         ref={navRef}
-        className={`bg-white backdrop-blur-md border-b border-gray-100/50 px-4 sm:px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`bg-white border-b border-gray-100 px-4 sm:px-6 py-3 fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2 mb-4">
-          <span className="text-xl font-bold text-gray-900">Learn </span>
-          <span className="text-xl bg-yellow-500 rounded px-2 py-1 font-bold text-gray-900">
-            Hub
-          </span>
-        </Link>
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+          {/* 1. Logo */}
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center font-bold text-lg">
+              Learn
+            </div>
+            <span className="text-xl font-bold text-gray-900 tracking-tight">
+              Hub
+            </span>
+          </Link>
 
-        {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-6 lg:gap-8 flex-1 mx-10">
-          <Search />
-        </div>
+          {/* 2. Search Bar (Desktop) */}
+          <div className="hidden lg:flex flex-1 max-w-md ml-6">
+            <Search
+              query={""}
+              setQuery={() => {}}
+              searchInputRef={searchInputRef}
+            />
+          </div>
 
-        {/* Right side: Login/Register + Search Icon + Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <div className=" gap-2 hidden md:flex">
+          {/* 3. Right Side Links */}
+          <div className="hidden lg:flex items-center gap-6">
+            <Link
+              href="/job-success"
+              className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
+            >
+              Job Success
+            </Link>
             <Link
               href="/free-courses"
-              className="flex items-center justify-center  bg-gray-200 hover:outline outline-black/40 text-black px-4 py-2 rounded-md text-md cursor-pointer"
+              className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
             >
               Free Courses
             </Link>
+            <div className="flex items-center gap-1 text-sm font-medium text-gray-700 cursor-pointer hover:text-[#00A651] transition">
+              Download <FaChevronDown size={10} />
+            </div>
 
-            <Link
-              href="/upcoming-course"
-              className="flex items-center justify-center  bg-gray-200 hover:outline outline-black/40 text-black px-4 py-2 rounded-md text-md cursor-pointer"
-            >
-              All Courses
-            </Link>
+            <div className="h-5 w-px bg-gray-300 mx-1"></div>
 
-            {/* Dashboard */}
-            {profileData && (
-              <Link
-                href={dashboardHref}
-                className="flex items-center justify-center bg-black px-4 py-2 text-md text-white"
-              >
-                Dashboard
-              </Link>
+            {/* Language Selector */}
+            <div className="flex items-center gap-1 text-sm font-medium text-gray-700 cursor-pointer hover:text-[#00A651] transition">
+              <span className="text-lg leading-none">🇧🇩</span> EN{" "}
+              <FaChevronDown size={10} />
+            </div>
+
+            {/* Auth Buttons */}
+            {!isLoading && (
+              <>
+                {profileData ? (
+                  <NavbarUserDetails profileData={profileData} />
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleSidebar}
+                      className="text-sm font-semibold text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition"
+                    >
+                      Login
+                    </button>
+                    <button
+                      onClick={handleSidebar}
+                      className="bg-[#FFD700] text-black text-sm font-bold px-5 py-2 rounded-md hover:bg-yellow-500 transition shadow-sm"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
-          {!isLoading && (
-            <div>
-              {profileData ? (
-                <NavbarUserDetails profileData={profileData} />
-              ) : (
-                <button
-                  onClick={handleSidebar}
-                  className="px-3 sm:px-5 py-1.5 sm:py-2 text-gray-700 font-medium rounded-md bg-yellow-500  hover:bg-yellow-600 transition-colors duration-200 cursor-pointer text-sm sm:text-base hidden md:flex items-center gap-6 lg:gap-8"
-                >
-                  Login/Register
-                </button>
-              )}
-            </div>
-          )}
-          {/* Hamburger Menu Button (mobile only) */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex flex-col items-center justify-center w-8 h-8 ml-1 text-black focus:outline-none gap-1 rounded bg-gray-200"
-            aria-label="Toggle menu"
-          >
-            <span
-              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
-              }`}
-            />
-            <span
-              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                mobileMenuOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
-              }`}
-            />
-          </button>
+
+          {/* 4. Mobile Icons & Hamburger */}
+          <div className="flex lg:hidden items-center gap-3">
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="p-2 text-gray-600 bg-gray-100 rounded-full"
+            >
+              <FaSearch size={18} />
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-600 bg-gray-100 rounded-full focus:outline-none"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Search Bar (Toggle) */}
+        {searchOpen && (
+          <div className="lg:hidden mt-3 relative w-full">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="h-4 w-4 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search courses..."
+              className="w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:border-[#00A651]"
+            />
+          </div>
+        )}
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu (Slide from right) */}
       <div
         ref={menuRef}
-        className={`fixed top-19 right-0 h-full w-72 bg-white z-50 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-[60px] right-0 h-full w-72 bg-white z-50 shadow-2xl lg:hidden transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {!isLoading && profileData && (
           <MobileNavUserDetails profileData={profileData} />
         )}
-        <div className="p-6 pt-8 space-y-4">
-          <div className="space-y-2">
-            {profileData && (
-              <div>
-                <Link
-                  href={dashboardHref}
-                  className="flex items-center justify-center bg-black px-4 py-2 text-md text-white"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
-              </div>
-            )}
 
-            <a
-              href="#"
-              className="flex items-center justify-center  bg-gray-200 hover:outline outline-black/40 text-black px-4 py-2 rounded-md text-md cursor-pointer "
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              All Courses
-            </a>
+        <div className="p-5 space-y-2 flex flex-col">
+          {profileData && (
             <Link
-              href="/free-courses"
-              className="flex items-center justify-center  bg-gray-200 hover:outline outline-black/40 text-black px-4 py-2 rounded-md text-md cursor-pointer "
+              href={dashboardHref}
+              className="flex items-center justify-center bg-[#00A651] px-4 py-2.5 text-sm font-bold text-white rounded-md"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Free Courses
+              Dashboard
             </Link>
-          </div>
+          )}
+
+          <Link
+            href="/job-success"
+            className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Job Success
+          </Link>
+          <Link
+            href="/free-courses"
+            className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Free Courses
+          </Link>
+          <Link
+            href="/upcoming-course"
+            className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            All Courses
+          </Link>
+
           {!isLoading && !profileData && (
-            <div className="pt-4 border-t border-gray-100">
+            <div className="pt-4 mt-2 border-t border-gray-100 flex flex-col gap-2">
               <button
                 onClick={handleSidebar}
-                className="w-full py-2 text-center text-black font-medium rounded-lg hover:bg-gray-50 transition-colors bg-yellow-600"
+                className="w-full py-2.5 text-center text-gray-700 font-semibold rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
               >
-                Login/Register
+                Login
+              </button>
+              <button
+                onClick={handleSidebar}
+                className="w-full py-2.5 text-center text-black font-bold rounded-md bg-[#FFD700] hover:bg-yellow-500 transition-colors"
+              >
+                Sign Up
               </button>
             </div>
           )}
