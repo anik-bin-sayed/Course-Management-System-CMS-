@@ -87,7 +87,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setMobileMenuOpen(false); // Changed to lg
+      if (window.innerWidth >= 1024) setMobileMenuOpen(false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -130,7 +130,7 @@ const Navbar = () => {
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+        <div className="max-w-350 mx-auto flex items-center justify-between gap-4">
           {/* 1. Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center font-bold text-lg">
@@ -159,14 +159,17 @@ const Navbar = () => {
               Job Success
             </Link>
             <Link
+              href="/upcoming-course"
+              className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
+            >
+              All Courses
+            </Link>
+            <Link
               href="/free-courses"
               className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
             >
               Free Courses
             </Link>
-            <div className="flex items-center gap-1 text-sm font-medium text-gray-700 cursor-pointer hover:text-[#00A651] transition">
-              Download <FaChevronDown size={10} />
-            </div>
 
             <div className="h-5 w-px bg-gray-300 mx-1"></div>
 

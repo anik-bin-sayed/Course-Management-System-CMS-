@@ -12,6 +12,7 @@ import LazyLoadBoundary, {
 import HomePage from "@/pages/HomePage";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import StudentGuard from "../components/auth/StudentGuard";
+import JobSuccess from "../pages/JobSuccess";
 
 const NotFound = lazy(() => import("@/components/NotFound/NotFound"));
 const FreeCoursesPage = lazy(() => import("@/pages/FreeCoursesPage"));
@@ -36,6 +37,7 @@ const AppRoutes = () => {
       <Suspense fallback={<></>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/job-success" element={<JobSuccess />} />
           <Route path="/search" element={<SearchPage />} />
           <Route
             path="/dashboard/:courseSlug/:lessonId"
