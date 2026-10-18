@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import JobSuccessCard from "../components/jobSuccess/JobSuccessCard";
 import {
   FaSearch,
@@ -181,16 +182,17 @@ const students = [
 ];
 
 const JobSuccess = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white min-h-screen mt-16">
       {/* Hero Banner */}
       <div className="bg-[#8B5CF6] py-12 px-4 text-center text-white max-w-6xl mx-auto ">
         <h1 className="text-3xl md:text-4xl font-bold mb-3 font-sans">
-          Successful Job Placement
+          {t("jobSuccessPage.title")}
         </h1>
         <p className="text-sm md:text-base opacity-90">
-          Dhukkul's successful learners have secured job placements at various
-          renowned organizations, as listed below.
+          {t("jobSuccessPage.description")}
         </p>
       </div>
 

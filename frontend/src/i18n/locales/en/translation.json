@@ -1,0 +1,113 @@
+{
+  "common": {
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About Us",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "language": "Language",
+    "searchCourses": "Search courses...",
+    "jobSuccess": "Job Success",
+    "allCourses": "All Courses",
+    "freeCourses": "Free Courses",
+    "english": "English",
+    "bengali": "Bengali"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to your dashboard"
+  },
+  "homePage": {
+    "heroTitle": "Bangladesh Learns",
+    "heroLive": "Live",
+    "heroSubtitle": "Upgrade your future through Skill Development",
+    "heroCTA": " Start Learning",
+    "heroCompanies": "10000+ Graduates are working in various local and global companies: Start Learning"
+  },
+  "upcoming": {
+    "title": "Upcoming Live Course",
+    "seeDetails": "SEE DETAILS",
+    "seeAll": "See More",
+    "heroCTA": " Start Learning",
+    "heroCompanies": "10000+ Graduates are working in various local and global companies: Start Learning"
+  },
+
+  "freeCourse": {
+    "title": "Free Video Courses",
+    "descriptionStart": "Learn from industry experts and build your skills with",
+    "completelyFree": "completely free",
+    "descriptionEnd": "video courses.",
+    "empty": "No free courses available at the moment.",
+    "watchNow": "Watch Now",
+    "loginToWatch": "Login to Watch",
+    "loginToWatchToast": "Please log in to watch!",
+    "loadingVideo": "Loading video...",
+    "badge": "100% Free Learning",
+    "error": "We could not load free courses. Please try again.",
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "seeDetails": "বিস্তারিত দেখুন",
+    "seeAll": "See More"
+  },
+  "business": {
+    "title": "Dhukkul for business",
+    "description": "Empower your team with our business solutions to enhance skills, drive productivity, and achieve measurable results.",
+    "requestDemo": "Request a Demo",
+    "knowMore": "Know More",
+    "performance": "Performance"
+  },
+  "features": {
+    "title": "Live Course Contents",
+    "jobPlacement": "Dedicated job placement team",
+    "cvReview": "CV Builder and Expert CV Review",
+    "liveSupport": "18 hours live support for specific courses",
+    "batchSupport": "Pro Batch Special CV and Job Support",
+    "liveTests": "Opportunity to assess yourself in live tests",
+    "dailySupport": "Up to 3 support classes per day for specific courses"
+  },
+  "footer": {
+    "description": "Learn new skills, improve your knowledge, and grow your career with our free and premium video courses.",
+    "paidCourses": "Paid Courses",
+    "programming": "Programming",
+    "webDevelopment": "Web Development",
+    "dataStructures": "Data Structures",
+    "quickLinks": "Quick Links",
+    "instructors": "Instructors",
+    "getInTouch": "Get In Touch",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "rightsReserved": "All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsConditions": "Terms & Conditions"
+  },
+  "jobSuccessPage": {
+    "title": "Successful Job Placement",
+    "description": "Dhukkul's successful learners have secured job placements at various renowned organizations, as listed below."
+  },
+  "courses": {
+    "title": "All Courses",
+    "create": "Create Course",
+    "description": "Course Description",
+    "free": "Free",
+    "paid": "Paid"
+  },
+
+  "freeCourseHero": {
+    "badge": "100% Free Learning",
+    "title": "Learn New Skills For Free.",
+    "description": "Explore high-quality video courses, learn from experienced instructors, and build the skills you need to grow your career.",
+    "exploreCourses": "Explore Courses",
+    "startLearning": "Start Learning",
+    "freeCourses": "Free Courses",
+    "videoLessons": "Video Lessons",
+    "learners": "Learners"
+  }
+}

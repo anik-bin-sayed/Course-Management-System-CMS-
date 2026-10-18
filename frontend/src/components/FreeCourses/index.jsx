@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { FaPlay } from "react-icons/fa";
 import { toast } from "sonner";
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
+import { useTranslation } from "react-i18next";
 
 const VideoModal = lazy(() => import("../Home/VideoModal"));
 
@@ -49,6 +50,7 @@ const FreeCourses = ({
   onRetry,
 }) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const { t } = useTranslation();
   const { isAuthenticated } = useSelector((state) => state?.auth);
 
   const { data, page, total_pages, has_next, has_previous } =
@@ -64,15 +66,13 @@ const FreeCourses = ({
         className="flex min-h-[60vh] flex-col items-center justify-center gap-4 bg-gray-50 px-4 text-center"
         role="alert"
       >
-        <p className="text-xl text-gray-700">
-          We could not load free courses. Please try again.
-        </p>
+        <p className="text-xl text-gray-700">{t("freeCourse.error")}</p>
         <button
           type="button"
           onClick={onRetry}
           className="rounded-md bg-red-700 px-5 py-2 text-sm font-semibold text-white hover:bg-red-800"
         >
-          Retry
+          {t("freeCourse.retry")}
         </button>
       </div>
     );
@@ -81,7 +81,7 @@ const FreeCourses = ({
   if (!data || data.length === 0) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center bg-gray-50">
-        <p className="text-xl text-gray-600">No free courses available.</p>
+        <p className="text-xl text-gray-600">{t("freeCourse.empty")}</p>
       </div>
     );
   }
@@ -94,7 +94,7 @@ const FreeCourses = ({
 
   const handleWatchFreeCourse = (course) => {
     if (!isAuthenticated) {
-      toast.error("Please Login to watch!");
+      toast.error(t("freeCourse.loginToWatchToast"));
       return;
     }
     setSelectedCourse(course);
@@ -112,17 +112,17 @@ const FreeCourses = ({
             <div className="min-w-0 text-left">
               <div className="mb-1 inline-flex items-center gap-2 rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-semibold text-red-600 ring-1 ring-red-100 sm:text-xs">
                 <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                100% Free Learning
+                {t("freeCourse.badge")}
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Free Video Courses
+                {t("freeCourse.title")}
               </h1>
               <p className="mt-1 max-w-2xl text-xs leading-5 text-gray-500 sm:text-sm sm:leading-6">
-                Learn from industry experts and build your skills with{" "}
+                {t("freeCourse.descriptionStart")}{" "}
                 <span className="font-semibold text-red-500">
-                  completely free
+                  {t("freeCourse.completelyFree")}
                 </span>{" "}
-                video courses.
+                {t("freeCourse.descriptionEnd")}
               </p>
             </div>
           </div>
@@ -187,7 +187,9 @@ const FreeCourses = ({
                         : "cursor-not-allowed bg-gray-200 text-gray-500"
                     }`}
                   >
-                    {isAuthenticated ? "Watch Now" : "Login to Watch"}
+                    {isAuthenticated
+                      ? t("freeCourse.watchNow")
+                      : t("freeCourse.loginToWatch")}
                   </button>
                 </div>
               </div>
@@ -208,7 +210,7 @@ const FreeCourses = ({
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
           >
-            Previous
+            {t("freeCourse.previous")}
           </button>
 
           <div className="flex space-x-1">
@@ -237,7 +239,7 @@ const FreeCourses = ({
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
           >
-            Next
+            {t("freeCourse.next")}
           </button>
         </div>
       )}
@@ -245,7 +247,10 @@ const FreeCourses = ({
       {selectedCourse && (
         <Suspense
           fallback={
-            <LoadingFallback label="Loading video..." variant="modal" />
+            <LoadingFallback
+              label={t("freeCourse.loadingVideo")}
+              variant="modal"
+            />
           }
         >
           <VideoModal

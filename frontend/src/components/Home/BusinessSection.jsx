@@ -1,8 +1,11 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { FiTrendingUp } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 const BusinessSection = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -10,18 +13,17 @@ const BusinessSection = () => {
           {/* Left Content */}
           <div className="md:w-1/2 z-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Dhukkul for business
+              {t("business.title")}
             </h2>
             <p className="text-gray-600 mb-8 text-base md:text-lg leading-relaxed max-w-lg">
-              Empower your team with our business solutions to enhance skills,
-              drive productivity, and achieve measurable results.
+              {t("business.description")}
             </p>
             <div className="flex flex-wrap gap-4">
               <button className="bg-[#00A651] text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 hover:bg-[#008f45] transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                Request a Demo <FaArrowRight size={14} />
+                {t("business.requestDemo")} <FaArrowRight size={14} />
               </button>
               <button className="bg-white text-gray-700 px-6 py-3 rounded-full font-semibold border border-gray-300 flex items-center gap-2 hover:bg-gray-50 transition-all duration-300">
-                Know More <FaArrowRight size={14} />
+                {t("business.knowMore")} <FaArrowRight size={14} />
               </button>
             </div>
           </div>
@@ -36,7 +38,7 @@ const BusinessSection = () => {
               <div className="absolute top-4 left-0 w-64 bg-white rounded-xl shadow-xl p-4 border border-gray-100 z-10">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-xs font-semibold text-gray-500">
-                    Performance
+                    {t("business.performance")}
                   </span>
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-[#00A651]">
                     <FiTrendingUp size={14} />
@@ -85,7 +87,7 @@ const BusinessSection = () => {
                 </div>
                 <div className="flex justify-between items-center px-1">
                   <span className="text-[10px] font-bold text-gray-600">
-                    Performance: 83.1/100
+                    {t("business.performance")}: 83.1/100
                   </span>
                   <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
                 </div>

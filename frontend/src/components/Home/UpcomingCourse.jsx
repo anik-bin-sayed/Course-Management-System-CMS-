@@ -2,8 +2,11 @@ import { FiClock, FiArrowRight, FiBookOpen, FiUsers } from "react-icons/fi";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 import CourseCardLoader from "./CourseCardLoader";
+import { useTranslation } from "react-i18next";
 
 const UpcomingCourse = ({ data, loading, isError }) => {
+  const { t } = useTranslation();
+
   const courses = data || [];
 
   const getDaysLeft = (date) => {
@@ -48,11 +51,11 @@ const UpcomingCourse = ({ data, loading, isError }) => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 text-yellow-600">
             <FiBookOpen size={20} />
           </div>
           <h2 className="text-2xl font-bold text-gray-900">
-            Upcoming Live Course
+            {t("upcoming.title")}
           </h2>
         </div>
 
@@ -103,7 +106,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                     />
 
                     {/* Dark Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
 
                     {/* Live Badge */}
                     <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm border border-white/20">
@@ -130,7 +133,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                   {/* Content */}
                   <div className="p-5 cursor-pointer">
                     {/* Title */}
-                    <h3 className="line-clamp-2 min-h-[3.5rem] text-base font-bold leading-snug text-gray-900 transition group-hover:text-green-600">
+                    <h3 className="line-clamp-2 min-h-14 text-base font-bold leading-snug text-gray-900 transition group-hover:text-gray-600">
                       {course.title}
                     </h3>
 
@@ -149,16 +152,16 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                       <div>
                         {course.discount_price ? (
                           <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-bold text-green-600">
-                              ৳{course.discount_price}
+                            <span className="text-xl font-bold text-black">
+                              ৳ {course.discount_price}
                             </span>
                             <span className="text-xs text-gray-400 line-through">
-                              ৳{course.price}
+                              ৳ {course.price}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-xl font-bold text-green-600">
-                            ৳{course.price}
+                          <span className="text-xl font-bold text-black">
+                            ৳ {course.price}
                           </span>
                         )}
                       </div>
@@ -169,8 +172,8 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                     </div>
 
                     {/* See Details Button */}
-                    <button className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 py-2 text-sm font-semibold text-gray-700 transition hover:border-green-600 hover:bg-green-600 hover:text-white">
-                      SEE DETAILS <FiArrowRight size={14} />
+                    <button className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 py-2 text-sm font-semibold text-gray-700 transition hover:border-yellow-400 hover:bg-yellow-400 hover:text-black">
+                      {t("upcoming.seeDetails")} <FiArrowRight size={14} />
                     </button>
                   </div>
                 </Link>
@@ -185,7 +188,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
             href="/upcoming-course"
             className="rounded-full bg-gray-200 px-10 py-2.5 text-sm font-bold text-gray-700 uppercase transition hover:bg-gray-300"
           >
-            See All
+            {t("upcoming.seeAll")}
           </Link>
         </div>
       </div>

@@ -1,8 +1,10 @@
 import React from "react";
 import { FaArrowRight, FaPlay } from "react-icons/fa";
 import AppLink from "../common/AppLink";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
+  const { t } = useTranslation();
   return (
     <section className="bg-[#F4F7F6] pt-10 lg:pt-20 pb-2 mt-12">
       {" "}
@@ -12,22 +14,25 @@ const Hero = () => {
           {/* Left Content */}
           <div className="md:w-[55%] z-10 mb-10 md:mb-0">
             <h1 className="text-4xl md:text-[3.2rem] leading-tight font-bold text-gray-900 mb-4">
-              Bangladesh Learns <span className="text-red-500">Live</span>
+              {t("homePage.heroTitle")}{" "}
+              <span className="text-red-500"> {t("homePage.heroLive")} </span>
             </h1>
-            <p className="text-gray-600 mb-6 text-lg md:text-xl font-medium">
-              Upgrade your future through Skill Development
+            <p className="text-gray-800 mb-6 text-lg md:text-xl font-semibold">
+              {t("homePage.heroSubtitle")}
             </p>
 
             <div className="mb-10">
-              <AppLink className="inline-flex w-fit bg-[#FFD700] text-black font-bold py-3.5 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(255,215,0,0.39)] hover:bg-yellow-400 hover:-translate-y-0.5 transition-all duration-200 items-center gap-2 text-lg">
-                Start Learning <FaArrowRight />
+              <AppLink
+                href="/upcoming-course"
+                className="inline-flex w-fit bg-[#FFD700] text-black font-bold py-3.5 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(255,215,0,0.39)] hover:bg-yellow-400 hover:-translate-y-0.5 transition-all duration-200 items-center gap-2 text-md"
+              >
+                {t("homePage.heroCTA")} <FaArrowRight />
               </AppLink>
             </div>
 
             <div className="flex flex-col gap-3">
               <p className="text-sm font-bold text-gray-800">
-                10000+ Graduates are working in various local and global
-                companies:
+                {t("homePage.heroCompanies")}
               </p>
               {/* Logo Strip */}
               <div className="flex flex-wrap gap-x-8 gap-y-6 items-center mt-3 select-none">

@@ -9,11 +9,13 @@ import { FaPlay } from "react-icons/fa";
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
 
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const VideoModal = lazy(() => import("./VideoModal"));
 
 const FreeCourses = ({ data, loading }) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const { t } = useTranslation();
 
   const { isAuthenticated } = useSelector((state) => state?.auth);
 
@@ -52,14 +54,14 @@ const FreeCourses = ({ data, loading }) => {
   if (!data || data.length === 0) {
     return (
       <div className="py-20 text-center text-gray-600">
-        No free courses available at the moment.
+        {t("freeCourse.empty")}
       </div>
     );
   }
 
   const handleWatchFreeCourse = (course) => {
     if (!isAuthenticated) {
-      toast.error("Please Login to watch!");
+      toast.error(t("freeCourse.loginToWatchToast"));
       return;
     }
 
@@ -82,17 +84,16 @@ const FreeCourses = ({ data, loading }) => {
               {/* Heading */}
               <h1 className="text-3xl font-bold tracking-tight text-gray-100 sm:text-4xl">
                 {" "}
-                Free Video Courses{" "}
+                {t("freeCourse.title")}
               </h1>
               {/* Description */}
               <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-200 sm:text-base">
                 {" "}
-                Learn from industry experts and build your skills with{" "}
+                {t("freeCourse.descriptionStart")}{" "}
                 <span className="font-medium text-yellow-500">
-                  {" "}
-                  completely free{" "}
+                  {t("freeCourse.completelyFree")}
                 </span>{" "}
-                video courses.{" "}
+                {t("freeCourse.descriptionEnd")}
               </p>
             </div>
           </div>
@@ -165,7 +166,9 @@ const FreeCourses = ({ data, loading }) => {
                         : "cursor-not-allowed bg-gray-200 text-gray-500"
                     }`}
                   >
-                    {isAuthenticated ? "Watch Now" : "Login to Watch"}
+                    {isAuthenticated
+                      ? t("freeCourse.watchNow")
+                      : t("freeCourse.loginToWatch")}
                   </button>
                 </div>
               </div>
@@ -179,7 +182,7 @@ const FreeCourses = ({ data, loading }) => {
             href="/free-courses"
             className="rounded-full bg-gray-200 px-10 py-2.5 text-sm font-bold text-gray-700 uppercase transition hover:bg-gray-300"
           >
-            See All
+            {t("freeCourse.seeAll")}
           </Link>
         </div>
       </div>
@@ -187,7 +190,10 @@ const FreeCourses = ({ data, loading }) => {
       {selectedCourse && (
         <Suspense
           fallback={
-            <LoadingFallback label="Loading video..." variant="modal" />
+            <LoadingFallback
+              label={t("freeCourse.loadingVideo")}
+              variant="modal"
+            />
           }
         >
           <VideoModal

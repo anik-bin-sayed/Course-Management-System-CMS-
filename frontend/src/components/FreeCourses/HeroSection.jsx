@@ -1,9 +1,11 @@
 import Image from "@/components/common/AppImage";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { HiMagnifyingGlass, HiPlay } from "react-icons/hi2";
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   return (
     <section className="relative min-h-[calc(50vh-100px)] overflow-hidden bg-red-700">
       {/* Background decoration */}
@@ -17,19 +19,18 @@ const HeroSection = () => {
             {/* Badge */}
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm ring-1 ring-white/20">
               <span className="h-2 w-2 rounded-full bg-white" />
-              100% Free Learning
+              <span>{t("freeCourseHero.badge")}</span>
             </div>
 
             {/* Heading */}
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Learn New Skills
-              <span className="block text-red-100">For Free.</span>
+              <h1>{t("freeCourseHero.title")}</h1>
+              <span className="block text-red-100"></span>
             </h1>
 
             {/* Description */}
             <p className="mt-5 max-w-xl text-sm leading-6 text-red-100 sm:text-base sm:leading-7">
-              Explore high-quality video courses, learn from experienced
-              instructors, and build the skills you need to grow your career.
+              <p>{t("freeCourseHero.description")}</p>
             </p>
 
             {/* Buttons */}
@@ -38,14 +39,14 @@ const HeroSection = () => {
                 type="button"
                 className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-red-700 shadow-lg transition hover:bg-red-50 hover:shadow-xl active:scale-95"
               >
-                Explore Courses
+                {t("freeCourseHero.exploreCourses")}
               </button>
 
               <button
                 type="button"
                 className="rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 active:scale-95"
               >
-                Start Learning
+                {t("freeCourseHero.startLearning")}
               </button>
             </div>
 
@@ -53,21 +54,27 @@ const HeroSection = () => {
             <div className="mt-7 flex flex-wrap justify-center gap-6 md:justify-start">
               <div>
                 <p className="text-xl font-bold text-white">100+</p>
-                <p className="text-xs text-red-100">Free Courses</p>
+                <p className="text-xs text-red-100">
+                  {t("freeCourseHero.freeCourses")}
+                </p>
               </div>
 
               <div className="h-10 w-px bg-white/20" />
 
               <div>
                 <p className="text-xl font-bold text-white">500+</p>
-                <p className="text-xs text-red-100">Video Lessons</p>
+                <p className="text-xs text-red-100">
+                  {t("freeCourseHero.videoLessons")}
+                </p>
               </div>
 
               <div className="h-10 w-px bg-white/20" />
 
               <div>
                 <p className="text-xl font-bold text-white">10K+</p>
-                <p className="text-xs text-red-100">Learners</p>
+                <p className="text-xs text-red-100">
+                  {t("freeCourseHero.learners")}
+                </p>
               </div>
             </div>
           </div>

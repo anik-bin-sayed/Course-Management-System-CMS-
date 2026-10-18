@@ -8,7 +8,7 @@ import Link from "@/components/common/AppLink";
 import Image from "@/components/common/AppImage";
 
 import { IoIosArrowDown } from "react-icons/io";
-import { FiUser, FiLogOut } from "react-icons/fi";
+import { FiUser, FiLogOut, FiUsers } from "react-icons/fi";
 
 import { useLogoutUserMutation } from "../../../lib/features/auth/authApi";
 
@@ -48,6 +48,9 @@ const NavbarUserDetails = ({ profileData }) => {
       console.error("Logout failed:", error);
     }
   };
+
+  const dashboardHref =
+    profileData?.role === "admin" ? "/admin/manage-course" : "/dashboard";
 
   return (
     <div ref={dropdownRef} className="hidden md:block relative">
@@ -117,7 +120,7 @@ const NavbarUserDetails = ({ profileData }) => {
               right-0
               top-full
               mt-2
-              w-52
+              w-72
               rounded-xl
               border border-gray-200
               bg-white
@@ -136,74 +139,68 @@ const NavbarUserDetails = ({ profileData }) => {
               </p>
             </div>
 
-            {/* Profile */}
-            <Link
-              href="/profile"
-              onClick={handleProfile}
-              className="
-                w-full
-                flex items-center gap-3
-                px-4 py-3
-                text-sm
-                text-gray-700
-                hover:bg-gray-50
-                transition-colors
-                cursor-pointer
-              "
-            >
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
-                <FiUser className="w-4 h-4 text-gray-600" />
-              </span>
-
-              <span className="font-medium">Profile</span>
-            </Link>
-
-            {/* All users */}
-
-            {profileData?.role === "admin" && (
+            <div className="grid grid-cols-2 gap-3 p-4 w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-100">
+              {/* ১ম রো, ১ম কলাম: Dashboard */}
               <Link
-                href="/admin/users"
+                href={dashboardHref}
                 onClick={handleProfile}
-                className="
-                w-full
-                flex items-center gap-3
-                px-4 py-3
-                text-sm
-                text-gray-700
-                hover:bg-gray-50
-                transition-colors
-                cursor-pointer 
-              "
+                className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all duration-200 group"
               >
-                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
-                  <FiUser className="w-4 h-4 text-gray-600" />
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm text-gray-600 group-hover:text-[#00A651] transition-colors">
+                  <FiUser className="w-5 h-5" />
                 </span>
-
-                <span className="font-medium">All Users</span>
+                <span className="font-semibold text-xs text-gray-700 text-center">
+                  Dashboard
+                </span>
               </Link>
-            )}
 
-            {/* Logout */}
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="
-                w-full
-                flex items-center gap-3
-                px-4 py-3
-                text-sm
-                text-red-600
-                hover:bg-red-50
-                transition-colors
-                cursor-pointer
-              "
-            >
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50">
-                <FiLogOut className="w-4 h-4 text-red-500" />
-              </span>
+              {/* ১ম রো, ২য় কলাম: Profile */}
+              <Link
+                href="/profile"
+                onClick={handleProfile}
+                className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all duration-200 group"
+              >
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm text-gray-600 group-hover:text-[#00A651] transition-colors">
+                  <FiUser className="w-5 h-5" />
+                </span>
+                <span className="font-semibold text-xs text-gray-700 text-center">
+                  Profile
+                </span>
+              </Link>
 
-              <span className="font-medium">Logout</span>
-            </button>
+              {/* ২য় রো, ১ম কলাম: All Users (শুধুমাত্র অ্যাডমিনের জন্য) */}
+              {profileData?.role === "admin" ? (
+                <Link
+                  href="/admin/users"
+                  onClick={handleProfile}
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all duration-200 group"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm text-gray-600 group-hover:text-[#00A651] transition-colors">
+                    <FiUsers className="w-5 h-5" />
+                  </span>
+                  <span className="font-semibold text-xs text-gray-700 text-center">
+                    All Users
+                  </span>
+                </Link>
+              ) : (
+                // অ্যাডমিন না হলে জায়গা ফাঁকা রাখতে একটি খালি ডিভ
+                <div className="hidden"></div>
+              )}
+
+              {/* ২য় রো, ২য় কলাম: Logout */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-red-50/50 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all duration-200 group"
+              >
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm text-red-500 group-hover:text-red-600 transition-colors">
+                  <FiLogOut className="w-5 h-5" />
+                </span>
+                <span className="font-semibold text-xs text-red-600 text-center">
+                  Logout
+                </span>
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

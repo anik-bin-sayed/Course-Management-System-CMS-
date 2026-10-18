@@ -44,7 +44,6 @@ const FreeCoursesPage = () => {
       {/* Static Header */}
       <HeroSection />
 
-      {/* Lazy Loaded Content with proper min-height fallback */}
       <div className="grow">
         <Suspense fallback={<PageSkeleton />}>
           <FreeCoursesContent currentPage={currentPage} />
