@@ -22,14 +22,23 @@ const HeroSection = () => {
 
             {/* Heading */}
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+<<<<<<< Updated upstream
               Learn New Skills
               <span className="block text-red-100">For Free.</span>
+=======
+              {t("freeCourseHero.title")}
+              <span className="block text-red-100"></span>
+>>>>>>> Stashed changes
             </h1>
 
             {/* Description */}
             <p className="mt-5 max-w-xl text-sm leading-6 text-red-100 sm:text-base sm:leading-7">
+<<<<<<< Updated upstream
               Explore high-quality video courses, learn from experienced
               instructors, and build the skills you need to grow your career.
+=======
+              {t("freeCourseHero.description")}
+>>>>>>> Stashed changes
             </p>
 
             {/* Buttons */}
