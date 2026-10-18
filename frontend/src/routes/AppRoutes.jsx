@@ -9,13 +9,14 @@ import AdminLayout from "@/components/Admin/AdminLayout";
 import LazyLoadBoundary, {
   LoadingFallback,
 } from "@/components/common/LazyLoadBoundary";
+import FreeCoursesPage from "@/pages/FreeCoursesPage";
 import HomePage from "@/pages/HomePage";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import StudentGuard from "../components/auth/StudentGuard";
 import JobSuccess from "../pages/JobSuccess";
+import UpcomingCoursesPage from "../pages/UpcomingCoursesPage";
 
 const NotFound = lazy(() => import("@/components/NotFound/NotFound"));
-const FreeCoursesPage = lazy(() => import("@/pages/FreeCoursesPage"));
 const LessonWatchPage = lazy(() => import("@/pages/LessonWatchPage"));
 const ProfileEditPage = lazy(() => import("@/pages/ProfileEditPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
@@ -25,7 +26,6 @@ const StudentDashboardPage = lazy(() => import("@/pages/StudentDashboardPage"));
 const UpcomingCourseDetailsPage = lazy(
   () => import("@/pages/UpcomingCourseDetailsPage"),
 );
-const UpcomingCoursesPage = lazy(() => import("@/pages/UpcomingCoursesPage"));
 
 const ManageCoursesPage = lazy(() => import("@/pages/admin/ManageCoursesPage"));
 const UserDetailsPage = lazy(() => import("@/pages/admin/UserDetailsPage"));
@@ -34,7 +34,7 @@ const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
 const AppRoutes = () => {
   return (
     <LazyLoadBoundary>
-      <Suspense fallback={<></>}>
+      <Suspense fallback={<LoadingFallback />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/job-success" element={<JobSuccess />} />
