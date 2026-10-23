@@ -67,7 +67,7 @@ const FreeCourses = ({ data, loading }) => {
   };
 
   return (
-    <div className="px-4 py-12 flex items-center justify-center">
+    <div className="bg-[#F8F9FA] px-4 py-12 flex items-center justify-center">
       <div className="max-w-7xl border p-10 rounded-xl border-gray-100 shadow bg-gray-800">
         {/* Header */}
         <div className="mb-8 flex flex-col items-center text-center">
@@ -173,15 +173,14 @@ const FreeCourses = ({ data, loading }) => {
           ))}
         </div>
 
-        <div className="text-center text-lg text-gray-900 mt-8">
-          <div className="mt-10 flex items-center justify-center">
-            <Link
-              href="/free-courses"
-              className="border py-2 px-30 bg-gray-100  rounded border-gray-300 uppercase font-bold"
-            >
-              see all
-            </Link>
-          </div>
+        {/* See All Button */}
+        <div className="mt-12 flex items-center justify-center">
+          <Link
+            href="/free-courses"
+            className="rounded-full bg-gray-200 px-10 py-2.5 text-sm font-bold text-gray-700 uppercase transition hover:bg-gray-300"
+          >
+            See All
+          </Link>
         </div>
       </div>
 

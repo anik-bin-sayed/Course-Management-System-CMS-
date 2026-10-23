@@ -12,15 +12,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:pr-8">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-400 shadow-sm">
-                <SiGoogledisplayandvideo360 className="h-5 w-5 text-gray-950" />
+            <Link href="/" className="flex items-center gap-2 shrink-0">
+              <div className="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center font-bold text-lg">
+                Learn
               </div>
-
-              <h2 className="text-xl font-bold tracking-tight text-gray-900">
-                Learn<span className="text-yellow-500">Hub</span>
-              </h2>
-            </div>
+              <span className="text-xl font-bold text-gray-900 tracking-tight">
+                Hub
+              </span>
+            </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-gray-500">
               Learn new skills, improve your knowledge, and grow your career

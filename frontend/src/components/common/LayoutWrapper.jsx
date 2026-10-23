@@ -24,10 +24,10 @@ export default function LayoutWrapper({ children }) {
     pathname.startsWith("/verify-email");
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       {!hideNavbar && <Navbar />}
-      {children}
+      <main className="flex-1">{children}</main>
       {!hideFooter && <Footer />}
-    </>
+    </div>
   );
 }

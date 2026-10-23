@@ -1,5 +1,7 @@
-import UpcomingCourse from "@/components/Upcoming";
+import UpcomingCourse from "../components/Upcoming";
 
-export default function UpcomingCoursesPage() {
+const UpcomingCoursesPage = () => {
   return <UpcomingCourse />;
-}
+};
+
+export default UpcomingCoursesPage;

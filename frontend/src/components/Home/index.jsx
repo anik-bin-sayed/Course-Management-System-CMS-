@@ -7,6 +7,10 @@ import {
   useGetFreeCoursesQuery,
 } from "../../lib/features/courses/free-course-api";
 import { useGetUpcomingCourseQuery } from "../../lib/features/courses/paid-course-api";
+import BusinessSection from "./BusinessSection";
+import Features from "./Features";
+import Stats from "./Stats";
+import Reviews from "./Reviews";
 
 const Home = () => {
   const [cachedFreeCourseData] = useState(getCachedHomepageFreeCourses);
@@ -37,6 +41,12 @@ const Home = () => {
         data={data}
         loading={freeCourseLoading && !cachedFreeCourseData}
       />
+
+      <BusinessSection />
+
+      <Features />
+      <Stats />
+      <Reviews />
     </>
   );
 };

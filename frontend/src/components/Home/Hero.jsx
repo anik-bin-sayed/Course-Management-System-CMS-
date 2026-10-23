@@ -1,155 +1,167 @@
-import Image from "@/components/common/AppImage";
-import Link from "@/components/common/AppLink";
-import { HiArrowDown, HiCheck, HiPlay } from "react-icons/hi2";
-
-const HERO_IMAGE_URL =
-  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80";
+import React from "react";
+import { FaArrowRight, FaPlay } from "react-icons/fa";
+import AppLink from "../common/AppLink";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[40vh] flex items-center overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={HERO_IMAGE_URL}
-          alt="Background"
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
-          fill
-          priority
-          fetchPriority="high"
-        />
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-linear-to-r from-gray-900/90 via-gray-900/70 to-transparent" />
-        {/* Animated Blob */}
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Side - Text Content */}
-          <div className="space-y-6">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-yellow-500/20 backdrop-blur-sm text-yellow-400 px-4 py-2 rounded-full text-sm font-medium border border-yellow-500/30">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500" />
-              </span>
-              Learn from the best
-            </div>
-
-            {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-              <span className="text-white">Master New Skills &</span>
-              <br />
-              <span className="bg-linear-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                Transform Your Future
-              </span>
+    <section className="bg-[#F4F7F6] pt-10 lg:pt-20 pb-2 mt-12">
+      {" "}
+      {/* Adjusted background and padding */}
+      <div className="container mx-auto px-0 md:px-4 max-w-7xl ">
+        <div className="bg-linear-to-r from-[#E6F4F1] to-[#E8F0FE] rounded p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-sm border border-black/50 ">
+          {/* Left Content */}
+          <div className="md:w-[55%] z-10 mb-10 md:mb-0">
+            <h1 className="text-4xl md:text-[3.2rem] leading-tight font-bold text-gray-900 mb-4">
+              Bangladesh Learns <span className="text-red-500">Live</span>
             </h1>
-
-            {/* Description */}
-            <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-lg">
-              Unlock your potential with world-class courses taught by industry
-              experts. Learn at your own pace and gain in-demand skills that
-              will set you apart.
+            <p className="text-gray-600 mb-6 text-lg md:text-xl font-medium">
+              Upgrade your future through Skill Development
             </p>
 
-            {/* Features List */}
-            <div className="flex flex-wrap gap-3 text-sm">
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                100+ Courses
-              </span>
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                Expert Instructors
-              </span>
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                Lifetime Access
-              </span>
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                Certificate
-              </span>
+            <div className="mb-10">
+              <AppLink className="inline-flex w-fit bg-[#FFD700] text-black font-bold py-3.5 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(255,215,0,0.39)] hover:bg-yellow-400 hover:-translate-y-0.5 transition-all duration-200 items-center gap-2 text-lg">
+                Start Learning <FaArrowRight />
+              </AppLink>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 pt-1">
-              <button className="px-8 py-3 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition-all duration-200 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 transform">
-                Get Started Free
-              </button>
-              <Link
-                href="/free-courses"
-                className="px-8 py-3 text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/10 transition-all duration-200 hover:border-yellow-500 flex items-center gap-2"
-              >
-                <HiPlay className="h-5 w-5" />
-                Watch Demo
-              </Link>
-            </div>
-
-            {/* Trusted By */}
-            <div className="pt-2">
-              <p className="text-sm text-gray-400 mb-3">
-                Trusted by 50,000+ learners worldwide
+            <div className="flex flex-col gap-3">
+              <p className="text-sm font-bold text-gray-800">
+                10000+ Graduates are working in various local and global
+                companies:
               </p>
-              <div className="flex items-center gap-6 opacity-60">
-                <span className="text-gray-400 font-semibold text-lg">
-                  Microsoft
-                </span>
-                <span className="text-gray-400 font-semibold text-lg">
-                  Google
-                </span>
-                <span className="text-gray-400 font-semibold text-lg">
-                  Amazon
-                </span>
+              {/* Logo Strip */}
+              <div className="flex flex-wrap gap-x-8 gap-y-6 items-center mt-3 select-none">
+                {/* BRAIN STATION 23 */}
+                <div className="flex items-center gap-2 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300 group">
+                  <div className="w-6 h-6 bg-gray-400 group-hover:bg-[#00A651] rounded-full flex items-center justify-center transition-colors duration-300">
+                    <div className="w-3 h-3 bg-white rounded-sm transform rotate-45"></div>
+                  </div>
+                  <span className="font-bold text-sm tracking-wider">
+                    BRAIN STATION 23
+                  </span>
+                </div>
+
+                {/* TechnoSoft */}
+                <div className="flex flex-col text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="font-bold text-sm leading-none flex items-center gap-1">
+                    <span className="text-lg leading-none">⌂</span> TechnoSoft
+                  </span>
+                  <span className="text-[9px] tracking-widest uppercase mt-0.5">
+                    Integration
+                  </span>
+                </div>
+
+                {/* Excel */}
+                <div className="flex flex-col text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="font-serif italic font-bold text-lg leading-none">
+                    Excel
+                  </span>
+                  <span className="text-[9px] tracking-wide mt-0.5">
+                    technologies ltd.
+                  </span>
+                </div>
+
+                {/* gtr */}
+                <div className="flex items-end gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="font-black italic text-2xl leading-none tracking-tighter">
+                    gtr
+                  </span>
+                  <span className="text-[8px] leading-tight mb-0.5">
+                    genuine technology
+                    <br />& research limited
+                  </span>
+                </div>
+
+                {/* ASTHA IT */}
+                <div className="flex items-center text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="font-black text-lg tracking-widest">
+                    ASTHA
+                  </span>
+                  <span className="font-light text-lg tracking-widest">IT</span>
+                </div>
+
+                {/* REVE Systems */}
+                <div className="flex items-center gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="font-light text-xl tracking-[0.2em]">
+                    REVE
+                  </span>
+                  <span className="font-normal text-xl">Systems</span>
+                </div>
+
+                {/* ofol it */}
+                <div className="flex flex-col text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="font-serif italic font-bold text-lg leading-none flex items-center gap-1">
+                    <span className="text-xl">⚡</span> ofol it
+                  </span>
+                  <span className="text-[8px] tracking-widest text-center mt-0.5">
+                    success begins here
+                  </span>
+                </div>
+
+                {/* CORE DEVS */}
+                <div className="flex items-center gap-1.5 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <div className="w-4 h-4 border-2 border-gray-400 group-hover:border-[#00A651] transform rotate-45 flex items-center justify-center transition-colors duration-300"></div>
+                  <span className="font-bold text-sm tracking-wider">
+                    CORE DEVS
+                  </span>
+                </div>
+
+                {/* SAYBURGH */}
+                <div className="flex items-center gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <div className="w-3 h-3 bg-gray-400 group-hover:bg-[#00A651] transform rotate-45 transition-colors duration-300"></div>
+                  <span className="font-extrabold text-sm tracking-tighter">
+                    SAYBURGH
+                  </span>
+                </div>
+
+                {/* ANCHOR BLOCK */}
+                <div className="flex items-center gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
+                  <span className="text-lg leading-none">⚓</span>
+                  <div className="flex flex-col leading-none">
+                    <span className="font-bold text-[10px] tracking-wide">
+                      ANCHOR
+                    </span>
+                    <span className="font-bold text-[10px] tracking-wide">
+                      BLOCK
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Illustration / Image */}
-          <div className="hidden lg:flex justify-center items-center">
-            <div className="relative w-full max-w-md">
-              {/* Main Image Card */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20 border border-white/10 aspect-4/3">
-                <Image
-                  src={HERO_IMAGE_URL}
-                  alt="Students learning"
-                  fill
-                  className="object-cover"
-                />
-                {/* Floating Badge - Top */}
-                <div className="absolute top-3 left-3 bg-white/10 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/20">
-                  <p className="text-white text-xs font-medium">200+ Courses</p>
-                </div>
-                {/* Floating Badge - Bottom */}
-                <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/10">
-                  <p className="text-yellow-400 text-xs font-medium">
-                    4.9/5 Rating
-                  </p>
-                </div>
-              </div>
+          {/* Right Image Area */}
+          <div className="md:w-[45%] relative flex justify-center md:justify-end">
+            {/* Decorative background blur */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-300 rounded-full blur-3xl opacity-30"></div>
 
-              {/* Decorative Elements */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 bg-yellow-500/30 rounded-full blur-2xl" />
-              <div className="absolute -bottom-6 -left-6 w-28 h-28 bg-yellow-400/20 rounded-full blur-2xl" />
-              {/* Dots Pattern */}
-              <div className="absolute -right-8 -bottom-8 grid grid-cols-4 gap-2 opacity-20">
-                {[...Array(16)].map((_, i) => (
-                  <div key={i} className="w-2 h-2 bg-white rounded-full" />
-                ))}
+            {/* Main Image Container */}
+            <div className="w-full max-w-105 aspect-video md:aspect-square bg-[#1A1A1A] rounded-2xl overflow-hidden relative shadow-2xl border-[6px] border-white/50 z-10 transform hover:scale-[1.02] transition-transform duration-500">
+              {/* Demo Image Background */}
+              <img
+                src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop"
+                alt="AI Technology"
+                className="absolute inset-0 w-full h-full object-cover opacity-60"
+              />
+
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+
+              {/* Text Overlay inside Image */}
+              <div className="absolute inset-0 flex flex-col justify-end items-center text-white p-6 text-center pb-12">
+                <span className="bg-[#FFD700] text-black text-xs font-bold px-3 py-1 rounded-sm mb-3 uppercase tracking-wider shadow-lg">
+                  AI Driven
+                </span>
+                <h3 className="text-xl md:text-2xl font-semibold mb-1 text-gray-100 drop-shadow-md">
+                  Learn Something New Today
+                </h3>
+                <h3 className="text-3xl md:text-4xl font-bold text-[#FFD700] drop-shadow-lg">
+                  Build Your Career
+                </h3>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce">
-        <span className="text-gray-400 text-xs font-medium">Scroll</span>
-        <HiArrowDown className="h-4 w-4 text-gray-400" />
       </div>
     </section>
   );

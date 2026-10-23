@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -127,7 +125,6 @@ const NavbarUserDetails = ({ profileData }) => {
               z-50
             "
           >
-            {/* Dropdown Header */}
             <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
               <p className="text-xs text-gray-400">Signed in as</p>
 
@@ -136,6 +133,7 @@ const NavbarUserDetails = ({ profileData }) => {
               </p>
             </div>
 
+<<<<<<< Updated upstream
             {/* Profile */}
             <Link
               href="/profile"
@@ -161,6 +159,9 @@ const NavbarUserDetails = ({ profileData }) => {
             {/* All users */}
 
             {profileData?.role === "admin" && (
+=======
+            <div className="grid grid-cols-2 gap-3 p-4 w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-100">
+>>>>>>> Stashed changes
               <Link
                 href="/admin/users"
                 onClick={handleProfile}
@@ -202,8 +203,41 @@ const NavbarUserDetails = ({ profileData }) => {
                 <FiLogOut className="w-4 h-4 text-red-500" />
               </span>
 
+<<<<<<< Updated upstream
               <span className="font-medium">Logout</span>
             </button>
+=======
+              {profileData?.role === "admin" ? (
+                <Link
+                  href="/admin/users"
+                  onClick={handleProfile}
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all duration-200 group"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm text-gray-600 group-hover:text-[#00A651] transition-colors">
+                    <FiUsers className="w-5 h-5" />
+                  </span>
+                  <span className="font-semibold text-xs text-gray-700 text-center">
+                    All Users
+                  </span>
+                </Link>
+              ) : (
+                <div className="hidden"></div>
+              )}
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-red-50/50 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all duration-200 group"
+              >
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm text-red-500 group-hover:text-red-600 transition-colors">
+                  <FiLogOut className="w-5 h-5" />
+                </span>
+                <span className="font-semibold text-xs text-red-600 text-center">
+                  Logout
+                </span>
+              </button>
+            </div>
+>>>>>>> Stashed changes
           </motion.div>
         )}
       </AnimatePresence>
