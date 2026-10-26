@@ -1,158 +1,126 @@
+import React from "react";
+import { FaArrowRight } from "react-icons/fa";
 import Image from "@/components/common/AppImage";
-import Link from "@/components/common/AppLink";
-import { HiArrowDown, HiCheck, HiPlay } from "react-icons/hi2";
+import AppLink from "@/components/common/AppLink";
 
-const HERO_IMAGE_URL =
-  "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80";
+const HeroSection = () => {
+  const DEMO_IMAGE_URL =
+    "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop";
 
-const Hero = () => {
   return (
-    <section className="relative min-h-[40vh] flex items-center overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={HERO_IMAGE_URL}
-          alt="Background"
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
-          fill
-          priority
-          fetchPriority="high"
-        />
+    <section className="bg-gray-50 py-6 sm:py-10 w-full font-sans mt-16 sm:mt-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-4">
+        {/* Main Card Container */}
+        <div className="bg-[#F4F9F9] rounded-2xl border border-[#E5E7EB] shadow-sm overflow-hidden flex flex-col lg:flex-row relative">
+          {/* LEFT SIDE - CONTENT */}
+          <div className="w-full lg:w-[50%] p-4 sm:p-6 md:p-8 lg:px-6 flex flex-col justify-between z-10">
+            <div>
+              {/* Headline */}
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#1A1A1A] leading-[1.15] mb-3 flex items-center flex-wrap gap-2 sm:gap-3">
+                <span>Bangladesh Learns</span>
+                <span className="text-[#E53E3E]">Live</span>
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-[#E53E3E] rounded-full inline-block"></span>
+              </h1>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-linear-to-r from-gray-900/90 via-gray-900/70 to-transparent" />
-        {/* Animated Blob */}
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Side - Text Content */}
-          <div className="space-y-6">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-yellow-500/20 backdrop-blur-sm text-yellow-400 px-4 py-2 rounded-full text-sm font-medium border border-yellow-500/30">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500" />
-              </span>
-              Learn from the best
-            </div>
-
-            {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-              <span className="text-white">Master New Skills &</span>
-              <br />
-              <span className="bg-linear-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                Transform Your Future
-              </span>
-            </h1>
-
-            {/* Description */}
-            <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-lg">
-              Unlock your potential with world-class courses taught by industry
-              experts. Learn at your own pace and gain in-demand skills that
-              will set you apart.
-            </p>
-
-            {/* Features List */}
-            <div className="flex flex-wrap gap-3 text-sm">
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                100+ Courses
-              </span>
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                Expert Instructors
-              </span>
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                Lifetime Access
-              </span>
-              <span className="flex items-center gap-2 text-gray-300">
-                <HiCheck className="h-5 w-5 text-yellow-500" />
-                Certificate
-              </span>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 pt-1">
-              <button className="px-8 py-3 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition-all duration-200 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 hover:scale-105 transform">
-                Get Started Free
-              </button>
-              <Link
-                href="/free-courses"
-                className="px-8 py-3 text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/10 transition-all duration-200 hover:border-yellow-500 flex items-center gap-2"
-              >
-                <HiPlay className="h-5 w-5" />
-                Watch Demo
-              </Link>
-            </div>
-
-            {/* Trusted By */}
-            <div className="pt-2">
-              <p className="text-sm text-gray-400 mb-3">
-                Trusted by 50,000+ learners worldwide
+              {/* Sub-headline */}
+              <p className="text-base sm:text-[18px] md:text-[20px] text-[#1A1A1A] font-medium mb-6 sm:mb-8">
+                Upgrade your future through Skill Development
               </p>
-              <div className="flex items-center gap-6 opacity-60">
-                <span className="text-gray-400 font-semibold text-lg">
-                  Microsoft
-                </span>
-                <span className="text-gray-400 font-semibold text-lg">
-                  Google
-                </span>
-                <span className="text-gray-400 font-semibold text-lg">
-                  Amazon
-                </span>
+
+              {/* CTA Button */}
+              <div className="mb-8 sm:mb-12 lg:mb-16">
+                <AppLink
+                  href="#"
+                  className="inline-flex items-center justify-center gap-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#1A1A1A] font-bold text-base sm:text-[18px] py-3 sm:py-3.5 px-6 sm:px-8 rounded-lg transition-colors duration-200"
+                >
+                  Start Learning Now
+                  <FaArrowRight className="text-base sm:text-[18px]" />
+                </AppLink>
+              </div>
+            </div>
+
+            {/* Logos Section */}
+            <div>
+              <p className="text-sm sm:text-[16px] md:text-[18px] font-bold text-[#1A1A1A] mb-4 sm:mb-5">
+                10000+ Graduates are working in various local and global
+                companies:
+              </p>
+
+              {/* Logos Grid - Responsive flex wrap */}
+              <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-300">
+                <div className="flex items-center gap-1.5 font-bold text-gray-800 text-sm sm:text-lg">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gray-400"></div>
+                  <span className="tracking-tight">BRAIN STATION 23</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 font-bold text-gray-800">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-400 rounded-sm"></div>
+                  <span className="leading-none text-xs sm:text-sm">
+                    TechnoSoft
+                    <br />
+                    <span className="text-[9px] sm:text-[10px] font-normal">
+                      Integration
+                    </span>
+                  </span>
+                </div>
+
+                <div className="font-bold text-gray-800 text-base sm:text-xl italic">
+                  excel
+                </div>
+
+                <div className="flex items-center gap-1 font-bold text-gray-800 text-base sm:text-xl italic relative">
+                  gtr
+                  <span className="text-[8px] sm:text-[10px] not-italic font-normal absolute -bottom-3 sm:-bottom-3.5 left-0 whitespace-nowrap">
+                    genuine technology
+                  </span>
+                </div>
+
+                <div className="font-black text-gray-800 text-base sm:text-xl tracking-tighter">
+                  ASTHA <span className="font-normal">IT</span>
+                </div>
+
+                <div className="font-semibold text-gray-800 text-base sm:text-xl tracking-tight">
+                  REVE <span className="font-light">Systems</span>
+                </div>
+
+                <div className="flex items-center gap-1 font-bold text-gray-800 text-base sm:text-xl">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border-2 border-gray-800"></div>
+                  ophol it
+                </div>
+
+                <div className="font-bold text-gray-800 text-sm sm:text-lg flex items-center gap-1">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-400 rounded-sm"></div>
+                  CORE DEVS
+                </div>
+
+                <div className="font-bold text-gray-800 text-sm sm:text-lg italic flex items-center gap-1">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-400 rounded-full"></div>
+                  SAYBURGH
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Illustration / Image */}
-          <div className="hidden lg:flex justify-center items-center">
-            <div className="relative w-full max-w-md">
-              {/* Main Image Card */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/20 border border-white/10 aspect-4/3">
+          <div className="w-full lg:w-[50%] relative min-h-62.5 sm:min-h-85 lg:min-h-full">
+            {/* Image Container */}
+            <div className="absolute inset-0 p-2 sm:p-3 lg:p-4 pb-2 sm:pb-3 lg:pb-4 pr-2 sm:pr-3 lg:pr-4">
+              <div className="relative w-full h-full rounded-xl overflow-hidden">
                 <Image
-                  src={HERO_IMAGE_URL}
-                  alt="Students learning"
+                  src={DEMO_IMAGE_URL}
+                  alt="AI Driven Tech"
                   fill
-                  className="object-cover"
+                  className="object-cover object-center"
+                  priority
                 />
-                {/* Floating Badge - Top */}
-                <div className="absolute top-3 left-3 bg-white/10 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/20">
-                  <p className="text-white text-xs font-medium">200+ Courses</p>
-                </div>
-                {/* Floating Badge - Bottom */}
-                <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-md rounded-xl px-3 py-1.5 border border-white/10">
-                  <p className="text-yellow-400 text-xs font-medium">
-                    4.9/5 Rating
-                  </p>
-                </div>
-              </div>
-
-              {/* Decorative Elements */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 bg-yellow-500/30 rounded-full blur-2xl" />
-              <div className="absolute -bottom-6 -left-6 w-28 h-28 bg-yellow-400/20 rounded-full blur-2xl" />
-              {/* Dots Pattern */}
-              <div className="absolute -right-8 -bottom-8 grid grid-cols-4 gap-2 opacity-20">
-                {[...Array(16)].map((_, i) => (
-                  <div key={i} className="w-2 h-2 bg-white rounded-full" />
-                ))}
+                {/* Optional Dark Overlay for better contrast if needed */}
+                <div className="absolute inset-0 bg-black/10 mix-blend-multiply"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 animate-bounce">
-        <span className="text-gray-400 text-xs font-medium">Scroll</span>
-        <HiArrowDown className="h-4 w-4 text-gray-400" />
-      </div>
     </section>
   );
 };
 
-export default Hero;
+export default HeroSection;
