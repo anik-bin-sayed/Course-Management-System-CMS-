@@ -6,6 +6,8 @@ import {
   FiUsers,
   FiStar,
 } from "react-icons/fi";
+import { TbLoader } from "react-icons/tb";
+
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 import CourseCardLoader from "./CourseCardLoader";
@@ -53,26 +55,12 @@ const UpcomingCourse = ({ data, loading, isError }) => {
           <div className="flex flex-col items-center px-4 pb-8 pt-2">
             {/* Icon + Title */}
             <div className="flex items-center justify-center gap-3 sm:gap-4 text-2xl sm:text-3xl font-semibold">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600">
-                <FiBookOpen size={24} />
+              <span className="flex h-11 w-11 items-center justify-center rounded-full  font-extrabold text-red-600 border">
+                <TbLoader size={34} className="font-extrabold" />
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Upcoming <span className="text-yellow-600">Courses</span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-gray-900">
+                Upcoming Courses
               </h2>
-            </div>
-
-            {/* Subtitle */}
-            <p className="mt-3 text-sm sm:text-base text-gray-500 text-center">
-              Learn Something{" "}
-              <span className="font-semibold text-yellow-600">New</span> —{" "}
-              <span className="text-gray-400">enroll before seats fill up</span>
-            </p>
-
-            {/* Divider */}
-            <div className="mt-5 flex items-center gap-2">
-              <span className="h-1 w-8 rounded-full bg-yellow-400"></span>
-              <span className="h-1 w-2 rounded-full bg-yellow-300"></span>
-              <span className="h-1 w-2 rounded-full bg-yellow-200"></span>
             </div>
           </div>
 
@@ -97,7 +85,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
               {courses.map((course) => (
                 <div
                   key={course.id}
-                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:border-yellow-200"
+                  className="group overflow-hidden rounded border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:border-gray-400"
                 >
                   <Link href={`/upcoming-course/${course.id}`}>
                     {/* Thumbnail */}
@@ -106,12 +94,12 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                         src={course.thumbnail}
                         alt={course.title}
                         fill
-                        className="object-cover transition duration-500 group-hover:scale-110"
+                        className="object-cover transition duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       />
 
                       {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 
                       {/* Upcoming Badge */}
                       <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-yellow-400 px-3 py-1.5 text-xs font-bold text-black shadow-md">
@@ -130,7 +118,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                     </div>
 
                     {/* Content */}
-                    <div className="p-5 cursor-pointer">
+                    <div className="p-2 cursor-pointer">
                       {/* Level + Language */}
                       <div className="mb-3 flex flex-wrap items-center gap-2">
                         <span className="rounded-md bg-purple-50 px-2.5 py-1 text-xs font-semibold capitalize text-yellow-900">
@@ -144,17 +132,12 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                       </div>
 
                       {/* Title */}
-                      <h3 className="line-clamp-2 min-h-14 text-lg font-semibold leading-7 text-gray-900 transition-colors group-hover:text-yellow-600">
+                      <h3 className="tracking-tight min-h-14 text-lg font-semibold leading-7 text-gray-700 transition-colors group-hover:text-black">
                         {course.title}
                       </h3>
 
-                      {/* Description */}
-                      <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-gray-500">
-                        {course.short_description}
-                      </p>
-
                       {/* Meta row */}
-                      <div className="mt-4 flex items-center gap-4 border-t border-dashed border-gray-100 pt-3 text-xs text-gray-500">
+                      <div className="mt-2 flex items-center gap-4 border-t border-dashed border-gray-100  text-xs text-gray-500">
                         <span className="flex items-center gap-1">
                           <FiUsers size={13} className="text-gray-400" />
                           {course.enrolled_count || 0} enrolled
@@ -166,11 +149,11 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                       </div>
 
                       {/* Price + Button */}
-                      <div className="mt-4 flex items-end justify-between">
+                      <div className="mt-2 flex flex-col justify-between">
                         <div>
                           {course.discount_price ? (
-                            <div className="flex items-center gap-2">
-                              <span className="text-xl font-bold text-gray-900">
+                            <div className="flex justify-start gap-2 px-4 py-2 ">
+                              <span className="text-xl font-extrabold text-gray-900  ">
                                 ৳{course.discount_price}
                               </span>
 
@@ -183,18 +166,17 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                               ৳{course.price}
                             </span>
                           )}
-
-                          <p className="text-xs text-gray-400">Course price</p>
                         </div>
 
                         {/* View Button */}
                         <button
-                          className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black transition-all duration-200 hover:bg-yellow-500 hover:shadow-md group-hover:scale-105"
+                          className="flex items-center justify-center  bg-gray-900 px-4 py-2 rounded text-white transition-all duration-200 hover:bg-gray-800 hover:shadow-md cursor-pointer"
                           title="View course"
                         >
+                          See Details
                           <FiArrowRight
                             size={18}
-                            className="transition-transform duration-200 group-hover:translate-x-0.5"
+                            className="transition-transform duration-200 group-hover:translate-x-0.5 mt-1 text-2xl"
                           />
                         </button>
                       </div>
