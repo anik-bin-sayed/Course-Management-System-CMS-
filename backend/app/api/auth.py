@@ -55,6 +55,7 @@ def verify_email(
 
 @router.post("/check-email")
 def check_email(data: CheckEmailSchema, db: Session = Depends(get_db)):
+
     user = UserRepository.get_by_email(
         db,
         data.email,
