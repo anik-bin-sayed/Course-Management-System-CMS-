@@ -1,7 +1,6 @@
 import Image from "@/components/common/AppImage";
 import React from "react";
-
-import { HiMagnifyingGlass, HiPlay } from "react-icons/hi2";
+import { HiPlay } from "react-icons/hi2";
 
 const HeroSection = () => {
   return (
@@ -11,34 +10,22 @@ const HeroSection = () => {
       <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-red-800 opacity-40 blur-3xl" />
 
       <div className="relative mx-auto flex min-h-[calc(50vh-100px)] max-w-7xl items-center px-6 py-10 lg:px-8">
-        <div className="grid w-full grid-cols-1 items-center gap-10 md:grid-cols-2 mt-15">
+        <div className="mt-15 grid w-full grid-cols-1 items-center gap-10 md:grid-cols-2">
           {/* Left Content */}
           <div className="text-center md:text-left">
-            {/* Badge */}
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm ring-1 ring-white/20">
               <span className="h-2 w-2 rounded-full bg-white" />
               100% Free Learning
             </div>
 
-            {/* Heading */}
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-<<<<<<< Updated upstream
               Learn New Skills
               <span className="block text-red-100">For Free.</span>
-=======
-              {t("freeCourseHero.title")}
-              <span className="block text-red-100"></span>
->>>>>>> Stashed changes
             </h1>
 
-            {/* Description */}
             <p className="mt-5 max-w-xl text-sm leading-6 text-red-100 sm:text-base sm:leading-7">
-<<<<<<< Updated upstream
               Explore high-quality video courses, learn from experienced
               instructors, and build the skills you need to grow your career.
-=======
-              {t("freeCourseHero.description")}
->>>>>>> Stashed changes
             </p>
 
             {/* Buttons */}
@@ -80,12 +67,11 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
+
           {/* Right Image */}
-          <div className="relative flex items-center justify-center mt-2">
-            {/* Glow */}
+          <div className="relative mt-2 flex items-center justify-center">
             <div className="absolute h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
-            {/* Image Card */}
             <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
               <div className="overflow-hidden rounded-2xl bg-white">
                 <Image
