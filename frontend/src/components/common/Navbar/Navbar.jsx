@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState, useRef } from "react";
 import Link from "@/components/common/AppLink";
 import { useDispatch } from "react-redux";
@@ -16,6 +14,7 @@ import SideLogin from "../../Sidebar/SideLogin.jsx";
 import NavbarUserDetails from "./NavbarUserDetails.jsx";
 import MobileNavUserDetails from "./MovileNavUserDetails.jsx";
 import LanguageSwitchButton from "./LanguageSwitchButton.jsx";
+import AppLink from "../AppLink.jsx";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +42,6 @@ const Navbar = () => {
     if (currentScrollY > lastScrollY && currentScrollY > 100) {
       setShowNavbar(false);
       if (mobileMenuOpen) setMobileMenuOpen(false);
-      if (searchOpen) setSearchOpen(false);
     } else {
       setShowNavbar(true);
     }
@@ -53,7 +51,7 @@ const Navbar = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, mobileMenuOpen, searchOpen]);
+  }, [lastScrollY, mobileMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,22 +68,6 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mobileMenuOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape" && searchOpen) {
-        setSearchOpen(false);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [searchOpen]);
-
-  useEffect(() => {
-    if (searchOpen && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current.focus(), 200);
-    }
-  }, [searchOpen]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -186,12 +168,16 @@ const Navbar = () => {
             <div className="h-5 w-px bg-gray-300 mx-1"></div>
 
             {/* Language Selector */}
-            {/* <div className="flex items-center gap-1 text-sm font-medium text-gray-700 cursor-pointer hover:text-[#00A651] transition">
-              <span className="text-lg leading-none">🇧🇩</span> EN{" "}
-              <FaChevronDown size={10} />
-            </div> */}
 
             <LanguageSwitchButton />
+            {!isLoading && profileData && (
+              <AppLink
+                href={dashboardHref}
+                className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
+              >
+                <span> {t("dashboard.title")}</span>
+              </AppLink>
+            )}
 
             {/* Auth Buttons */}
             {!isLoading && (
@@ -214,12 +200,13 @@ const Navbar = () => {
 
           {/* 4. Mobile Icons & Hamburger */}
           <div className="flex lg:hidden items-center gap-3">
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
+            <LanguageSwitchButton />
+            <AppLink
+              href="/search"
               className="p-2 text-gray-600 bg-gray-100 rounded-full"
             >
               <FaSearch size={18} />
-            </button>
+            </AppLink>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-gray-600 bg-gray-100 rounded-full focus:outline-none"
@@ -229,38 +216,27 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-
-        {/* Mobile Search Bar (Toggle) */}
-        {searchOpen && (
-          <div className="lg:hidden mt-3 relative w-full">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FaSearch className="h-4 w-4 text-gray-400" />
-            </div>
-            <input
-              type="text"
-              placeholder="Search courses..."
-              className="w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:border-[#00A651]"
-            />
-          </div>
-        )}
       </nav>
 
       {/* Mobile Menu (Slide from right) */}
       <div
         ref={menuRef}
-        className={`fixed top-[60px] right-0 h-full w-72 bg-white z-50 shadow-2xl lg:hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-15 right-0 h-full w-72 bg-white z-50 shadow-2xl lg:hidden transition-transform duration-300 ease-in-out ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {!isLoading && profileData && (
-          <MobileNavUserDetails profileData={profileData} />
+          <MobileNavUserDetails
+            profileData={profileData}
+            setMobileMenuOpen={setMobileMenuOpen}
+          />
         )}
 
         <div className="p-5 space-y-2 flex flex-col">
           {profileData && (
             <Link
               href={dashboardHref}
-              className="flex items-center justify-center bg-[#00A651] px-4 py-2.5 text-sm font-bold text-white rounded-md"
+              className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
               onClick={() => setMobileMenuOpen(false)}
             >
               {t("dashboard.title")}

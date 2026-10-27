@@ -54,19 +54,19 @@ const NavbarUserDetails = ({ profileData }) => {
         aria-label="Open user menu"
         className="
           flex items-center gap-3
-          rounded-xl border border-gray-200
+          rounded border border-gray-200
           bg-white px-3 py-2
           shadow-sm transition-all duration-200
           hover:bg-gray-50 cursor-pointer
         "
       >
         {/* Profile Image */}
-        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-gray-200">
+        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-gray-200">
           <Image
             src={profileData?.avatar || "/images/default.jpg"}
             alt={profileData?.name || "Profile"}
             fill
-            sizes="40px"
+            sizes="44px"
             className="object-cover"
           />
         </div>

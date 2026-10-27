@@ -74,11 +74,11 @@ const CategoryNav = ({
 
   return (
     <section
-      className={`sticky z-40 mx-auto max-w-7xl  backdrop-blur-md transition-[top] duration-150 ease-out ${
-        isNavbarVisible ? "top-20" : "top-0"
+      className={`sticky z-40 mx-auto w-full sm:w-full max-w-7xl backdrop-blur-md transition-[top] duration-150 ease-out ${
+        isNavbarVisible ? "top-15 md:top-19" : "top-0"
       } ${className}`}
     >
-      <div className=" px-12">
+      <div className=" px-1 sm:px-2 md:px-4 lg:px-6">
         <div className="relative px-14  bg-gray-100">
           {canScrollLeft && (
             <div className="border px-20 bg-black b">

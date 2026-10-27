@@ -12,7 +12,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-const MobileNavUserDetails = ({ profileData }) => {
+const MobileNavUserDetails = ({ profileData, setMobileMenuOpen }) => {
   const [open, setOpen] = useState(false);
 
   //   redux
@@ -27,7 +27,7 @@ const MobileNavUserDetails = ({ profileData }) => {
     }
   };
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 bg-gray-50">
       {/* Header */}
       <button
         onClick={() => setOpen(!open)}
@@ -70,6 +70,7 @@ const MobileNavUserDetails = ({ profileData }) => {
           <Link
             href="/profile"
             className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+            onClick={() => setMobileMenuOpen(false)}
           >
             <FaUser />
             <span>Profile</span>
@@ -79,6 +80,7 @@ const MobileNavUserDetails = ({ profileData }) => {
             <Link
               href="/admin/users"
               className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
             >
               <FaUser />
               <span>All Users</span>
