@@ -5,7 +5,7 @@ import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer";
 
 export default function LayoutWrapper({ children }) {
-  const pathname = usePathname();
+  const pathname = usePathname().replace(/^\/bn(?=\/|$)/, "") || "/";
 
   const hideNavbar =
     pathname === "/profile" ||

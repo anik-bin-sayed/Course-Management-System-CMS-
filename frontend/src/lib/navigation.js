@@ -6,12 +6,31 @@ import {
 
 export function useRouter() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isBanglaPath =
+    location.pathname === "/bn" || location.pathname.startsWith("/bn/");
+
+  const localize = (to) => {
+    if (
+      !isBanglaPath ||
+      typeof to !== "string" ||
+      !to.startsWith("/") ||
+      to.startsWith("//") ||
+      /^\/bn(?:\/|[?#]|$)/.test(to)
+    ) {
+      return to;
+    }
+
+    return to === "/" ? "/bn" : `/bn${to}`;
+  };
 
   return {
     push: (to, options = {}) =>
-      navigate(to, { preventScrollReset: options.scroll === false }),
+      navigate(localize(to), {
+        preventScrollReset: options.scroll === false,
+      }),
     replace: (to, options = {}) =>
-      navigate(to, {
+      navigate(localize(to), {
         replace: true,
         preventScrollReset: options.scroll === false,
       }),

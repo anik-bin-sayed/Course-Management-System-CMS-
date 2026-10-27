@@ -3,18 +3,19 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "@/components/common/AppLink";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { setUser } from "../../../lib/features/auth/authSlice.js";
 import { useGetProfileQuery } from "../../../lib/features/auth/authApi";
 
 // Icons
-import { FaSearch, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
-import { HiOutlineUserCircle } from "react-icons/hi";
+import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 
 // additional
 import Search from "./Search.jsx";
 import SideLogin from "../../Sidebar/SideLogin.jsx";
 import NavbarUserDetails from "./NavbarUserDetails.jsx";
 import MobileNavUserDetails from "./MovileNavUserDetails.jsx";
+import LanguageSwitchButton from "./LanguageSwitchButton.jsx";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,7 @@ const Navbar = () => {
   const searchInputRef = useRef();
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   // redux
   const { data: profileData, isLoading } = useGetProfileQuery();
@@ -166,28 +168,30 @@ const Navbar = () => {
               href="/job-success"
               className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
             >
-              Job Success
+              {t("common.jobSuccess")}
             </Link>
             <Link
               href="/upcoming-course"
               className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
             >
-              All Courses
+              {t("common.allCourses")}
             </Link>
             <Link
               href="/free-courses"
               className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
             >
-              Free Courses
+              {t("common.freeCourses")}
             </Link>
 
             <div className="h-5 w-px bg-gray-300 mx-1"></div>
 
             {/* Language Selector */}
-            <div className="flex items-center gap-1 text-sm font-medium text-gray-700 cursor-pointer hover:text-[#00A651] transition">
+            {/* <div className="flex items-center gap-1 text-sm font-medium text-gray-700 cursor-pointer hover:text-[#00A651] transition">
               <span className="text-lg leading-none">🇧🇩</span> EN{" "}
               <FaChevronDown size={10} />
-            </div>
+            </div> */}
+
+            <LanguageSwitchButton />
 
             {/* Auth Buttons */}
             {!isLoading && (
@@ -198,15 +202,9 @@ const Navbar = () => {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleSidebar}
-                      className="text-sm font-semibold text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition"
+                      className="bg-[#FFD700] text-black text-sm font-bold px-5 py-2 rounded-md hover:bg-yellow-500 transition shadow-sm cursor-pointer"
                     >
-                      Login
-                    </button>
-                    <button
-                      onClick={handleSidebar}
-                      className="bg-[#FFD700] text-black text-sm font-bold px-5 py-2 rounded-md hover:bg-yellow-500 transition shadow-sm"
-                    >
-                      Sign Up
+                      {t("common.login")} / {t("common.register")}
                     </button>
                   </div>
                 )}
@@ -265,7 +263,7 @@ const Navbar = () => {
               className="flex items-center justify-center bg-[#00A651] px-4 py-2.5 text-sm font-bold text-white rounded-md"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Dashboard
+              {t("dashboard.title")}
             </Link>
           )}
 
@@ -274,21 +272,21 @@ const Navbar = () => {
             className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Job Success
+            {t("common.jobSuccess")}
           </Link>
           <Link
             href="/free-courses"
             className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Free Courses
+            {t("common.freeCourses")}
           </Link>
           <Link
             href="/upcoming-course"
             className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
             onClick={() => setMobileMenuOpen(false)}
           >
-            All Courses
+            {t("common.allCourses")}
           </Link>
 
           {!isLoading && !profileData && (
@@ -297,13 +295,13 @@ const Navbar = () => {
                 onClick={handleSidebar}
                 className="w-full py-2.5 text-center text-gray-700 font-semibold rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
               >
-                Login
+                {t("common.login")}
               </button>
               <button
                 onClick={handleSidebar}
                 className="w-full py-2.5 text-center text-black font-bold rounded-md bg-[#FFD700] hover:bg-yellow-500 transition-colors"
               >
-                Sign Up
+                {t("common.register")}
               </button>
             </div>
           )}

@@ -17,7 +17,9 @@
     "allCourses": "All Courses",
     "freeCourses": "Free Courses",
     "english": "English",
-    "bengali": "Bengali"
+    "bengali": "Bengali",
+    "switchToEnglish": "Switch to English",
+    "switchToBangla": "Switch to Bangla"
   },
   "dashboard": {
     "title": "Dashboard",

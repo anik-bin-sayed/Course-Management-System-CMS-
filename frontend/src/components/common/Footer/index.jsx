@@ -1,10 +1,13 @@
 import Link from "@/components/common/AppLink";
+import { useTranslation } from "react-i18next";
 
 import { FaFacebookF, FaYoutube, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import { SiGoogledisplayandvideo360 } from "react-icons/si";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="border-t border-gray-200 bg-white text-gray-600">
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
@@ -22,8 +25,7 @@ const Footer = () => {
             </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-gray-500">
-              Learn new skills, improve your knowledge, and grow your career
-              with our free and premium video courses.
+              {t("footer.description")}
             </p>
 
             {/* Social Links */}
@@ -65,7 +67,7 @@ const Footer = () => {
           {/* Courses */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-              Courses
+              {t("common.courses")}
             </h3>
 
             <ul className="mt-5 space-y-3 text-sm">
@@ -74,7 +76,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Free Courses
+                  {t("common.freeCourses")}
                 </Link>
               </li>
 
@@ -83,7 +85,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Paid Courses
+                  {t("footer.paidCourses")}
                 </Link>
               </li>
 
@@ -92,7 +94,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Programming
+                  {t("footer.programming")}
                 </Link>
               </li>
 
@@ -101,7 +103,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Web Development
+                  {t("footer.webDevelopment")}
                 </Link>
               </li>
 
@@ -110,7 +112,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Data Structures
+                  {t("footer.dataStructures")}
                 </Link>
               </li>
             </ul>
@@ -119,7 +121,7 @@ const Footer = () => {
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-              Quick Links
+              {t("footer.quickLinks")}
             </h3>
 
             <ul className="mt-5 space-y-3 text-sm">
@@ -128,7 +130,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Home
+                  {t("common.home")}
                 </Link>
               </li>
 
@@ -137,7 +139,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  About Us
+                  {t("common.about")}
                 </Link>
               </li>
 
@@ -146,7 +148,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  All Courses
+                  {t("common.allCourses")}
                 </Link>
               </li>
 
@@ -155,7 +157,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Instructors
+                  {t("footer.instructors")}
                 </Link>
               </li>
 
@@ -164,7 +166,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition-colors hover:text-yellow-500"
                 >
-                  Contact
+                  {t("common.contact")}
                 </Link>
               </li>
             </ul>
@@ -173,7 +175,7 @@ const Footer = () => {
           {/* Contact */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-              Get In Touch
+              {t("footer.getInTouch")}
             </h3>
 
             <div className="mt-5 space-y-4 text-sm">
@@ -183,7 +185,7 @@ const Footer = () => {
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-400">Email</p>
+                  <p className="text-xs text-gray-400">{t("footer.email")}</p>
                   <span className="text-gray-600">support@learnhub.com</span>
                 </div>
               </div>
@@ -194,7 +196,7 @@ const Footer = () => {
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-400">Phone</p>
+                  <p className="text-xs text-gray-400">{t("footer.phone")}</p>
                   <span className="text-gray-600">+880 1234-567890</span>
                 </div>
               </div>
@@ -205,7 +207,9 @@ const Footer = () => {
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-400">Location</p>
+                  <p className="text-xs text-gray-400">
+                    {t("footer.location")}
+                  </p>
                   <span className="text-gray-600">Dhaka, Bangladesh</span>
                 </div>
               </div>
@@ -218,8 +222,8 @@ const Footer = () => {
           <div className="flex flex-col items-center justify-between gap-4 text-sm md:flex-row">
             <p className="text-gray-400">
               © {new Date().getFullYear()}{" "}
-              <span className="font-medium text-gray-600">LearnHub</span>. All
-              rights reserved.
+              <span className="font-medium text-gray-600">LearnHub</span>.{" "}
+              {t("footer.rightsReserved")}
             </p>
 
             <div className="flex items-center gap-5">
@@ -227,7 +231,7 @@ const Footer = () => {
                 href="#"
                 className="text-gray-400 transition-colors hover:text-yellow-500"
               >
-                Privacy Policy
+                {t("footer.privacyPolicy")}
               </Link>
 
               <span className="h-4 w-px bg-gray-200" />
@@ -236,7 +240,7 @@ const Footer = () => {
                 href="#"
                 className="text-gray-400 transition-colors hover:text-yellow-500"
               >
-                Terms & Conditions
+                {t("footer.termsConditions")}
               </Link>
             </div>
           </div>
