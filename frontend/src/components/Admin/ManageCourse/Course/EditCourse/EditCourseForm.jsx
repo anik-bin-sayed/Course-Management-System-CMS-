@@ -92,17 +92,16 @@ const EditCourseForm = ({ editData }) => {
       data.append("thumbnail", thumbnailFile);
     }
 
-    for (const [key, value] of data.entries()) {
-      if (value instanceof File) {
-        console.log(key, {
-          name: value.name,
-          type: value.type,
-          size: value.size,
-        });
-      } else {
-        console.log(key, value);
-      }
-    }
+    // for (const [key, value] of data.entries()) {
+    //   if (value instanceof File) {
+    //     console.log(key, {
+    //       name: value.name,
+    //       type: value.type,
+    //       size: value.size,
+    //     });
+    //   } else {
+    //   }
+    // }
 
     try {
       await updateFreeCourse({

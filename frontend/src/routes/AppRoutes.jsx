@@ -72,32 +72,21 @@ function AppPageRoutes() {
       <Route path="/job-success" element={<JobSuccess />} />
       <Route path="/search" element={<SearchPage />} />
 
-      <Route
-        path="/dashboard/:courseSlug/:lessonId"
-        element={
-          <ProtectedRoute>
-            <StudentCoursePage showLesson />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard/:courseSlug/:lessonId/watch"
-        element={
-          <ProtectedRoute>
-            <LessonWatchPage />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard/:courseSlug"
-        element={
-          <ProtectedRoute>
-            <StudentCoursePage />
-          </ProtectedRoute>
-        }
-      />
+      <Route element={<StudentGuard />}>
+        <Route
+          path="/dashboard/:courseSlug/:lessonId/watch"
+          element={<LessonWatchPage />}
+        />
+        <Route
+          path="/dashboard/:courseSlug/:lessonId"
+          element={<StudentCoursePage showLesson />}
+        />
+        <Route
+          path="/dashboard/:courseSlug"
+          element={<StudentCoursePage />}
+        />
+        <Route path="/dashboard" element={<StudentDashboardPage />} />
+      </Route>
 
       <Route path="/free-courses" element={<FreeCoursesPage />} />
       <Route path="/upcoming-course" element={<UpcomingCoursesPage />} />
@@ -113,15 +102,6 @@ function AppPageRoutes() {
           <ProtectedRoute>
             <ProfilePage />
           </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard"
-        element={
-          <StudentGuard>
-            <StudentDashboardPage />
-          </StudentGuard>
         }
       />
 

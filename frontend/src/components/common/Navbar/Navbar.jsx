@@ -2,13 +2,16 @@ import { useEffect, useState, useRef } from "react";
 import Link from "@/components/common/AppLink";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { setUser } from "../../../lib/features/auth/authSlice.js";
 import { useGetProfileQuery } from "../../../lib/features/auth/authApi";
+import {
+  isEnrollmentEligible,
+  useGetMyEnrollmentsQuery,
+} from "../../../lib/features/enrollment/enrollmentApi";
 
-// Icons
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 
-// additional
 import Search from "./Search.jsx";
 import SideLogin from "../../Sidebar/SideLogin.jsx";
 import NavbarUserDetails from "./NavbarUserDetails.jsx";
@@ -28,15 +31,97 @@ const Navbar = () => {
   const menuRef = useRef();
   const searchInputRef = useRef();
   const dropdownRef = useRef(null);
+
+  const desktopLinksRef = useRef(null);
+  const desktopLinkRefs = useRef({});
+  const [highlightStyle, setHighlightStyle] = useState({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const location = useLocation();
 
-  // redux
-  const { data: profileData, isLoading } = useGetProfileQuery();
+  const {
+    data: profileData,
+    isLoading,
+    isFetching: isFetchingProfile,
+  } = useGetProfileQuery();
+  const {
+    data: enrollments,
+    isError: isEnrollmentError,
+    isFetching: isFetchingEnrollments,
+    isLoading: isLoadingEnrollments,
+    isUninitialized: areEnrollmentsUninitialized,
+  } = useGetMyEnrollmentsQuery(undefined, {
+    skip: profileData?.role !== "student",
+  });
   const dashboardHref =
     profileData?.role === "student" ? "/dashboard" : "/admin/manage-course";
+  const hasEligibleEnrollment = enrollments?.some(isEnrollmentEligible);
+  const showDashboardLink =
+    profileData?.role === "student"
+      ? !isLoadingEnrollments &&
+        !isFetchingEnrollments &&
+        !areEnrollmentsUninitialized &&
+        !isEnrollmentError &&
+        hasEligibleEnrollment
+      : ["admin", "instructor"].includes(profileData?.role);
 
-  // Handle scroll
+  useEffect(() => {
+    if (location.state?.openLogin) {
+      setSidebarOpen(true);
+    }
+  }, [location.state]);
+
+  const desktopNavItems = [
+    { id: "job-success", href: "/job-success", label: t("common.jobSuccess") },
+    {
+      id: "upcoming-course",
+      href: "/upcoming-course",
+      label: t("common.allCourses"),
+    },
+    {
+      id: "free-courses",
+      href: "/free-courses",
+      label: t("common.freeCourses"),
+    },
+  ];
+
+  const activeDesktopId =
+    desktopNavItems.find((item) => location.pathname === item.href)?.id || null;
+
+  useEffect(() => {
+    const updateHighlight = () => {
+      if (!desktopLinksRef.current) return;
+      const activeEl = desktopLinkRefs.current[activeDesktopId];
+      const navEl = desktopLinksRef.current;
+      if (!activeEl || !navEl) {
+        setHighlightStyle((prev) => ({ ...prev, opacity: 0 }));
+        return;
+      }
+      const navRect = navEl.getBoundingClientRect();
+      const elRect = activeEl.getBoundingClientRect();
+      setHighlightStyle({
+        left: elRect.left - navRect.left + navEl.scrollLeft,
+        width: elRect.width,
+        opacity: 1,
+      });
+    };
+
+    updateHighlight();
+
+    const raf = requestAnimationFrame(updateHighlight);
+    window.addEventListener("resize", updateHighlight);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", updateHighlight);
+    };
+  }, [activeDesktopId, location.pathname]);
+
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
     if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -109,7 +194,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Overlay for mobile menu */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
@@ -117,7 +201,6 @@ const Navbar = () => {
         />
       )}
 
-      {/* Navbar */}
       <nav
         ref={navRef}
         className={`bg-white border-b border-gray-100 px-4 sm:px-6 py-3 fixed top-0 left-0 right-0 z-50 transition-transform duration-150 ease-out ${
@@ -125,7 +208,6 @@ const Navbar = () => {
         }`}
       >
         <div className="max-w-350 mx-auto flex items-center justify-between gap-4">
-          {/* 1. Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center font-bold text-lg">
               Learn
@@ -135,7 +217,6 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* 2. Search Bar (Desktop) */}
           <div className="hidden lg:flex flex-1 max-w-md ml-6">
             <Search
               query={""}
@@ -144,42 +225,57 @@ const Navbar = () => {
             />
           </div>
 
-          {/* 3. Right Side Links */}
           <div className="hidden lg:flex items-center gap-6">
-            <Link
-              href="/job-success"
-              className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
+            <div
+              ref={desktopLinksRef}
+              className="relative flex items-center gap-6"
             >
-              {t("common.jobSuccess")}
-            </Link>
-            <Link
-              href="/upcoming-course"
-              className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
-            >
-              {t("common.allCourses")}
-            </Link>
-            <Link
-              href="/free-courses"
-              className="text-sm font-medium text-gray-700 hover:text-[#00A651] transition"
-            >
-              {t("common.freeCourses")}
-            </Link>
+              <div
+                className="pointer-events-none absolute bottom-0 rounded-full bg-black transition-all duration-300 ease-out"
+                style={{
+                  left: `${highlightStyle.left}px`,
+                  width: `${highlightStyle.width}px`,
+                  height: "2px",
+                  opacity: highlightStyle.opacity,
+                }}
+              />
+
+              {desktopNavItems.map((item) => {
+                const isActive = activeDesktopId === item.id;
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    ref={(el) => {
+                      desktopLinkRefs.current[item.id] = el;
+                    }}
+                    className={`relative pb-2 text-sm transition-colors duration-200 ${
+                      isActive
+                        ? "font-semibold text-black"
+                        : "font-medium text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
 
             <div className="h-5 w-px bg-gray-300 mx-1"></div>
 
-            {/* Language Selector */}
-
             <LanguageSwitchButton />
-            {!isLoading && profileData && (
-              <AppLink
-                href={dashboardHref}
-                className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
-              >
-                <span> {t("dashboard.title")}</span>
-              </AppLink>
-            )}
+            {!isLoading &&
+              !isFetchingProfile &&
+              profileData &&
+              showDashboardLink && (
+                <AppLink
+                  href={dashboardHref}
+                  className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
+                >
+                  <span> {t("dashboard.title")}</span>
+                </AppLink>
+              )}
 
-            {/* Auth Buttons */}
             {!isLoading && (
               <>
                 {profileData ? (
@@ -198,7 +294,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* 4. Mobile Icons & Hamburger */}
           <div className="flex lg:hidden items-center gap-3">
             <LanguageSwitchButton />
             <AppLink
@@ -218,7 +313,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu (Slide from right) */}
       <div
         ref={menuRef}
         className={`fixed top-15 right-0 h-full w-72 bg-white z-50 shadow-2xl lg:hidden transition-transform duration-300 ease-in-out ${
@@ -233,15 +327,18 @@ const Navbar = () => {
         )}
 
         <div className="p-5 space-y-2 flex flex-col">
-          {profileData && (
-            <Link
-              href={dashboardHref}
-              className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {t("dashboard.title")}
-            </Link>
-          )}
+          {!isLoading &&
+            !isFetchingProfile &&
+            profileData &&
+            showDashboardLink && (
+              <Link
+                href={dashboardHref}
+                className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t("dashboard.title")}
+              </Link>
+            )}
 
           <Link
             href="/job-success"

@@ -33,7 +33,7 @@ const FreeVideoList = () => {
 
   const handleEdit = (course) => {
     router.push(
-      `/manage-course?tab=edit-course&slug=${encodeURIComponent(course.slug)}`,
+      `/admin/manage-course?tab=edit-course&slug=${encodeURIComponent(course.slug)}`,
     );
   };
 
@@ -63,7 +63,7 @@ const FreeVideoList = () => {
 
       {/* Course Grid */}
       <div className="mx-auto max-w-7xl overflow-x-auto rounded-xl border border-yellow-100 bg-white shadow-sm">
-        <table className="w-full min-w-[950px]">
+        <table className="w-full min-w-237.5">
           {/* Header */}
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50">

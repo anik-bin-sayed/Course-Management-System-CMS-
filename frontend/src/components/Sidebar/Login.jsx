@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
@@ -38,6 +39,8 @@ const LoginRegister = ({
   const [checkEmail, { isLoading: isCheckingEmail }] = useCheckEmailMutation();
   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
   const { data: profileData, refetch: refetchProfile } = useGetProfileQuery();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (initialEmail) setEmail(initialEmail);
@@ -163,6 +166,9 @@ const LoginRegister = ({
       onClose();
       setShowCloseConfirm(false);
       refetchProfile();
+      if (location.state?.openLogin && location.state.from) {
+        navigate(location.state.from, { replace: true });
+      }
     } catch (error) {
       console.error("Login failed:", error);
 

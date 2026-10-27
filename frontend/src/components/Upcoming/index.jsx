@@ -143,7 +143,7 @@ const UpcomingCourse = () => {
                 <Link
                   href={`/upcoming-course/${course.id}`}
                   key={course.id}
-                  className="group flex flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+                  className="group flex flex-col overflow-hidden rounded-md bg-white ring-1 ring-gray-200 transition-all duration-300 group-hover:border-black focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 "
                 >
                   {/* Thumbnail */}
                   <div className="relative h-48 w-full overflow-hidden bg-gray-100">
@@ -151,7 +151,7 @@ const UpcomingCourse = () => {
                       src={course.thumbnail}
                       alt={course.title}
                       fill
-                      className="object-cover transition duration-500 group-hover:scale-110"
+                      className="object-cover transition duration-500 "
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
                     {/* gradient overlay */}
@@ -177,7 +177,7 @@ const UpcomingCourse = () => {
                     </div>
 
                     {/* Title */}
-                    <h3 className="mt-3 line-clamp-2 min-h-14 text-base font-semibold leading-7 text-gray-900 transition group-hover:text-yellow-600 sm:text-lg">
+                    <h3 className="mt-3 line-clamp-2 min-h-14 text-base font-semibold leading-7 text-gray-600 transition group-hover:text-black sm:text-lg">
                       {course.title}
                     </h3>
 
@@ -188,7 +188,7 @@ const UpcomingCourse = () => {
 
                     {/* CTA button */}
                     <div className="mt-5">
-                      <span className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition group-hover:bg-yellow-500 group-hover:text-gray-900 sm:text-sm">
+                      <span className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition group-hover:bg-black group-hover:text-white sm:text-sm">
                         {t("upcomingCourse.viewDetails")}
                         <FiArrowRight
                           size={14}

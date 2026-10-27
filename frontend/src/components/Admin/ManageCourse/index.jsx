@@ -31,6 +31,7 @@ const ManageCourse = () => {
 
       case "create-free-video":
         return <CreateFreeVideos />;
+
       case "create-course":
         return <CreateCourse />;
 

@@ -29,6 +29,7 @@ profileCacheSync.startListening({
   ),
   effect: (_, { dispatch }) => {
     dispatch(profileApi.util.resetApiState());
+    dispatch(enrollmentApi.util.resetApiState());
   },
 });
 

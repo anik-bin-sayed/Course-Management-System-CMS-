@@ -1,6 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../api/baseApi";
 
+export const isEnrollmentEligible = (enrollment) =>
+  ["active", "completed"].includes(enrollment?.status);
+
 export const enrollmentApi = createApi({
   reducerPath: "enrollmentApi",
   baseQuery: baseQueryWithReauth,
@@ -24,12 +27,14 @@ export const enrollmentApi = createApi({
         method: "POST",
         body: { enrollment_id },
       }),
+      invalidatesTags: ["Enrollment"],
     }),
     initiatePayment: builder.mutation({
       query: (payment_id) => ({
         url: `/payments/${payment_id}/initiate`,
         method: "POST",
       }),
+      invalidatesTags: ["Enrollment"],
     }),
   }),
 });

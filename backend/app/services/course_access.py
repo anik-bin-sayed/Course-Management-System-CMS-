@@ -61,10 +61,17 @@ class CourseAccessService:
             )
             return
 
-        CourseAccessService.check_access(
-            db=db,
-            student_id=current_user.id,
-            course_id=course_id,
+        if current_user.role == "student":
+            CourseAccessService.check_access(
+                db=db,
+                student_id=current_user.id,
+                course_id=course_id,
+            )
+            return
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Course access required",
         )
 
     @staticmethod

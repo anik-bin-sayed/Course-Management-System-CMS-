@@ -1,5 +1,9 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useGetProfileQuery } from "../../lib/features/auth/authApi";
+import {
+  isEnrollmentEligible,
+  useGetMyEnrollmentsQuery,
+} from "../../lib/features/enrollment/enrollmentApi";
 import Loader from "../../utils/Loader";
 import AuthCheckFallback from "./AuthCheckFallback";
 import { isDefinitiveAuthError } from "../../lib/features/auth/authErrors";
@@ -16,6 +20,17 @@ const StudentGuard = ({ children }) => {
   } = useGetProfileQuery();
 
   const location = useLocation();
+  const {
+    data: enrollments,
+    isError: isEnrollmentError,
+    isFetching: isFetchingEnrollments,
+    isLoading: isLoadingEnrollments,
+    isUninitialized: areEnrollmentsUninitialized,
+    refetch: refetchEnrollments,
+    error: enrollmentError,
+  } = useGetMyEnrollmentsQuery(undefined, {
+    skip: !user || user.role !== "student",
+  });
 
   if (isUninitialized || isLoading || (isFetching && !user)) {
     return <Loader variant="inline" />;
@@ -25,13 +40,49 @@ const StudentGuard = ({ children }) => {
     return <AuthCheckFallback inline onRetry={refetch} />;
   }
 
-  if (isError || user?.role !== "student") {
+  if (isError || !user) {
+    return (
+      <Navigate
+        to="/"
+        replace
+        state={{ from: location, openLogin: true }}
+      />
+    );
+  }
+
+  if (user.role !== "student") {
     return <Navigate to="/" replace state={{ from: location }} />;
   }
 
-  if (!user) return <AuthCheckFallback onRetry={refetch} />;
+  const hasEligibleEnrollment = enrollments?.some(isEnrollmentEligible);
 
-  return <>{children}</>;
+  if (
+    areEnrollmentsUninitialized ||
+    isLoadingEnrollments ||
+    (isFetchingEnrollments && !hasEligibleEnrollment)
+  ) {
+    return <Loader variant="inline" />;
+  }
+
+  if (isEnrollmentError && isDefinitiveAuthError(enrollmentError)) {
+    return (
+      <Navigate
+        to="/"
+        replace
+        state={{ from: location, openLogin: true }}
+      />
+    );
+  }
+
+  if (isEnrollmentError) {
+    return <AuthCheckFallback inline onRetry={refetchEnrollments} />;
+  }
+
+  if (!hasEligibleEnrollment) {
+    return <Navigate to="/upcoming-course" replace />;
+  }
+
+  return children ?? <Outlet />;
 };
 
 export default StudentGuard;
