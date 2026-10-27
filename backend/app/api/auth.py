@@ -32,10 +32,9 @@ def register(
 
 
 @router.post("/verify-email")
-def verify_email(
+async def verify_email(
     data: VerifyEmailRequest,
     response: Response,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     result = UserService.verify_email(
@@ -43,7 +42,7 @@ def verify_email(
         data,
     )
 
-    background_tasks.add_task(invalidate_user_profile_cache, result["user_id"])
+    await invalidate_user_profile_cache(result["user_id"])
     set_auth_cookies(
         response,
         result["access"],

@@ -40,6 +40,7 @@ from app.core.dependencies import (
     student_required,
     get_current_user,
 )
+from app.api.upcoming_course import invalidate_upcoming_course_cache
 
 router = APIRouter(
     prefix="/courses",
@@ -85,12 +86,16 @@ async def create_course(
         end_date=end_date,
     )
 
-    return await CourseService.create(
+    result = await CourseService.create(
         db,
         data,
         thumbnail,
         current_user,
     )
+
+    await invalidate_upcoming_course_cache()
+
+    return result
 
 
 @router.get(
@@ -226,9 +231,13 @@ async def delete_paid_course(
     admin: User = Depends(admin_required),
 ):
 
-    return await CourseService.delete_course(
+    result = await CourseService.delete_course(
         db=db, course_id=course_id, current_user=current_user
     )
+
+    await invalidate_upcoming_course_cache()
+
+    return result
 
 
 @router.get("/{slug}/", response_model=CourseResponse)
@@ -282,13 +291,17 @@ async def update_course(
         end_date=end_date,
     )
 
-    return await CourseService.update(
+    result = await CourseService.update(
         db=db,
         course_id=course_id,
         data=data,
         thumbnail=thumbnail,
         current_user=current_user,
     )
+
+    await invalidate_upcoming_course_cache()
+
+    return result
 
 
 @router.get("/upcoming")

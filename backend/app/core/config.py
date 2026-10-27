@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     BACKEND_URL: str = "http://localhost:8000"
 
     REDIS_URL: str
+    USER_PROFILE_CACHE_TTL_SECONDS: int = 600
 
     @property
     def SSLCOMMERZ_INIT_URL(self) -> str:

@@ -1,8 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createListenerMiddleware,
+  isAnyOf,
+} from "@reduxjs/toolkit";
 import { authApi } from "./features/auth/authApi";
 import { profileApi } from "./features/profile/profileApi";
 import { freeCourseApi } from "./features/courses/free-course-api";
-import authReducer from "./features/auth/authSlice";
+import authReducer, { logout } from "./features/auth/authSlice";
 import { categoryApi } from "./features/category/category-api";
 import {
   getPersistedPaidCourseEntries,
@@ -12,6 +16,31 @@ import { lessonApi } from "./features/lesson/lessonApi";
 import { lessonVideoApi } from "./features/lesson/lessonVideoApi";
 import { upcomingCourse } from "./features/upcomingCourse/upcomingCourseApi";
 import { enrollmentApi } from "./features/enrollment/enrollmentApi";
+
+const profileCacheSync = createListenerMiddleware();
+
+profileCacheSync.startListening({
+  matcher: isAnyOf(
+    logout,
+    authApi.endpoints.login.matchFulfilled,
+    authApi.endpoints.verifyEmail.matchFulfilled,
+    authApi.endpoints.logoutUser.matchFulfilled,
+  ),
+  effect: (_, { dispatch }) => {
+    dispatch(profileApi.util.resetApiState());
+  },
+});
+
+profileCacheSync.startListening({
+  matcher: isAnyOf(
+    profileApi.endpoints.uploadAvatar.matchFulfilled,
+    profileApi.endpoints.updateProfileInfo.matchFulfilled,
+    profileApi.endpoints.userRoleChange.matchFulfilled,
+  ),
+  effect: (_, { dispatch }) => {
+    dispatch(authApi.util.invalidateTags(["User"]));
+  },
+});
 
 export const makeStore = () => {
   const store = configureStore({
@@ -30,6 +59,7 @@ export const makeStore = () => {
 
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
+        .prepend(profileCacheSync.middleware)
         .concat(authApi.middleware)
         .concat(profileApi.middleware)
         .concat(freeCourseApi.middleware)

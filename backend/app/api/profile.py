@@ -8,12 +8,14 @@ from fastapi import (
     File,
     HTTPException,
 )
+from pydantic import ValidationError
 
 from sqlalchemy.orm import Session
 
 from app.models.user import User
 from app.dependencies.database import get_db
 from app.core.dependencies import get_current_user
+from app.core.config import settings
 from app.services.cloudinary_service import CloudinaryService
 from app.schemas.profile import UpdateProfileSchema
 from app.repositories.user_repository import UserRepository
@@ -27,8 +29,6 @@ router = APIRouter(
 )
 
 logger = logging.getLogger(__name__)
-
-PROFILE_CACHE_TTL = 300
 
 
 @router.patch("/avatar")
@@ -139,7 +139,19 @@ async def get_user_profile(
         cached_user = await redis_client.get(cache_key)
 
         if cached_user is not None:
-            return json.loads(cached_user)
+            try:
+                cached_profile = UserResponse.model_validate_json(cached_user)
+            except (ValidationError, ValueError, TypeError):
+                logger.warning("Malformed user profile cache entry; removing it")
+                try:
+                    await redis_client.delete(cache_key)
+                except Exception:
+                    logger.warning(
+                        "Failed to remove malformed user profile cache entry",
+                        exc_info=True,
+                    )
+            else:
+                return cached_profile.model_dump(mode="json")
 
     except Exception:
         logger.exception("Redis cache read failed")
@@ -158,7 +170,7 @@ async def get_user_profile(
         await redis_client.set(
             name=cache_key,
             value=json.dumps(user_data),
-            ex=PROFILE_CACHE_TTL,
+            ex=settings.USER_PROFILE_CACHE_TTL_SECONDS,
         )
 
     except Exception:
