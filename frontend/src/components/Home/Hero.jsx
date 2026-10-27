@@ -8,11 +8,8 @@ const Hero = () => {
 
   return (
     <section className="bg-[#F4F7F6] pt-10 lg:pt-20 pb-2 mt-12">
-      {" "}
-      {/* Adjusted background and padding */}
       <div className="container mx-auto px-0 md:px-4 max-w-7xl ">
-        <div className="bg-linear-to-r from-[#E6F4F1] to-[#E8F0FE] rounded p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-sm border border-black/50 ">
-          {/* Left Content */}
+        <div className="bg-linear-to-r from-[#E6F4F1] to-[#E8F0FE] rounded p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-sm border border-black/20 transition-all duration-300">
           <div className="md:w-[55%] z-10 mb-10 md:mb-0">
             <h1 className="text-4xl md:text-[3.2rem] leading-tight font-bold text-gray-900 mb-4">
               {t("homePage.heroTitle")}{" "}
@@ -23,7 +20,10 @@ const Hero = () => {
             </p>
 
             <div className="mb-10">
-              <AppLink className="inline-flex w-fit bg-[#FFD700] text-black font-bold py-3.5 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(255,215,0,0.39)] hover:bg-yellow-400 hover:-translate-y-0.5 transition-all duration-200 items-center gap-2 text-lg">
+              <AppLink
+                href="/upcoming-course"
+                className="inline-flex w-fit bg-[#FFD700] text-black font-bold py-3.5 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(255,215,0,0.39)] hover:bg-yellow-400 hover:-translate-y-0.5 transition-all duration-200 items-center gap-2 text-lg"
+              >
                 {t("homePage.heroCTA")} <FaArrowRight />
               </AppLink>
             </div>
@@ -34,7 +34,6 @@ const Hero = () => {
               </p>
               {/* Logo Strip */}
               <div className="flex flex-wrap gap-x-8 gap-y-6 items-center mt-3 select-none">
-                {/* BRAIN STATION 23 */}
                 <div className="flex items-center gap-2 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300 group">
                   <div className="w-6 h-6 bg-gray-400 group-hover:bg-[#00A651] rounded-full flex items-center justify-center transition-colors duration-300">
                     <div className="w-3 h-3 bg-white rounded-sm transform rotate-45"></div>
@@ -148,7 +147,7 @@ const Hero = () => {
               />
 
               {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent"></div>
 
               {/* Text Overlay inside Image */}
               <div className="absolute inset-0 flex flex-col justify-end items-center text-white p-6 text-center pb-12">

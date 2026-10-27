@@ -1,4 +1,4 @@
-import { cloneElement, Suspense, useEffect, useState } from "react";
+import { cloneElement, Suspense, useEffect, useRef, useState } from "react";
 
 import { Outlet } from "react-router-dom";
 
@@ -44,9 +44,21 @@ const navItems = [
     icon: <TbCategory />,
   },
 ];
+
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [highlightStyle, setHighlightStyle] = useState({
+    top: 0,
+    height: 0,
+    opacity: 0,
+    width: 0,
+    left: 0,
+  });
+
+  const navRef = useRef(null);
+  const itemRefs = useRef([]);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: profileData } = useGetProfileQuery();
@@ -58,6 +70,41 @@ const AdminLayout = () => {
       setIsSidebarCollapsed(savedState === "true");
     }
   }, []);
+
+  useEffect(() => {
+    const updateHighlight = () => {
+      if (!navRef.current) return;
+      const activeIndex = navItems.findIndex((item) =>
+        (item.activeIds || [item.id]).includes(activeTab),
+      );
+      const activeEl = itemRefs.current[activeIndex];
+      const navEl = navRef.current;
+      if (!activeEl || !navEl) {
+        setHighlightStyle((prev) => ({ ...prev, opacity: 0 }));
+        return;
+      }
+      const navRect = navEl.getBoundingClientRect();
+      const elRect = activeEl.getBoundingClientRect();
+      setHighlightStyle({
+        top: elRect.top - navRect.top + navEl.scrollTop,
+        height: elRect.height,
+        width: elRect.width,
+        left: elRect.left - navRect.left,
+        opacity: 1,
+      });
+    };
+
+    updateHighlight();
+
+    const raf = requestAnimationFrame(updateHighlight);
+
+    window.addEventListener("resize", updateHighlight);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", updateHighlight);
+    };
+  }, [activeTab, isSidebarCollapsed, isSidebarOpen, navItems.length]);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed((previousState) => {
@@ -124,42 +171,58 @@ const AdminLayout = () => {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => handleTabChange(item.id)}
-              title={isSidebarCollapsed ? item.label : undefined}
-              className={`flex h-11 w-full cursor-pointer items-center rounded-lg text-sm font-medium transition-all duration-200 ${
-                isSidebarCollapsed
-                  ? "justify-center px-0"
-                  : "justify-start px-3"
-              } ${
-                (item.activeIds || [item.id]).includes(activeTab)
-                  ? "bg-yellow-400 text-black"
-                  : "text-gray-500 hover:bg-gray-100"
-              }`}
-            >
-              <span
-                className={`flex shrink-0 items-center justify-center text-2xl ${
-                  isSidebarCollapsed ? "" : "mr-3"
+        <nav
+          ref={navRef}
+          className="relative flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-4"
+        >
+          <div
+            className="pointer-events-none absolute rounded bg-yellow-400 transition-all duration-300 ease-out"
+            style={{
+              top: `${highlightStyle.top}px`,
+              left: `${highlightStyle.left}px`,
+              width: `${highlightStyle.width}px`,
+              height: `${highlightStyle.height}px`,
+              opacity: highlightStyle.opacity,
+            }}
+          />
+
+          {navItems.map((item, index) => {
+            const isActive = (item.activeIds || [item.id]).includes(activeTab);
+            return (
+              <button
+                key={item.id}
+                ref={(el) => {
+                  itemRefs.current[index] = el;
+                }}
+                type="button"
+                onClick={() => handleTabChange(item.id)}
+                title={isSidebarCollapsed ? item.label : undefined}
+                className={`relative z-10 flex h-11 w-full cursor-pointer items-center rounded text-sm transition-colors duration-200 ${
+                  isSidebarCollapsed
+                    ? "justify-center px-0"
+                    : "justify-start px-3"
+                } ${
+                  isActive
+                    ? "text-black font-bold"
+                    : "text-gray-500 hover:bg-gray-100 font-medium"
                 }`}
               >
-                {cloneElement(item.icon, {
-                  className: "text-2xl transition-all duration-200",
-                })}
-              </span>
-              {!isSidebarCollapsed && (
-                <span className="truncate">{item.label}</span>
-              )}
-            </button>
-          ))}
+                <span
+                  className={`flex shrink-0 items-center justify-center text-2xl ${
+                    isSidebarCollapsed ? "" : "mr-3"
+                  }`}
+                >
+                  {cloneElement(item.icon, {
+                    className: "text-2xl transition-all duration-200",
+                  })}
+                </span>
+                {!isSidebarCollapsed && (
+                  <span className="truncate">{item.label}</span>
+                )}
+              </button>
+            );
+          })}
         </nav>
-
-        <div className="border-t border-gray-200 p-4">
-          <p className="text-xs text-gray-500">Admin Panel v1.0</p>
-        </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
@@ -171,12 +234,7 @@ const AdminLayout = () => {
           >
             <IoReorderThreeOutline />
           </button>
-          <h1 className="ml-3 text-lg font-semibold">
-            {["watch", "list-lessons"].includes(activeTab)
-              ? "All Courses"
-              : navItems.find((item) => item.id === activeTab)?.label ||
-                "Dashboard"}
-          </h1>
+
           <div className="ml-auto flex items-center space-x-3 rounded-lg border border-gray-300 bg-gray-100 px-4 py-2">
             <span className="text-sm text-gray-600">
               Welcome, {profileData?.name || "Admin"}

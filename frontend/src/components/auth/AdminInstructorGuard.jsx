@@ -22,7 +22,6 @@ const AdminInstructorGuard = ({ children }) => {
   }
 
   if (isError && !isDefinitiveAuthError(error)) {
-    if (user && allowedRole) return <>{children}</>;
     return <AuthCheckFallback inline onRetry={refetch} />;
   }
 

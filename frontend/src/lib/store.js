@@ -3,6 +3,7 @@ import {
   createListenerMiddleware,
   isAnyOf,
 } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import { authApi } from "./features/auth/authApi";
 import { profileApi } from "./features/profile/profileApi";
 import { freeCourseApi } from "./features/courses/free-course-api";
@@ -70,6 +71,8 @@ export const makeStore = () => {
         .concat(upcomingCourse.middleware)
         .concat(enrollmentApi.middleware),
   });
+
+  setupListeners(store.dispatch);
 
   const persistedPaidCourseEntries = getPersistedPaidCourseEntries();
   if (persistedPaidCourseEntries.length > 0) {

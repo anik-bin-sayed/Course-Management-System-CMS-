@@ -6,6 +6,8 @@ export const authApi = createApi({
 
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Auth", "User"],
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
@@ -47,6 +49,8 @@ export const authApi = createApi({
         method: "GET",
       }),
       providesTags: ["User"],
+      keepUnusedDataFor: 60,
+      refetchOnMountOrArgChange: 30,
     }),
 
     refreshAccessToken: builder.mutation({

@@ -17,11 +17,12 @@ const StudentGuard = ({ children }) => {
 
   const location = useLocation();
 
-  if (isUninitialized || isLoading || (isFetching && !user)) return <Loader />;
+  if (isUninitialized || isLoading || (isFetching && !user)) {
+    return <Loader variant="inline" />;
+  }
 
   if (isError && !isDefinitiveAuthError(error)) {
-    if (user?.role === "student") return <>{children}</>;
-    return <AuthCheckFallback onRetry={refetch} />;
+    return <AuthCheckFallback inline onRetry={refetch} />;
   }
 
   if (isError || user?.role !== "student") {

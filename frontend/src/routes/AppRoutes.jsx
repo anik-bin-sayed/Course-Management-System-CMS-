@@ -152,15 +152,15 @@ function AppPageRoutes() {
         }
       />
 
-      <Route path="/admin/manage-course" element={<AdminLayout />}>
-        <Route
-          index
-          element={
-            <AdminInstructorGuard>
-              <ManageCoursesPage />
-            </AdminInstructorGuard>
-          }
-        />
+      <Route
+        path="/admin/manage-course"
+        element={
+          <AdminInstructorGuard>
+            <AdminLayout />
+          </AdminInstructorGuard>
+        }
+      >
+        <Route index element={<ManageCoursesPage />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://asset-management-fastapi-nextjs.onrender.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
