@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { FiLogOut, FiMenu, FiUser } from "react-icons/fi";
 import AppImage from "@/components/common/AppImage";
 import AppLink from "@/components/common/AppLink";
@@ -11,7 +12,12 @@ export default function StudentDashboardTopbar({
   onMenuClick,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { pathname } = useLocation();
   const [logoutUser, { isLoading: isLoggingOut }] = useLogoutUserMutation();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const handleLogout = async () => {
     try {

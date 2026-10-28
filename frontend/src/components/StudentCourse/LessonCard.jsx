@@ -12,7 +12,7 @@ const LessonCard = ({ lesson, index, courseSlug }) => {
       <div className="relative flex flex-1 flex-col p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="relative">
-            <span className="flex h-11 w-11 items-center justify-center rounded  font-semibold text-black  ring-1 ring-amber-200/60 transition-all duration-300 group-hover:bg-yellow-400 group-hover:ring-amber-400 group-hover:shadow-lg group-hover:shadow-amber-500/30">
+            <span className="flex h-11 w-11 items-center justify-center rounded  font-semibold group-hover:text-gray-200  ring-1 ring-amber-200/60 transition-all duration-300 group-hover:bg-black group-hover:ring-gray-400 group-hover:shadow-lg group-hover:shadow-amber-500/30">
               {lessonNumber}
             </span>
 

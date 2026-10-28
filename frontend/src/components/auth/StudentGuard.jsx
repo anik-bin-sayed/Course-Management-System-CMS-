@@ -33,7 +33,7 @@ const StudentGuard = ({ children }) => {
   });
 
   if (isUninitialized || isLoading || (isFetching && !user)) {
-    return <Loader variant="inline" />;
+    return;
   }
 
   if (isError && !isDefinitiveAuthError(error)) {
@@ -42,11 +42,7 @@ const StudentGuard = ({ children }) => {
 
   if (isError || !user) {
     return (
-      <Navigate
-        to="/"
-        replace
-        state={{ from: location, openLogin: true }}
-      />
+      <Navigate to="/" replace state={{ from: location, openLogin: true }} />
     );
   }
 
@@ -56,33 +52,34 @@ const StudentGuard = ({ children }) => {
 
   const hasEligibleEnrollment = enrollments?.some(isEnrollmentEligible);
 
-  if (
-    areEnrollmentsUninitialized ||
-    isLoadingEnrollments ||
-    (isFetchingEnrollments && !hasEligibleEnrollment)
-  ) {
-    return <Loader variant="inline" />;
-  }
-
   if (isEnrollmentError && isDefinitiveAuthError(enrollmentError)) {
     return (
-      <Navigate
-        to="/"
-        replace
-        state={{ from: location, openLogin: true }}
-      />
+      <Navigate to="/" replace state={{ from: location, openLogin: true }} />
     );
   }
 
-  if (isEnrollmentError) {
-    return <AuthCheckFallback inline onRetry={refetchEnrollments} />;
-  }
+  const isEnrollmentLoading =
+    areEnrollmentsUninitialized ||
+    isLoadingEnrollments ||
+    (isFetchingEnrollments && !hasEligibleEnrollment);
 
-  if (!hasEligibleEnrollment) {
+  if (!isEnrollmentLoading && !isEnrollmentError && !hasEligibleEnrollment) {
     return <Navigate to="/upcoming-course" replace />;
   }
 
-  return children ?? <Outlet />;
+  return (
+    children ?? (
+      <Outlet
+        context={{
+          profile: user,
+          enrollments,
+          isLoading: isEnrollmentLoading,
+          isError: isEnrollmentError,
+          refetchEnrollments,
+        }}
+      />
+    )
+  );
 };
 
 export default StudentGuard;

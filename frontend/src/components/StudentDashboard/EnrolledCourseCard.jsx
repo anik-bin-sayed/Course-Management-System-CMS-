@@ -1,13 +1,4 @@
-import {
-  FiBookOpen,
-  FiCheckCircle,
-  FiClock,
-  FiPlay,
-  FiLock,
-  FiLayers,
-  FiTrendingUp,
-  FiArrowRight,
-} from "react-icons/fi";
+import { FiBookOpen, FiClock, FiLayers, FiArrowRight } from "react-icons/fi";
 import AppImage from "@/components/common/AppImage";
 import AppLink from "@/components/common/AppLink";
 
@@ -57,19 +48,13 @@ function StatusBadge({ status }) {
 
 const EnrolledCourseCard = ({ enrollment, index, onPay, paymentLoading }) => {
   const { course } = enrollment;
-  const progress = Math.max(
-    0,
-    Math.min(100, enrollment.progress_percentage || 0),
-  );
-  const isCompleted = enrollment.status === "completed";
-  const canLearn = ["active", "completed"].includes(enrollment.status);
+
   const schedule = formatDate(course.start_date);
 
   const courseHref = `/dashboard/${encodeURIComponent(course.slug)}`;
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-md border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-slate-900/10 sm:flex-row">
-      {/* Thumbnail */}
       <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-slate-100 sm:aspect-auto sm:w-48 md:w-56 lg:w-64">
         <AppLink
           href={courseHref}
@@ -99,20 +84,6 @@ const EnrolledCourseCard = ({ enrollment, index, onPay, paymentLoading }) => {
             </span>
           </span>
         </AppLink>
-
-        {/* {isCompleted && (
-          <span className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-sky-600 shadow-md ring-1 ring-black/5 backdrop-blur">
-            <FiCheckCircle className="text-lg" aria-label="Completed" />
-            asdf
-          </span>
-        )} */}
-
-        {/* {canLearn && !isCompleted && (
-          <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full bg-slate-950/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur">
-            <FiTrendingUp className="text-[10px]" />
-            In progress
-          </span>
-        )} */}
       </div>
 
       {/* Content */}
@@ -150,65 +121,6 @@ const EnrolledCourseCard = ({ enrollment, index, onPay, paymentLoading }) => {
             Started {schedule}
           </p>
         )}
-
-        {/* Progress
-        {canLearn && (
-          <div className="mt-1 space-y-2 rounded-xl bg-slate-50/80 p-3 ring-1 ring-slate-100">
-            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider">
-              <span className="text-slate-500">Your progress</span>
-              <span className={isCompleted ? "text-sky-600" : "text-amber-700"}>
-                {progress}%
-              </span>
-            </div>
-
-            <div
-              className="h-2 w-full overflow-hidden rounded-full bg-white ring-1 ring-slate-200/70"
-              role="progressbar"
-              aria-valuenow={progress}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              <div
-                className={`h-full rounded-full transition-all duration-700 ease-out ${
-                  isCompleted
-                    ? "bg-gradient-to-r from-sky-400 via-sky-500 to-sky-500"
-                    : "bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500"
-                }`}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        )} */}
-
-        {/* CTA
-        <div className="mt-auto flex items-center justify-between gap-3 pt-1">
-          {canLearn ? (
-            <AppLink
-              href={courseHref}
-              className="group/btn inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-xs font-semibold text-white shadow-sm transition-all duration-300 hover:bg-amber-500 hover:text-slate-950 hover:shadow-md sm:text-sm"
-            >
-              <FiPlay
-                aria-hidden="true"
-                className="transition-transform duration-300 group-hover/btn:translate-x-0.5"
-              />
-              {isCompleted ? "Review course" : "Continue learning"}
-              <FiArrowRight className="text-xs opacity-0 transition-all duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:opacity-100" />
-            </AppLink>
-          ) : (
-            <button
-              type="button"
-              onClick={onPay}
-              disabled={paymentLoading}
-              className="group/btn inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-amber-400 px-4 text-xs font-bold text-slate-950 shadow-sm shadow-amber-400/40 transition-all duration-300 hover:bg-amber-500 hover:shadow-md hover:shadow-amber-500/40 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
-            >
-              <FiLock
-                aria-hidden="true"
-                className="transition-transform duration-300 group-hover/btn:scale-110"
-              />
-              {paymentLoading ? "Opening..." : "Complete payment"}
-            </button>
-          )}
-        </div> */}
       </div>
     </article>
   );

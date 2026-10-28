@@ -86,9 +86,9 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) {
-    return <ProfileLoader />;
-  }
+  // if (isLoading) {
+  //   return <ProfileLoader />;
+  // }
   return (
     <div className="min-h-screen bg-slate-50">
       <ProfileNavbar profile={profile} />

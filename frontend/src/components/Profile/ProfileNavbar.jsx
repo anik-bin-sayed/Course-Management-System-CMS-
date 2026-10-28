@@ -4,7 +4,6 @@ import {
 } from "../../lib/features/auth/authApi";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
-import { usePathname } from "@/lib/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "@/lib/navigation";
 
@@ -44,16 +43,6 @@ const ProfileNavbar = ({ profile }) => {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const getInitials = (name) => {
-    if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   const logout = async () => {
     try {

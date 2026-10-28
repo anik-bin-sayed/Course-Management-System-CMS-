@@ -1,17 +1,13 @@
-import { useState } from "react";
 import { FiBookOpen, FiRefreshCw } from "react-icons/fi";
 import { useSearchParams } from "@/lib/navigation";
+import { useOutletContext } from "react-router-dom";
 import {
   useCreatePaymentMutation,
-  useGetMyEnrollmentsQuery,
   useInitiatePaymentMutation,
 } from "@/lib/features/enrollment/enrollmentApi";
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import { toast } from "sonner";
 import AppLink from "@/components/common/AppLink";
 import EnrolledCourseCard from "@/components/StudentDashboard/EnrolledCourseCard";
-import StudentDashboardTopbar from "@/components/StudentDashboard/StudentDashboardTopbar";
-import StudentSidebar from "@/components/StudentDashboard/StudentSidebar";
 
 const dashboardTabs = [
   "Modules",
@@ -20,6 +16,7 @@ const dashboardTabs = [
   "Resources",
   "Certificates",
 ];
+
 function CourseCardSkeleton() {
   return (
     <div
@@ -41,17 +38,11 @@ export default function StudentDashboardPage() {
   const searchParams = useSearchParams();
   const paymentResult = searchParams.get("payment");
   const {
-    data: enrollments = [],
+    enrollments = [],
     isLoading,
     isError,
-    refetch: refetchEnrollments,
-  } = useGetMyEnrollmentsQuery();
-  const { data: profile } = useGetProfileQuery();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const bannerEnrollment = enrollments.find(
-    (enrollment) => enrollment.status === "active",
-  );
+    refetchEnrollments,
+  } = useOutletContext();
   const [createPayment] = useCreatePaymentMutation();
   const [initiatePayment, { isLoading: isStartingPayment }] =
     useInitiatePaymentMutation();
@@ -67,23 +58,7 @@ export default function StudentDashboardPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <StudentSidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
-        mobileOpen={mobileSidebarOpen}
-        onClose={() => setMobileSidebarOpen(false)}
-      />
-      <div
-        className={`min-h-screen transition-[padding] duration-200 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"}`}
-      >
-        <StudentDashboardTopbar
-          profile={profile}
-          currentCourse={bannerEnrollment?.course}
-          onMenuClick={() => setMobileSidebarOpen(true)}
-        />
-
-        <div className="mx-auto max-w-375 px-4 pb-12 pt-7 sm:px-7 lg:px-9">
+    <main className="mx-auto max-w-375 px-4 pb-12 pt-7 sm:px-7 lg:px-9">
           <div className="mb-6 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div>
               <p className="text-xs font-semibold uppercase text-amber-800">
@@ -204,8 +179,6 @@ export default function StudentDashboardPage() {
               ))}
             </div>
           )}
-        </div>
-      </div>
     </main>
   );
 }

@@ -17,7 +17,7 @@ const AdminGuard = ({ children }) => {
   const location = useLocation();
 
   if (isUninitialized || isLoading || (isFetching && !user)) {
-    return <Loader variant="inline" />;
+    return;
   }
 
   if (isError && !isDefinitiveAuthError(error)) {

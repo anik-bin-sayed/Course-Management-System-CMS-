@@ -5,9 +5,8 @@ import { useTranslation } from "react-i18next";
 import AdminGuard from "@/components/auth/AdminGuard";
 import AdminInstructorGuard from "@/components/auth/AdminInstructorGuard";
 import AdminLayout from "@/components/Admin/AdminLayout";
-import LazyLoadBoundary, {
-  LoadingFallback,
-} from "@/components/common/LazyLoadBoundary";
+import LazyLoadBoundary from "@/components/common/LazyLoadBoundary";
+import StudentDashboardLayout from "@/components/StudentDashboard/StudentDashboardLayout";
 
 import FreeCoursesPage from "@/pages/FreeCoursesPage";
 import HomePage from "@/pages/HomePage";
@@ -66,16 +65,18 @@ function AppPageRoutes() {
       <Route path="/search" element={<SearchPage />} />
 
       <Route element={<StudentGuard />}>
-        <Route
-          path="/dashboard/:courseSlug/:lessonId/watch"
-          element={<LessonWatchPage />}
-        />
-        <Route
-          path="/dashboard/:courseSlug/:lessonId"
-          element={<StudentCoursePage showLesson />}
-        />
-        <Route path="/dashboard/:courseSlug" element={<StudentCoursePage />} />
-        <Route path="/dashboard" element={<StudentDashboardPage />} />
+        <Route path="/dashboard" element={<StudentDashboardLayout />}>
+          <Route index element={<StudentDashboardPage />} />
+          <Route
+            path=":courseSlug/:lessonId/watch"
+            element={<LessonWatchPage />}
+          />
+          <Route
+            path=":courseSlug/:lessonId"
+            element={<StudentCoursePage showLesson />}
+          />
+          <Route path=":courseSlug" element={<StudentCoursePage />} />
+        </Route>
       </Route>
 
       <Route path="/free-courses" element={<FreeCoursesPage />} />
@@ -141,7 +142,7 @@ function AppPageRoutes() {
 const AppRoutes = () => {
   return (
     <LazyLoadBoundary>
-      <Suspense fallback={<LoadingFallback />}>
+      <Suspense fallback={""}>
         <Routes>
           <Route element={<LanguageLayout />}>
             <Route path="/*" element={<AppPageRoutes />} />

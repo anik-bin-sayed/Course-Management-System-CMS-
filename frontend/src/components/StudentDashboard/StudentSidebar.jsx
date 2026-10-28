@@ -2,7 +2,6 @@ import {
   FiAward,
   FiBookOpen,
   FiBriefcase,
-  FiCalendar,
   FiChevronLeft,
   FiChevronRight,
   FiFileText,

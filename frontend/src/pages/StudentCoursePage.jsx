@@ -16,11 +16,7 @@ import { useParams } from "@/lib/navigation";
 
 import AppLink from "@/components/common/AppLink";
 
-import StudentDashboardTopbar from "@/components/StudentDashboard/StudentDashboardTopbar";
-
-import StudentSidebar from "@/components/StudentDashboard/StudentSidebar";
-
-import { useGetMyEnrollmentsQuery } from "@/lib/features/enrollment/enrollmentApi";
+import { useOutletContext } from "react-router-dom";
 
 import { useGetCourseBySlugQuery } from "@/lib/features/courses/paid-course-api";
 
@@ -31,7 +27,6 @@ import {
 
 import { useGetLessonVideosQuery } from "@/lib/features/lesson/lessonVideoApi";
 
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import LessonCard from "../components/StudentCourse/LessonCard";
 import ShowLesson from "../components/StudentCourse/ShowLesson";
 import BackRoute from "../utils/BackRoute";
@@ -76,21 +71,12 @@ function PageSkeleton({ detail }) {
 const StudentCoursePage = ({ showLesson = false }) => {
   const { courseSlug, lessonId } = useParams();
 
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-
-  const { data: profile } = useGetProfileQuery();
-
   const {
-    data: enrollments = [],
-
+    enrollments = [],
     isLoading: enrollmentsLoading,
-
     isError: enrollmentsError,
-
-    refetch: refetchEnrollments,
-  } = useGetMyEnrollmentsQuery();
+    refetchEnrollments,
+  } = useOutletContext();
 
   const {
     currentData: course,
@@ -371,27 +357,8 @@ const StudentCoursePage = ({ showLesson = false }) => {
   };
 
   return (
-    <main className="min-h-screen bg-[#f6f7fb] text-slate-900">
-      <StudentSidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
-        mobileOpen={mobileSidebarOpen}
-        onClose={() => setMobileSidebarOpen(false)}
-      />
-
-      <div
-        className={`min-h-screen transition-[padding] duration-200 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"}`}
-      >
-        <StudentDashboardTopbar
-          profile={profile}
-          currentCourse={course}
-          onMenuClick={() => setMobileSidebarOpen(true)}
-        />
-
-        <div className="mx-auto w-full max-w-375 px-4 pb-12 pt-6 sm:px-7 sm:pt-8 lg:px-9">
-          {renderContent()}
-        </div>
-      </div>
+    <main className="mx-auto w-full max-w-375 px-4 pb-12 pt-6 sm:px-7 sm:pt-8 lg:px-9">
+      {renderContent()}
     </main>
   );
 };

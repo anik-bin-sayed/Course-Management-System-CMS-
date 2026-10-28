@@ -9,7 +9,7 @@ import {
   FiBook,
 } from "react-icons/fi";
 
-import { useParams, useSearchParams } from "react-router-dom";
+import { useOutletContext, useParams, useSearchParams } from "react-router-dom";
 import { useGetCourseByIdQuery } from "@/lib/features/courses/paid-course-api";
 import {
   useGetCourseLessonsQuery,
@@ -19,27 +19,30 @@ import {
   useGetLessonVideosQuery,
   useLazyGetLessonVideosQuery,
 } from "@/lib/features/lesson/lessonVideoApi";
-import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import { getYoutubeEmbedUrl, getYoutubeThumbnail } from "@/lib/youtube";
 import AppLink from "@/components/common/AppLink";
-import StudentSidebar from "@/components/StudentDashboard/StudentSidebar";
-import StudentDashboardTopbar from "@/components/StudentDashboard/StudentDashboardTopbar";
 import WatchPageSkeleton from "../components/LessonWatchPage/WatchPageSkeleton";
 import LessonRow from "../components/LessonWatchPage/LessonRow";
 import Aside from "../components/LessonWatchPage/Aside";
-import { GoArrowLeft } from "react-icons/go";
 import BackRoute from "../utils/BackRoute";
 
 const LessonWatchPage = () => {
   const { courseSlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: profile } = useGetProfileQuery();
-  const isStudent = profile?.role === "student";
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const {
+    enrollments = [],
+    isLoading: enrollmentsLoading,
+    isError: enrollmentsError,
+    refetchEnrollments,
+  } = useOutletContext();
 
   const lesson_id = searchParams.get("lesson_id");
   const video_id = searchParams.get("video_id");
+  const enrollment = enrollments.find(
+    (item) =>
+      item.course?.slug === courseSlug &&
+      ["active", "completed"].includes(item.status),
+  );
 
   const activeRowRef = useRef(null);
 
@@ -58,7 +61,10 @@ const LessonWatchPage = () => {
     currentData: lesson,
     isLoading: isLessonLoading,
     isError: isLessonError,
-  } = useGetLessonByIdQuery({ id: lesson_id }, { skip: !lesson_id });
+  } = useGetLessonByIdQuery(
+    { id: lesson_id },
+    { skip: !lesson_id || enrollmentsLoading || enrollmentsError || !enrollment },
+  );
 
   const courseId = lesson?.course_id;
 
@@ -79,7 +85,13 @@ const LessonWatchPage = () => {
     currentData: videos = [],
     isLoading: areVideosLoading,
     isError: areVideosError,
-  } = useGetLessonVideosQuery({ id: lesson_id }, { skip: !lesson_id });
+  } = useGetLessonVideosQuery(
+    { id: lesson_id },
+    {
+      skip:
+        !lesson_id || enrollmentsLoading || enrollmentsError || !enrollment,
+    },
+  );
 
   // Cache videos for the currently selected lesson.
   useEffect(() => {
@@ -234,6 +246,53 @@ const LessonWatchPage = () => {
   };
 
   // Loading state
+  if (enrollmentsLoading) {
+    return <WatchPageSkeleton />;
+  }
+
+  if (enrollmentsError) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-[#f6f7fb] px-5 py-10">
+        <section className="w-full max-w-md border border-rose-200 bg-white p-8 text-center">
+          <h1 className="text-xl font-bold text-slate-900">
+            Your courses could not be verified
+          </h1>
+          <p className="mt-3 text-sm text-slate-600">
+            Please try again before opening this lesson.
+          </p>
+          <button
+            type="button"
+            onClick={() => refetchEnrollments()}
+            className="mt-6 min-h-11 bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-700"
+          >
+            Try again
+          </button>
+        </section>
+      </main>
+    );
+  }
+
+  if (!enrollment) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-[#f6f7fb] px-5 py-10">
+        <section className="w-full max-w-md border border-slate-200 bg-white p-8 text-center">
+          <h1 className="text-xl font-bold text-slate-900">
+            Course access required
+          </h1>
+          <p className="mt-3 text-sm text-slate-600">
+            This course is not in your active enrollments.
+          </p>
+          <AppLink
+            href="/dashboard"
+            className="mt-6 inline-flex min-h-11 items-center justify-center bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-700"
+          >
+            Back to my courses
+          </AppLink>
+        </section>
+      </main>
+    );
+  }
+
   if (isLessonLoading) {
     return <WatchPageSkeleton />;
   }
@@ -269,36 +328,7 @@ const LessonWatchPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[#f6f7fb] text-slate-900">
-      {isStudent && (
-        <StudentSidebar
-          collapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
-          mobileOpen={mobileSidebarOpen}
-          onClose={() => setMobileSidebarOpen(false)}
-        />
-      )}
-
-      <div
-        className={
-          isStudent
-            ? `min-h-screen transition-[padding] duration-200 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"}`
-            : ""
-        }
-      >
-        {isStudent && (
-          <StudentDashboardTopbar
-            profile={profile}
-            currentCourse={course}
-            onMenuClick={() => setMobileSidebarOpen(true)}
-          />
-        )}
-
-        <div
-          className={`mx-auto grid max-w-[1600px] grid-cols-1 items-start gap-6 px-4 py-5 sm:px-7 sm:py-7 ${
-            isStudent ? "xl:grid-cols-[minmax(0,1fr)_380px]" : "xl:grid-cols-1"
-          }`}
-        >
+    <main className="mx-auto grid max-w-[1600px] grid-cols-1 items-start gap-6 px-4 py-5 sm:px-7 sm:py-7 xl:grid-cols-[minmax(0,1fr)_380px]">
           <section className="min-w-0 space-y-5">
             <BackRoute
               Text="Back to Lesson"
@@ -467,8 +497,6 @@ const LessonWatchPage = () => {
             LessonRow={LessonRow}
             getYoutubeThumbnail={getYoutubeThumbnail}
           />
-        </div>
-      </div>
     </main>
   );
 };

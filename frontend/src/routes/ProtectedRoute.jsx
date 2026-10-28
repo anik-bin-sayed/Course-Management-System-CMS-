@@ -16,9 +16,9 @@ const ProtectedRoute = ({ children }) => {
   } = useGetProfileQuery();
   const location = useLocation();
 
-  if (isUninitialized || isLoading || (isFetching && !user)) {
-    return <Loader variant="inline" />;
-  }
+  // if (isUninitialized || isLoading || (isFetching && !user)) {
+  //   return <Loader variant="inline" />;
+  // }
   if (isError && !isDefinitiveAuthError(error)) {
     return <AuthCheckFallback inline onRetry={refetch} />;
   }
