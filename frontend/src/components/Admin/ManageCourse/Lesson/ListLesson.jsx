@@ -50,7 +50,7 @@ const ListLesson = () => {
 
   const handleEditLesson = (lesson) => {
     navigate(
-      `/manage-course?tab=edit-lesson&course_id=${encodeURIComponent(
+      `/admin/manage-course?tab=edit-lesson&course_id=${encodeURIComponent(
         courseId,
       )}&lesson_id=${encodeURIComponent(lesson.id)}`,
     );

@@ -34,6 +34,7 @@ import { useGetLessonVideosQuery } from "@/lib/features/lesson/lessonVideoApi";
 import { useGetProfileQuery } from "@/lib/features/auth/authApi";
 import LessonCard from "../components/StudentCourse/LessonCard";
 import ShowLesson from "../components/StudentCourse/ShowLesson";
+import BackRoute from "../utils/BackRoute";
 
 function RouteMessage({ title, message, action }) {
   return (
@@ -289,12 +290,7 @@ const StudentCoursePage = ({ showLesson = false }) => {
 
     return (
       <>
-        <AppLink
-          href="/dashboard"
-          className="mb-5 inline-flex min-h-10 items-center gap-2 rounded px-2 text-sm font-semibold text-slate-600 transition hover:bg-white hover:text-amber-800"
-        >
-          <FiArrowLeft aria-hidden="true" /> My courses
-        </AppLink>
+        <BackRoute Text={"My courses"} backUrl="/dashboard" />
 
         <section className="overflow-hidden rounded border border-slate-200/80 bg-white shadow-sm">
           <button

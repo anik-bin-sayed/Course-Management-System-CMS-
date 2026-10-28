@@ -9,7 +9,7 @@ import {
   FiBook,
 } from "react-icons/fi";
 
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useGetCourseByIdQuery } from "@/lib/features/courses/paid-course-api";
 import {
   useGetCourseLessonsQuery,
@@ -27,8 +27,11 @@ import StudentDashboardTopbar from "@/components/StudentDashboard/StudentDashboa
 import WatchPageSkeleton from "../components/LessonWatchPage/WatchPageSkeleton";
 import LessonRow from "../components/LessonWatchPage/LessonRow";
 import Aside from "../components/LessonWatchPage/Aside";
+import { GoArrowLeft } from "react-icons/go";
+import BackRoute from "../utils/BackRoute";
 
 const LessonWatchPage = () => {
+  const { courseSlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: profile } = useGetProfileQuery();
   const isStudent = profile?.role === "student";
@@ -71,7 +74,6 @@ const LessonWatchPage = () => {
     isLoading: isPlaylistLoading,
     isError: isPlaylistError,
   } = useGetCourseLessonsQuery({ id: courseId }, { skip: !courseId });
-
   // Current lesson videos query
   const {
     currentData: videos = [],
@@ -231,19 +233,6 @@ const LessonWatchPage = () => {
     });
   };
 
-  // Select a video in the current lesson.
-  const selectVideo = (nextVideoId) => {
-    setSearchParams((previousParams) => {
-      const nextParams = new URLSearchParams(previousParams);
-
-      nextParams.set("tab", "watch");
-      nextParams.set("lesson_id", String(lesson_id));
-      nextParams.set("video_id", String(nextVideoId));
-
-      return nextParams;
-    });
-  };
-
   // Loading state
   if (isLessonLoading) {
     return <WatchPageSkeleton />;
@@ -311,6 +300,10 @@ const LessonWatchPage = () => {
           }`}
         >
           <section className="min-w-0 space-y-5">
+            <BackRoute
+              Text="Back to Lesson"
+              backUrl={`/dashboard/${encodeURIComponent(courseSlug)}/${encodeURIComponent(lesson_id)}`}
+            />
             {/* Video Player */}
             <div className="overflow-hidden  bg-slate-950 shadow-xl shadow-slate-900/10 ring-1 ring-slate-200 ">
               <div className="relative aspect-video w-full">

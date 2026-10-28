@@ -184,7 +184,15 @@ export default function StudentDashboardPage() {
               </AppLink>
             </section>
           ) : (
-            <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 2xl:grid-cols-3">
+            <div
+              className={`grid grid-cols-1 items-stretch gap-5 ${
+                enrollments.length === 1
+                  ? "md:grid-cols-1"
+                  : enrollments.length === 2
+                    ? "md:grid-cols-2"
+                    : "md:grid-cols-2 2xl:grid-cols-3"
+              }`}
+            >
               {enrollments.map((enrollment, index) => (
                 <EnrolledCourseCard
                   key={enrollment.id}

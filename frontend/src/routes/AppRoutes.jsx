@@ -32,13 +32,6 @@ const ManageCoursesPage = lazy(() => import("@/pages/admin/ManageCoursesPage"));
 const UserDetailsPage = lazy(() => import("@/pages/admin/UserDetailsPage"));
 const UsersPage = lazy(() => import("@/pages/admin/UsersPage"));
 
-/**
- * Language is determined by the URL:
- * /       -> English
- * /bn     -> Bangla
- * /about  -> English
- * /bn/about -> Bangla
- */
 function LanguageLayout() {
   const location = useLocation();
   const { i18n } = useTranslation();
@@ -81,10 +74,7 @@ function AppPageRoutes() {
           path="/dashboard/:courseSlug/:lessonId"
           element={<StudentCoursePage showLesson />}
         />
-        <Route
-          path="/dashboard/:courseSlug"
-          element={<StudentCoursePage />}
-        />
+        <Route path="/dashboard/:courseSlug" element={<StudentCoursePage />} />
         <Route path="/dashboard" element={<StudentDashboardPage />} />
       </Route>
 
