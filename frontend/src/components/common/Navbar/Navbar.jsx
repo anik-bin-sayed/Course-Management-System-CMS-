@@ -264,17 +264,15 @@ const Navbar = () => {
             <div className="h-5 w-px bg-gray-300 mx-1"></div>
 
             <LanguageSwitchButton />
-            {!isLoading &&
-              !isFetchingProfile &&
-              profileData &&
-              showDashboardLink && (
-                <AppLink
-                  href={dashboardHref}
-                  className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
-                >
-                  <span> {t("dashboard.title")}</span>
-                </AppLink>
-              )}
+
+            {!isLoading && profileData && showDashboardLink && (
+              <AppLink
+                href={dashboardHref}
+                className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
+              >
+                <span>{t("dashboard.title")}</span>
+              </AppLink>
+            )}
 
             {!isLoading && (
               <>
