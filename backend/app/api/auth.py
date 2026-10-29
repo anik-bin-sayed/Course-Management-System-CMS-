@@ -12,6 +12,8 @@ from app.core.dependencies import get_current_user
 from app.repositories.user_repository import UserRepository
 from app.services.profile_cache import invalidate_user_profile_cache
 
+from app.core.config import settings
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"],
@@ -114,18 +116,29 @@ def logout(
         db=db,
         user=current_user,
     )
-    background_tasks.add_task(invalidate_user_profile_cache, current_user.id)
+
+    background_tasks.add_task(
+        invalidate_user_profile_cache,
+        current_user.id,
+    )
+
+    is_prod = settings.ENVIRONMENT == "production"
+
+    cookie_params = {
+        "path": "/",
+        "httponly": True,
+        "secure": is_prod,
+        "samesite": "none" if is_prod else "lax",
+    }
 
     response.delete_cookie(
         key="access_token",
-        httponly=True,
-        samesite="lax",
+        **cookie_params,
     )
 
     response.delete_cookie(
         key="refresh_token",
-        httponly=True,
-        samesite="lax",
+        **cookie_params,
     )
 
     return {"message": "Logout successful"}
@@ -150,8 +163,10 @@ def refresh(
         refresh_token,
     )
 
-    set_auth_cookies(response, access_token, new_refresh_token)
+    set_auth_cookies(
+        response,
+        access_token,
+        new_refresh_token,
+    )
 
-    return {
-        "message": "Access token refreshed",
-    }
+    return {"message": "Access token refreshed"}
