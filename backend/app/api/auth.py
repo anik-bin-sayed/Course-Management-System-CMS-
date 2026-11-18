@@ -88,6 +88,7 @@ def login(
         response,
         access,
         refresh,
+        remember_me=data.remember_me,
     )
 
     return {
@@ -158,7 +159,7 @@ def refresh(
             detail="Refresh token missing",
         )
 
-    access_token, new_refresh_token = UserService.refresh(
+    access_token, new_refresh_token, remember_me = UserService.refresh(
         db,
         refresh_token,
     )
@@ -167,6 +168,7 @@ def refresh(
         response,
         access_token,
         new_refresh_token,
+        remember_me=remember_me,
     )
 
     return {"message": "Access token refreshed"}

@@ -128,10 +128,14 @@ class UserService:
                 detail="Please verify your email first",
             )
 
-        return UserService._issue_tokens(db, user)
+        return UserService._issue_tokens(db, user, remember_me=data.remember_me)
 
     @staticmethod
-    def _issue_tokens(db: Session, user: User):
+    def _issue_tokens(
+        db: Session,
+        user: User,
+        remember_me: bool = False,
+    ):
         access = create_access_token(
             {
                 "sub": str(user.id),
@@ -141,16 +145,11 @@ class UserService:
         )
 
         refresh = create_refresh_token(
-            {
-                "sub": str(user.id),
-            }
+            {"sub": str(user.id)},
+            remember_me=remember_me,
         )
 
-        UserRepository.update_refresh_token(
-            db,
-            user,
-            refresh,
-        )
+        UserRepository.update_refresh_token(db, user, refresh)
 
         return access, refresh
 
@@ -199,6 +198,11 @@ class UserService:
             refresh_token,
         )
 
+        user_id = payload.get("sub")
+
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+
         if not user:
             logger.info("Refresh rejected: token is no longer the active user token")
             raise HTTPException(
@@ -206,15 +210,20 @@ class UserService:
                 detail="Refresh token expired",
             )
 
+        remember_me = bool(payload.get("rm", False))
+
         access_token = create_access_token(
             {"sub": str(user.id), "type": "access", "role": user.role}
         )
 
-        new_refresh_token = create_refresh_token({"sub": str(user.id)})
+        new_refresh_token = create_refresh_token(
+            {"sub": str(user.id)},
+            remember_me=remember_me,
+        )
 
         UserRepository.update_refresh_token(db, user, new_refresh_token)
 
-        return access_token, new_refresh_token
+        return access_token, new_refresh_token, remember_me
 
     @staticmethod
     def change_role(db: Session, user_id: str, role: str):
