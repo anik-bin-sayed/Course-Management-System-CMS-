@@ -88,6 +88,7 @@ class CourseService:
             slug=slug,
             short_description=data.short_description,
             description=data.description,
+            learning_outcomes=data.learning_outcomes,
             price=data.price,
             discount_price=data.discount_price,
             level=data.level,
@@ -230,6 +231,8 @@ class CourseService:
         course.title = data.title
         course.short_description = data.short_description
         course.description = data.description
+        if data.learning_outcomes is not None:
+            course.learning_outcomes = data.learning_outcomes
         course.price = data.price
         course.discount_price = data.discount_price
         course.level = data.level

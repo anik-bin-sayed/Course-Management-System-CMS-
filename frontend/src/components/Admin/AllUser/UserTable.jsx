@@ -5,25 +5,25 @@ import UserTableLoader from "./UserTableLoader";
 const UserTable = ({ users, isLoading, openRoleModal }) => {
   if (isLoading) return <UserTableLoader />;
   return (
-    <div className="overflow-x-auto shadow-md rounded-lg">
-      <table className="min-w-full divide-y divide-gray-200 bg-white">
-        <thead className="bg-gray-50">
+    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+      <table className="min-w-full divide-y divide-slate-100 bg-white">
+        <thead className="bg-slate-50/80">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               User
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               Email / Phone
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               Role
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="divide-y divide-slate-100 bg-white">
           {users.length === 0 ? (
             <tr>
               <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
@@ -32,10 +32,10 @@ const UserTable = ({ users, isLoading, openRoleModal }) => {
             </tr>
           ) : (
             users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50">
+              <tr key={user.id} className="transition-colors hover:bg-slate-50/80">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="shrink-0 h-10 w-10 relative">
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
                       <Image
                         src={user.avatar || "/images/default.jpg"}
                         alt={user.name || "User"}
@@ -77,7 +77,7 @@ const UserTable = ({ users, isLoading, openRoleModal }) => {
                     {/* View Profile */}
                     <Link
                       href={`/admin/users/${user.id}`}
-                      className="text-gray-600 hover:bg-yellow-400 border border-gray-200 px-2 py-1 rounded-md"
+                      className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
                     >
                       Profile
                     </Link>
@@ -85,7 +85,7 @@ const UserTable = ({ users, isLoading, openRoleModal }) => {
                     {/* Change Role */}
                     <button
                       onClick={() => openRoleModal(user)}
-                      className="text-gray-600 hover:bg-yellow-400 border border-gray-200 px-2 py-1 rounded-md"
+                      className="rounded-lg bg-[#173c2d] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#24563e]"
                     >
                       Change Role
                     </button>

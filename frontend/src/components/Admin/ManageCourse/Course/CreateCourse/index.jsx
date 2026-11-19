@@ -4,6 +4,7 @@ import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 
 import { TbCurrencyTaka } from "react-icons/tb";
 import { LuGalleryThumbnails } from "react-icons/lu";
+import { FiBookOpen } from "react-icons/fi";
 
 import { useGetAllCategoryQuery } from "../../../../../lib/features/category/category-api";
 import {
@@ -11,6 +12,7 @@ import {
   useGetAssignableInstructorsQuery,
 } from "../../../../../lib/features/courses/paid-course-api";
 import InstructorMultiSelect from "../InstructorMultiSelect";
+import LearningOutcomesEditor from "../LearningOutcomesEditor";
 
 const CreateCategoryModal = lazy(
   () => import("../../category/CategoryModal/CreateCategory"),
@@ -21,6 +23,7 @@ const initialState = {
   slug: "",
   short_description: "",
   description: "",
+  learning_outcomes: [],
   price: "",
   discount_price: "",
   discount_percentage: "",
@@ -93,6 +96,10 @@ const CreateCourse = () => {
     }));
   };
 
+  const setLearningOutcomes = (learning_outcomes) => {
+    setFormData((prev) => ({ ...prev, learning_outcomes }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError("");
@@ -101,6 +108,13 @@ const CreateCourse = () => {
     const data = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
+      if (key === "learning_outcomes") {
+        value
+          .map((outcome) => outcome.trim())
+          .filter(Boolean)
+          .forEach((outcome) => data.append("learning_outcomes", outcome));
+        return;
+      }
       if (value !== null && value !== undefined && value !== "") {
         data.append(key, value);
       }
@@ -120,17 +134,16 @@ const CreateCourse = () => {
   };
   return (
     <>
-      <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
+      <div className="w-full px-0 py-1">
         <div className="mx-auto max-w-5xl">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Create New Course
-            </h1>
-
-            <p className="mt-1 text-sm text-gray-500">
-              Create and configure your course information.
-            </p>
+          <div className="mb-6 flex items-center gap-4 rounded-xl border border-emerald-900/10 bg-gradient-to-r from-white to-emerald-50/70 p-5 shadow-sm sm:p-6">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#173c2d] text-xl text-[#facc15]"><FiBookOpen /></span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-emerald-800">Content studio</p>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">Create New Course</h1>
+              <p className="mt-1 text-sm text-slate-600">Add course details, outcomes, pricing, and instructors.</p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -261,9 +274,14 @@ const CreateCourse = () => {
                   </p>
                 </div>
               </div>
-            </div>
+          </div>
 
-            {/* Course Settings */}
+          <LearningOutcomesEditor
+            outcomes={formData.learning_outcomes}
+            onChange={setLearningOutcomes}
+          />
+
+          {/* Course Settings */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -540,7 +558,7 @@ const CreateCourse = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-end gap-3 pb-8">
+            <div className="flex flex-col items-stretch justify-end gap-3 pb-8 sm:flex-row sm:items-center">
               {(submitError || submitSuccess) && (
                 <p
                   className={`mr-auto text-sm ${submitError ? "text-red-600" : "text-green-700"}`}
@@ -552,7 +570,7 @@ const CreateCourse = () => {
               <button
                 type="submit"
                 disabled={creating}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-7 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-yellow-200 disabled:opacity-70"
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#facc15] px-7 py-3 text-sm font-bold text-slate-950 shadow-sm transition-all duration-200 hover:bg-[#e9b900] focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-amber-100 disabled:opacity-70 sm:w-auto"
               >
                 {creating ? (
                   <>

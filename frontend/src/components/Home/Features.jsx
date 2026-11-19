@@ -9,14 +9,12 @@ import {
   FaClock,
 } from "react-icons/fa";
 
-const FeatureItem = ({ icon, title, iconColor }) => (
-  <div className="flex flex-col items-center justify-center text-center p-8 bg-white border border-gray-200 rounded-xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-    <div
-      className={`text-4xl mb-5 flex items-center justify-center ${iconColor}`}
-    >
+const FeatureItem = ({ icon, title }) => (
+  <div className="group flex flex-col items-center justify-center rounded-2xl border border-gray-200/80 bg-white p-7 text-center shadow-[0_8px_30px_-24px_rgba(16,37,29,0.45)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_22px_48px_-30px_rgba(16,37,29,0.4)] sm:p-8">
+    <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eff6f1] text-2xl text-[#1b704b] transition duration-300 group-hover:scale-105 group-hover:bg-[#e1f1e7]">
       {icon}
     </div>
-    <p className="text-[15px] font-semibold text-gray-700 leading-snug max-w-[220px]">
+    <p className="max-w-[220px] text-[15px] font-semibold leading-snug text-gray-700">
       {title}
     </p>
   </div>
@@ -26,45 +24,42 @@ const Features = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <h2 className="text-center text-2xl font-bold text-gray-800 mb-12">
+    <section className="bg-[#f7faf8] px-4 py-16 sm:px-6 lg:py-20">
+      <div className="mx-auto max-w-6xl">
+        <p className="mb-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-[#1b704b]">
+          Learn with confidence
+        </p>
+        <h2 className="mb-10 text-center text-3xl font-bold tracking-tight text-[#17251d] sm:mb-12 sm:text-4xl">
           {t("features.title")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <FeatureItem
             icon={<FaBriefcase />}
-            iconColor="text-[#8B5A2B]"
             title={t("features.jobPlacement")}
           />
 
           <FeatureItem
             icon={<FaFileAlt />}
-            iconColor="text-[#E53E3E]"
             title={t("features.cvReview")}
           />
 
           <FeatureItem
             icon={<FaHeadset />}
-            iconColor="text-[#3182CE]"
             title={t("features.liveSupport")}
           />
 
           <FeatureItem
             icon={<FaUsers />}
-            iconColor="text-[#38A169]"
             title={t("features.batchSupport")}
           />
 
           <FeatureItem
             icon={<FaLaptopCode />}
-            iconColor="text-[#805AD5]"
             title={t("features.liveTests")}
           />
 
           <FeatureItem
             icon={<FaClock />}
-            iconColor="text-[#D69E2E]"
             title={t("features.dailySupport")}
           />
         </div>

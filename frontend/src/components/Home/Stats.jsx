@@ -2,10 +2,12 @@ import { FaUserGraduate, FaUsers, FaChartPie, FaVideo } from "react-icons/fa";
 
 const StatCard = ({ icon, value, label, bgColor, iconColor, textColor }) => (
   <div
-    className={`${bgColor} rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-shadow duration-300`}
+    className={`group ${bgColor} flex flex-col items-center justify-center rounded-2xl border border-gray-200/70 p-7 text-center shadow-[0_8px_30px_-24px_rgba(16,37,29,0.4)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_48px_-30px_rgba(16,37,29,0.38)] sm:p-8`}
   >
     {/* Icon */}
-    <div className={`text-4xl md:text-5xl mb-4 ${iconColor}`}>{icon}</div>
+    <div className={`mb-4 text-4xl transition-transform duration-300 group-hover:scale-105 md:text-5xl ${iconColor}`}>
+      {icon}
+    </div>
 
     {/* Number */}
     <h3 className={`text-3xl md:text-4xl font-extrabold ${textColor} mb-1`}>
@@ -19,8 +21,8 @@ const StatCard = ({ icon, value, label, bgColor, iconColor, textColor }) => (
 
 const Stats = () => {
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <section className="bg-white px-4 py-16 sm:px-6 lg:py-20">
+      <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             icon={<FaUserGraduate />}

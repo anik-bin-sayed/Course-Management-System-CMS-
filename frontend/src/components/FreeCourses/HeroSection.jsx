@@ -1,108 +1,91 @@
 import Image from "@/components/common/AppImage";
-import React from "react";
+import AppLink from "@/components/common/AppLink";
 import { useTranslation } from "react-i18next";
+import { FaCheck } from "react-icons/fa";
+import { FiArrowRight } from "react-icons/fi";
 import { HiPlay } from "react-icons/hi2";
 
 const HeroSection = () => {
   const { t } = useTranslation();
+  const learningHighlights = [
+    t("freeCourseHero.freeCourses"),
+    t("freeCourseHero.selfPaced"),
+    t("freeCourseHero.videoLessons"),
+  ];
 
   return (
-    <section className="relative min-h-[calc(50vh-100px)] overflow-hidden bg-red-700">
-      {/* Background decoration */}
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-red-600 opacity-50 blur-3xl" />
-      <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-red-800 opacity-40 blur-3xl" />
+    <section className="relative overflow-hidden bg-[#10251d] pt-[65px] text-white">
+      <div className="pointer-events-none absolute -right-28 -top-20 h-80 w-80 rounded-full bg-emerald-300/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 left-[35%] h-96 w-96 rounded-full bg-[#ffd84d]/8 blur-3xl" />
 
-      <div className="relative mx-auto flex min-h-[calc(50vh-100px)] max-w-7xl items-center px-6 py-10 lg:px-8">
-        <div className="mt-15 grid w-full grid-cols-1 items-center gap-10 md:grid-cols-2">
-          {/* Left Content */}
-          <div className="text-center md:text-left">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm ring-1 ring-white/20">
-              <span className="h-2 w-2 rounded-full bg-white" />
-              {t("freeCourseHero.badge")}
-            </div>
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-10 lg:py-16">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/7 px-3 py-1.5 text-xs font-semibold text-emerald-100 sm:text-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#ffd84d]" />
+            {t("freeCourseHero.badge")}
+          </span>
 
-            <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              {t("freeCourseHero.title")}
-            </h1>
+          <h1 className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+            {t("freeCourseHero.title")}
+          </h1>
+          <p className="mt-5 max-w-xl text-sm leading-7 text-white/70 sm:text-base sm:leading-8">
+            {t("freeCourseHero.description")}
+          </p>
 
-            <p className="mt-5 max-w-xl text-sm leading-6 text-red-100 sm:text-base sm:leading-7">
-              {t("freeCourseHero.description")}
-            </p>
-
-            {/* Buttons */}
-            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row md:justify-start">
-              <button
-                type="button"
-                className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-red-700 shadow-lg transition hover:bg-red-50 hover:shadow-xl active:scale-95"
-              >
-                {t("freeCourseHero.exploreCourses")}
-              </button>
-
-              <button
-                type="button"
-                className="rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 active:scale-95"
-              >
-                {t("freeCourseHero.startLearning")}
-              </button>
-            </div>
-
-            {/* Stats */}
-            <div className="mt-7 flex flex-wrap justify-center gap-6 md:justify-start">
-              <div>
-                <p className="text-xl font-bold text-white">100+</p>
-                <p className="text-xs text-red-100">
-                  {t("freeCourseHero.freeCourses")}
-                </p>
-              </div>
-
-              <div className="h-10 w-px bg-white/20" />
-
-              <div>
-                <p className="text-xl font-bold text-white">500+</p>
-                <p className="text-xs text-red-100">
-                  {t("freeCourseHero.videoLessons")}
-                </p>
-              </div>
-
-              <div className="h-10 w-px bg-white/20" />
-
-              <div>
-                <p className="text-xl font-bold text-white">10K+</p>
-                <p className="text-xs text-red-100">
-                  {t("freeCourseHero.learners")}
-                </p>
-              </div>
-            </div>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#free-courses-grid"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#ffd84d] px-5 py-3 text-sm font-bold text-[#17251d] transition duration-300 hover:-translate-y-0.5 hover:bg-[#ffe47b] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#ffd84d]"
+            >
+              {t("freeCourseHero.exploreCourses")}
+              <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+            </a>
+            <AppLink
+              href="/upcoming-course"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:border-white/35 hover:bg-white/10"
+            >
+              {t("common.allCourses")}
+            </AppLink>
           </div>
 
-          {/* Right Image */}
-          <div className="relative mt-2 flex items-center justify-center">
-            <div className="absolute h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs font-medium text-white/70 sm:text-sm">
+            {learningHighlights.map((highlight) => (
+              <li key={highlight} className="inline-flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-emerald-300/15 text-emerald-200">
+                  <FaCheck className="text-[9px]" />
+                </span>
+                {highlight}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-            <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
-              <div className="overflow-hidden rounded-2xl bg-white">
-                <Image
-                  src="/images/freecoursehero.jpg"
-                  alt="Free video courses"
-                  width={800}
-                  height={500}
-                  className="h-[280px] w-full object-cover sm:h-[330px]"
-                />
-              </div>
-
-              {/* Floating Card */}
-              <div className="absolute bottom-7 left-7 flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-xl">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-                  <HiPlay className="h-5 w-5 text-red-700" />
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">
-                    {t("freeCourseHero.startLearning")}
-                  </p>
-                  <p className="text-xs text-gray-500">Watch free videos</p>
-                </div>
-              </div>
+        <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto">
+          <div className="absolute -inset-4 rounded-xl bg-emerald-300/10 blur-2xl" />
+          <div className="relative overflow-hidden rounded-xl border border-white/15 bg-white/5 p-2.5 shadow-2xl">
+            <div className="relative aspect-[1.2/1] overflow-hidden rounded-lg bg-[#203a2e] sm:aspect-[1.35/1]">
+              <Image
+                src="/images/freecoursehero.jpg"
+                alt="Free video course lesson"
+                fill
+                priority
+                className="object-cover transition-transform duration-700 ease-out hover:scale-[1.03]"
+                sizes="(max-width: 1024px) 100vw, 45vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#10251d]/60 via-transparent to-[#10251d]/10" />
+            </div>
+            <div className="absolute bottom-5 left-5 flex items-center gap-3 rounded-lg border border-gray-100 bg-white px-3.5 py-3 text-[#17251d] shadow-xl sm:bottom-7 sm:left-7 sm:px-4">
+              <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[#fff5c9] text-[#806500]">
+                <HiPlay className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-bold">
+                  {t("freeCourseHero.startLearning")}
+                </span>
+                <span className="mt-0.5 block text-xs text-gray-500">
+                  {t("freeCourseHero.videoLessons")}
+                </span>
+              </span>
             </div>
           </div>
         </div>

@@ -52,16 +52,10 @@ const NavbarUserDetails = ({ profileData }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-label="Open user menu"
-        className="
-          flex items-center gap-3
-          rounded border border-gray-200
-          bg-white px-3 py-2
-          shadow-sm transition-all duration-200
-          hover:bg-gray-50 cursor-pointer
-        "
+        className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white py-1.5 pl-2 pr-3 shadow-sm transition duration-200 hover:border-[#1b704b]/30 hover:bg-[#f8fbf9] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b704b]"
       >
         {/* Profile Image */}
-        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-gray-200">
+        <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-[#eff6f1]">
           <Image
             src={profileData?.avatar || "/images/default.jpg"}
             alt={profileData?.name || "Profile"}
@@ -70,6 +64,10 @@ const NavbarUserDetails = ({ profileData }) => {
             className="object-cover"
           />
         </div>
+
+        <span className="hidden max-w-24 truncate text-sm font-semibold text-gray-700 xl:block">
+          {profileData?.name?.split(" ")[0] || "Account"}
+        </span>
 
         {/* Arrow */}
         <IoIosArrowDown
@@ -89,16 +87,11 @@ const NavbarUserDetails = ({ profileData }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="
-              absolute right-0 top-full z-50 mt-2
-              w-52 overflow-hidden rounded-xl
-              border border-gray-200 bg-white
-              shadow-xl shadow-gray-200/50
-            "
+          className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl shadow-[#10251d]/15"
           >
             {/* User Information */}
-            <div className="border-b border-gray-100 bg-gray-50 px-4 py-3">
-              <p className="text-xs text-gray-400">Signed in as</p>
+            <div className="border-b border-gray-100 bg-[#f7faf8] px-4 py-4">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">Signed in as</p>
 
               <p className="mt-0.5 truncate text-sm font-semibold text-gray-800">
                 {profileData?.email || "User"}
@@ -109,15 +102,10 @@ const NavbarUserDetails = ({ profileData }) => {
             <Link
               href="/profile"
               onClick={handleProfile}
-              className="
-                flex w-full items-center gap-3
-                px-4 py-3 text-sm text-gray-700
-                transition-colors hover:bg-gray-50
-                cursor-pointer
-              "
+                className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-[#f7faf8] hover:text-[#1b704b]"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100">
-                <FiUser className="h-4 w-4 text-gray-600" />
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#eff6f1]">
+                <FiUser className="h-4 w-4 text-[#1b704b]" />
               </span>
 
               <span className="font-medium">Profile</span>
@@ -128,15 +116,10 @@ const NavbarUserDetails = ({ profileData }) => {
               <Link
                 href="/admin/users"
                 onClick={handleProfile}
-                className="
-                  flex w-full items-center gap-3
-                  px-4 py-3 text-sm text-gray-700
-                  transition-colors hover:bg-gray-50
-                  cursor-pointer
-                "
+                className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 transition-colors hover:bg-[#f7faf8] hover:text-[#1b704b]"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100">
-                  <FiUser className="h-4 w-4 text-gray-600" />
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#eff6f1]">
+                  <FiUser className="h-4 w-4 text-[#1b704b]" />
                 </span>
 
                 <span className="font-medium">All Users</span>
@@ -147,14 +130,9 @@ const NavbarUserDetails = ({ profileData }) => {
             <button
               type="button"
               onClick={handleLogout}
-              className="
-                flex w-full items-center gap-3
-                px-4 py-3 text-sm text-red-600
-                transition-colors hover:bg-red-50
-                cursor-pointer
-              "
+              className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-sm text-red-600 transition-colors hover:bg-red-50"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50">
                 <FiLogOut className="h-4 w-4 text-red-500" />
               </span>
 

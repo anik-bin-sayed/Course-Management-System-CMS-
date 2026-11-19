@@ -1,168 +1,94 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
-import { FaArrowRight, FaPlay } from "react-icons/fa";
+import { FaArrowRight, FaCheck, FaPlay } from "react-icons/fa";
 import AppLink from "../common/AppLink";
 
 const Hero = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="bg-[#F4F7F6] pt-10 lg:pt-20 pb-2 mt-12">
-      <div className="container mx-auto px-0 md:px-4 max-w-7xl ">
-        <div className="bg-linear-to-r from-[#E6F4F1] to-[#E8F0FE] rounded p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-sm border border-black/20 transition-all duration-300">
-          <div className="md:w-[55%] z-10 mb-10 md:mb-0">
-            <h1 className="text-4xl md:text-[3.2rem] leading-tight font-bold text-gray-900 mb-4">
-              {t("homePage.heroTitle")}{" "}
-              <span className="text-red-500">{t("homePage.heroLive")}</span>
-            </h1>
-            <p className="text-gray-600 mb-6 text-lg md:text-xl font-medium">
-              {t("homePage.heroSubtitle")}
-            </p>
+    <section className="relative mt-14 overflow-hidden bg-[#f7faf8] px-4 pb-12 pt-6 sm:px-6 lg:mt-16 lg:pb-16 lg:pt-8">
+      <div className="pointer-events-none absolute -left-32 top-12 h-80 w-80 rounded-full bg-emerald-200/40 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-amber-100/70 blur-3xl" />
 
-            <div className="mb-10">
-              <AppLink
-                href="/upcoming-course"
-                className="inline-flex w-fit bg-[#FFD700] text-black font-bold py-3.5 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(255,215,0,0.39)] hover:bg-yellow-400 hover:-translate-y-0.5 transition-all duration-200 items-center gap-2 text-lg"
-              >
-                {t("homePage.heroCTA")} <FaArrowRight />
-              </AppLink>
-            </div>
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 overflow-hidden rounded-[2rem] bg-[#10251d] px-6 py-10 text-white shadow-[0_28px_80px_-38px_rgba(16,37,29,0.65)] sm:px-10 md:px-14 lg:min-h-[530px] lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:px-16 lg:py-14">
+        <div className="pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute -right-8 -top-16 h-72 w-72 rounded-full border border-white/10" />
 
-            <div className="flex flex-col gap-3">
-              <p className="text-sm font-bold text-gray-800">
-                {t("homePage.heroCompanies")}
-              </p>
-              {/* Logo Strip */}
-              <div className="flex flex-wrap gap-x-8 gap-y-6 items-center mt-3 select-none">
-                <div className="flex items-center gap-2 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300 group">
-                  <div className="w-6 h-6 bg-gray-400 group-hover:bg-[#00A651] rounded-full flex items-center justify-center transition-colors duration-300">
-                    <div className="w-3 h-3 bg-white rounded-sm transform rotate-45"></div>
-                  </div>
-                  <span className="font-bold text-sm tracking-wider">
-                    BRAIN STATION 23
-                  </span>
-                </div>
-
-                {/* TechnoSoft */}
-                <div className="flex flex-col text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="font-bold text-sm leading-none flex items-center gap-1">
-                    <span className="text-lg leading-none">⌂</span> TechnoSoft
-                  </span>
-                  <span className="text-[9px] tracking-widest uppercase mt-0.5">
-                    Integration
-                  </span>
-                </div>
-
-                {/* Excel */}
-                <div className="flex flex-col text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="font-serif italic font-bold text-lg leading-none">
-                    Excel
-                  </span>
-                  <span className="text-[9px] tracking-wide mt-0.5">
-                    technologies ltd.
-                  </span>
-                </div>
-
-                {/* gtr */}
-                <div className="flex items-end gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="font-black italic text-2xl leading-none tracking-tighter">
-                    gtr
-                  </span>
-                  <span className="text-[8px] leading-tight mb-0.5">
-                    genuine technology
-                    <br />& research limited
-                  </span>
-                </div>
-
-                {/* ASTHA IT */}
-                <div className="flex items-center text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="font-black text-lg tracking-widest">
-                    ASTHA
-                  </span>
-                  <span className="font-light text-lg tracking-widest">IT</span>
-                </div>
-
-                {/* REVE Systems */}
-                <div className="flex items-center gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="font-light text-xl tracking-[0.2em]">
-                    REVE
-                  </span>
-                  <span className="font-normal text-xl">Systems</span>
-                </div>
-
-                {/* ofol it */}
-                <div className="flex flex-col text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="font-serif italic font-bold text-lg leading-none flex items-center gap-1">
-                    <span className="text-xl">⚡</span> ofol it
-                  </span>
-                  <span className="text-[8px] tracking-widest text-center mt-0.5">
-                    success begins here
-                  </span>
-                </div>
-
-                {/* CORE DEVS */}
-                <div className="flex items-center gap-1.5 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <div className="w-4 h-4 border-2 border-gray-400 group-hover:border-[#00A651] transform rotate-45 flex items-center justify-center transition-colors duration-300"></div>
-                  <span className="font-bold text-sm tracking-wider">
-                    CORE DEVS
-                  </span>
-                </div>
-
-                {/* SAYBURGH */}
-                <div className="flex items-center gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <div className="w-3 h-3 bg-gray-400 group-hover:bg-[#00A651] transform rotate-45 transition-colors duration-300"></div>
-                  <span className="font-extrabold text-sm tracking-tighter">
-                    SAYBURGH
-                  </span>
-                </div>
-
-                {/* ANCHOR BLOCK */}
-                <div className="flex items-center gap-1 text-gray-400 hover:text-[#00A651] cursor-pointer transition-colors duration-300">
-                  <span className="text-lg leading-none">⚓</span>
-                  <div className="flex flex-col leading-none">
-                    <span className="font-bold text-[10px] tracking-wide">
-                      ANCHOR
-                    </span>
-                    <span className="font-bold text-[10px] tracking-wide">
-                      BLOCK
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="relative z-10 max-w-2xl">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3.5 py-2 text-xs font-semibold tracking-wide text-emerald-100 sm:text-sm">
+            <span className="h-2 w-2 rounded-full bg-[#ffd84d] shadow-[0_0_12px_rgba(255,216,77,0.8)]" />
+            Learn practical skills. Move forward.
           </div>
 
-          {/* Right Image Area */}
-          <div className="md:w-[45%] relative flex justify-center md:justify-end">
-            {/* Decorative background blur */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-300 rounded-full blur-3xl opacity-30"></div>
+          <h1 className="max-w-xl text-[2.55rem] font-bold leading-[1.08] tracking-[-0.045em] sm:text-5xl lg:text-[3.65rem]">
+            {t("homePage.heroTitle")} {" "}
+            <span className="text-[#ffd84d]">{t("homePage.heroLive")}</span>
+          </h1>
+          <p className="mt-5 max-w-xl text-base leading-7 text-white/70 sm:text-lg sm:leading-8">
+            {t("homePage.heroSubtitle")}
+          </p>
 
-            {/* Main Image Container */}
-            <div className="w-full max-w-105 aspect-video md:aspect-square bg-[#1A1A1A] rounded-2xl overflow-hidden relative shadow-2xl border-[6px] border-white/50 z-10 transform hover:scale-[1.02] transition-transform duration-500">
-              {/* Demo Image Background */}
-              <img
-                src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop"
-                alt="AI Technology"
-                className="absolute inset-0 w-full h-full object-cover opacity-60"
-              />
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <AppLink
+              href="/upcoming-course"
+              className="group inline-flex min-h-13 items-center justify-center gap-3 rounded-xl bg-[#ffd84d] px-6 py-3.5 font-bold text-[#17251d] shadow-lg shadow-black/15 transition duration-300 hover:-translate-y-0.5 hover:bg-[#ffe47b] hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd84d]"
+            >
+              {t("homePage.heroCTA")}
+              <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+            </AppLink>
+            <AppLink
+              href="/free-courses"
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3.5 font-semibold text-white transition duration-300 hover:border-white/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              <FaPlay className="text-xs" />
+              {t("common.freeCourses")}
+            </AppLink>
+          </div>
 
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent"></div>
-
-              {/* Text Overlay inside Image */}
-              <div className="absolute inset-0 flex flex-col justify-end items-center text-white p-6 text-center pb-12">
-                <span className="bg-[#FFD700] text-black text-xs font-bold px-3 py-1 rounded-sm mb-3 uppercase tracking-wider shadow-lg">
-                  AI Driven
+          <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/75">
+            {["Live classes", "Free video courses", "Career support"].map(
+              (item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-300/15 text-emerald-200">
+                    <FaCheck className="text-[9px]" />
+                  </span>
+                  {item}
                 </span>
-                <h3 className="text-xl md:text-2xl font-semibold mb-1 text-gray-100 drop-shadow-md">
-                  Learn Something New Today
-                </h3>
-                <h3 className="text-3xl md:text-4xl font-bold text-[#FFD700] drop-shadow-lg">
-                  Build Your Career
-                </h3>
-              </div>
+              ),
+            )}
+          </div>
+        </div>
+
+        <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto">
+          <div className="absolute -inset-5 rounded-[2rem] bg-emerald-300/10 blur-2xl" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] border border-white/15 bg-[#1e362c] shadow-2xl sm:aspect-[1.12/1]">
+            <img
+              src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop"
+              alt="Digital learning and technology"
+              className="absolute inset-0 h-full w-full object-cover opacity-75 transition-transform duration-700 ease-out hover:scale-[1.03]"
+              fetchPriority="high"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1812]/90 via-[#10251d]/10 to-[#10251d]/20" />
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+              <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/85 backdrop-blur-md">
+                Learn by doing
+              </span>
+              <p className="mt-3 max-w-sm text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl">
+                Learn something new today. Build what comes next.
+              </p>
             </div>
           </div>
+
+          <div className="absolute -bottom-5 left-4 flex items-center gap-3 rounded-2xl border border-white/70 bg-white p-3.5 text-[#17251d] shadow-xl sm:-left-8 sm:bottom-8 sm:p-4">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#fff5c9] text-[#806500]">
+              <FaPlay className="ml-0.5 text-sm" />
+            </div>
+            <div>
+              <p className="text-sm font-bold">Start learning</p>
+              <p className="mt-0.5 text-xs text-gray-500">At your own pace</p>
+            </div>
+          </div>
+          <div className="absolute -right-3 -top-3 h-16 w-16 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm sm:-right-5 sm:-top-5" />
         </div>
       </div>
     </section>

@@ -8,6 +8,7 @@ from sqlalchemy import (
     Enum as SqlEnum,
     ForeignKey,
     Integer,
+    JSON,
     Numeric,
     String,
     Text,
@@ -93,6 +94,12 @@ class Course(Base):
 
     description: Mapped[str] = mapped_column(
         Text,
+        nullable=False,
+    )
+
+    learning_outcomes: Mapped[list[str]] = mapped_column(
+        JSON,
+        default=list,
         nullable=False,
     )
 

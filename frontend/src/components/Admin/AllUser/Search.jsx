@@ -58,26 +58,26 @@ const Search = ({ searchTerm, handleSearchChange, pagination, users }) => {
   };
 
   return (
-    <div className="mb-4 flex flex-col items-center gap-4">
-      <div className="relative w-full max-w-md">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="relative w-full max-w-xl">
         <input
           type="text"
           placeholder="Search by name or email..."
           value={search ? search : searchTerm}
           onChange={handleSearch}
           onFocus={() => setShowSuggestions(true)}
-          className="w-full rounded-md border border-gray-300 px-4 py-2 outline-none focus:ring focus:ring-yellow-400"
+          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:bg-white focus:ring-4 focus:ring-emerald-900/5"
         />
 
         {/* Suggestions */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10">
             {suggestions.map((user) => (
               <button
                 key={user.id}
                 type="button"
                 onClick={() => handleSuggestionClick(user.name)}
-                className="block w-full border-b border-gray-100 px-4 py-2 text-left text-sm transition hover:bg-gray-100 last:border-b-0"
+                className="block w-full border-b border-slate-100 px-4 py-3 text-left text-sm transition hover:bg-slate-50 last:border-b-0"
               >
                 <p className="font-medium text-gray-800">{user.name}</p>
 
@@ -88,9 +88,7 @@ const Search = ({ searchTerm, handleSearchChange, pagination, users }) => {
         )}
       </div>
 
-      <span className="text-sm text-gray-500">
-        Total: {pagination.total || users.length} users
-      </span>
+      <span className="text-sm text-slate-500">Search users by name or email</span>
     </div>
   );
 };

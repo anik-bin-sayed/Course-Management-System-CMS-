@@ -1,31 +1,52 @@
-import React from "react";
-import { FaStar } from "react-icons/fa";
+import { FaQuoteLeft, FaStar } from "react-icons/fa";
 
-const ReviewCard = ({ name, batch, text, image }) => (
-  <div className="bg-gray-50 p-6 rounded-xl mb-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
-    <div className="flex items-center gap-4 mb-4">
-      <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-gray-500 overflow-hidden shrink-0">
-        {image ? (
-          <img src={image} alt={name} className="w-full h-full object-cover" />
-        ) : (
-          <span className="text-sm font-semibold">User</span>
-        )}
+const ReviewCard = ({ name, batch, text, image }) => {
+  const initials = name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
+
+  return (
+    <article className="group flex h-full flex-col rounded-2xl border border-gray-200/80 bg-white p-6 shadow-[0_8px_30px_-24px_rgba(16,37,29,0.45)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_22px_48px_-30px_rgba(16,37,29,0.4)] sm:p-7">
+      <div className="mb-5 flex items-start justify-between">
+        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#eff6f1] text-[#1b704b] transition duration-300 group-hover:bg-[#e1f1e7]">
+          <FaQuoteLeft className="text-sm" />
+        </span>
+        <div
+          className="flex items-center gap-1 rounded-full bg-[#fff8df] px-3 py-1.5 text-xs text-[#c28a00]"
+          aria-label="5 out of 5 stars"
+        >
+          {Array.from({ length: 5 }, (_, star) => (
+            <FaStar key={star} />
+          ))}
+        </div>
       </div>
-      <div>
-        <h4 className="text-base font-bold text-gray-800">{name}</h4>
-        <p className="text-xs text-gray-500 mt-0.5">{batch}</p>
+
+      <p className="grow text-[15px] leading-7 text-gray-700">“{text}”</p>
+
+      <div className="mt-7 flex items-center gap-3 border-t border-gray-100 pt-5">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#173c2d] text-sm font-bold text-white ring-4 ring-[#eff6f1]">
+          {image ? (
+            <img src={image} alt="" className="h-full w-full object-cover" />
+          ) : (
+            initials
+          )}
+        </div>
+        <div className="min-w-0">
+          <h3 className="truncate text-sm font-bold text-[#17251d]">{name}</h3>
+          <p className="mt-1 line-clamp-1 text-xs font-medium text-gray-500">
+            {batch}
+          </p>
+        </div>
+        <span className="ml-auto self-start rounded-full bg-[#f4f7f5] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#547160]">
+          Learner
+        </span>
       </div>
-      <div className="ml-auto text-yellow-400 text-sm flex gap-0.5">
-        <FaStar />
-        <FaStar />
-        <FaStar />
-        <FaStar />
-        <FaStar />
-      </div>
-    </div>
-    <p className="text-[15px] text-gray-600 leading-relaxed">{text}</p>
-  </div>
-);
+    </article>
+  );
+};
 
 const Reviews = () => {
   const reviews = [
@@ -62,18 +83,23 @@ const Reviews = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <h2 className="text-center text-3xl font-bold text-gray-800 mb-3">
-          Learner Reviews
-        </h2>
-        <p className="text-center text-gray-500 text-base mb-12">
-          See what our learners are saying
-        </p>
+    <section className="bg-[#f7faf8] px-4 py-16 sm:px-6 lg:py-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+          <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#276143]">
+            Learner stories
+          </span>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-[#17251d] sm:text-4xl">
+            Learner reviews
+          </h2>
+          <p className="mt-3 text-base leading-7 text-gray-600">
+            See what learners say about their learning experience.
+          </p>
+        </div>
 
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-          {reviews.map((rev, idx) => (
-            <ReviewCard key={idx} {...rev} />
+        <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {reviews.map((review) => (
+            <ReviewCard key={review.name} {...review} />
           ))}
         </div>
       </div>

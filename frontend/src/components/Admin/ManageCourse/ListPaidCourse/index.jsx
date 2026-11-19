@@ -150,22 +150,23 @@ const AllCourse = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
-      <div className="mx-auto max-w-7xl">
+    <div className="w-full px-0 py-1">
+      <div className="mx-auto max-w-7xl space-y-6">
         {/* Page Header */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">All Courses</h1>
-
-            <p className="mt-1 text-sm text-gray-500">
-              Manage and organize all your courses.
-            </p>
+        <div className="flex flex-col gap-4 rounded-xl border border-emerald-900/10 bg-gradient-to-r from-white to-emerald-50/70 p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#173c2d] text-xl text-[#facc15]"><LuBookOpen /></span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-emerald-800">Course studio</p>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">All Courses</h1>
+              <p className="mt-1 text-sm text-slate-600">Manage and organize your course catalogue.</p>
+            </div>
           </div>
 
           <button
             type="button"
             disabled={role !== "admin"}
-            className="inline-flex items-center justify-center gap-2 rounded bg-yellow-400 px-5 py-3 text-sm font-semibold text-black cursor-pointer transition hover:bg-yellow-500 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed disabled:border"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#facc15] px-5 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#e9b900] disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
             onClick={handleCreateRoute}
           >
             <LuPlus className="text-lg" />
@@ -173,62 +174,62 @@ const AllCourse = () => {
           </button>
         </div>
 
-        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {/* Total */}
-          <div className="rounded-2xl border border-gray-50 bg-white p-5 shadow-sm ">
-            <p className="text-sm text-gray-500">Total Courses</p>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">Total Courses</p>
 
             <div className="mt-3 flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-3xl font-bold tracking-tight text-slate-950">
                 {totalCourses}
               </h3>
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
-                <LuBookOpen className="text-gray-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-900">
+                <LuBookOpen />
               </div>
             </div>
           </div>
 
           {/* Published */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Published</p>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">Published</p>
 
             <div className="mt-3 flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-3xl font-bold tracking-tight text-slate-950">
                 {publishedCourses}
               </h3>
 
-              <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+              <span className="rounded-md bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
                 Live
               </span>
             </div>
           </div>
 
           {/* Draft */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Drafts</p>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">Drafts</p>
 
             <div className="mt-3 flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-3xl font-bold tracking-tight text-slate-950">
                 {draftCourses}
               </h3>
 
-              <span className="rounded-full bg-yellow-50 px-3 py-1 text-xs font-semibold text-yellow-600">
+              <span className="rounded-md bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
                 Draft
               </span>
             </div>
           </div>
 
           {/* Free */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Free Courses</p>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">Free Courses</p>
 
             <div className="mt-3 flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-3xl font-bold tracking-tight text-slate-950">
                 {freeCourses}
               </h3>
 
-              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">
+              <span className="rounded-md bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
                 Free
               </span>
             </div>
@@ -255,11 +256,11 @@ const AllCourse = () => {
         {/*  FETCHING  */}
 
         {isFetching && !isLoading && (
-          <div className="mb-4 text-sm text-gray-500">Updating courses...</div>
+          <div className="rounded-lg border border-emerald-100 bg-emerald-50/70 px-4 py-2 text-sm font-medium text-emerald-900">Updating courses...</div>
         )}
 
         {filteredCourses.length > 0 ? (
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
             <FilterdCourseTable
               filteredCourses={filteredCourses}
               handleCreateLessons={handleCreateLessons}
@@ -271,9 +272,9 @@ const AllCourse = () => {
             />
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-              <LuBookOpen className="text-xl text-gray-500" />
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-amber-50 text-amber-800">
+              <LuBookOpen className="text-xl" />
             </div>
 
             <h3 className="mt-4 text-base font-semibold text-gray-900">

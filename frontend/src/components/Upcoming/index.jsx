@@ -47,10 +47,17 @@ const UpcomingCourse = () => {
 
   const categoryRefs = useRef({});
 
-  const { data: upcomingCourseData, isLoading } = useGetUpcomingCourseQuery({
-    page,
-    page_size: 8,
-  });
+  const {
+    data: cachedPageData,
+    currentData: currentPageData,
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetUpcomingCourseQuery({ page, page_size: 8 });
+
+  // `data` may still point at the previous argument while a page request runs.
+  const upcomingCourseData = currentPageData ?? cachedPageData;
 
   const categories = upcomingCourseData?.data;
   const pagination = upcomingCourseData?.pagination;
@@ -79,7 +86,7 @@ const UpcomingCourse = () => {
     };
   }, []);
 
-  if (isLoading) return <UpcomingCourseSkeleton />;
+  if (isLoading && !upcomingCourseData) return <UpcomingCourseSkeleton />;
 
   const pageNumbers = pagination
     ? getPageNumbers(page, pagination.total_pages)
@@ -91,14 +98,36 @@ const UpcomingCourse = () => {
       <CategoryNav
         categories={categories}
         isNavbarVisible={isNavbarVisible}
-        onCategoryClick={(id) => console.log("clicked", id)}
       />
       <section
         ref={sectionRef}
+        aria-busy={isFetching}
         className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 lg:px-12 mt-28"
       >
+        {isError && (
+          <div className="mb-6 flex flex-col gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              {upcomingCourseData
+                ? "Could not load the requested page. Showing the last available results."
+                : "Could not load upcoming courses."}
+            </p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="inline-flex min-h-9 w-fit items-center justify-center rounded-lg border border-rose-200 bg-white px-3 font-semibold text-rose-800 transition hover:bg-rose-100"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+        {isFetching && !isLoading && (
+          <div className="mb-4 flex items-center gap-2 text-xs font-medium text-slate-500" role="status">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-600" />
+            Loading page {page}…
+          </div>
+        )}
         {/* Empty state */}
-        {(!categories || categories.length === 0) && (
+        {(!categories || categories.length === 0) && !isError && (
           <div className="mx-auto max-w-md rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center shadow-sm">
             <FiCalendar className="mx-auto mb-4 text-gray-300" size={48} />
             <h3 className="text-lg font-semibold text-gray-800">
@@ -116,7 +145,7 @@ const UpcomingCourse = () => {
             key={category.id}
             id={`category-${category.id}`}
             ref={(el) => (categoryRefs.current[category.id] = el)}
-            className="mb-16 scroll-mt-28 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 sm:p-8 lg:p-10"
+            className="mb-12 scroll-mt-28 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200/80 sm:p-7 lg:p-8"
           >
             {/* Category header */}
             <div className="mb-8 flex flex-col items-start justify-between gap-3 border-b border-gray-100 pb-5 sm:flex-row sm:items-center">
@@ -212,70 +241,83 @@ const UpcomingCourse = () => {
 
         {/*  Pagination  */}
         {pagination && pagination.total_pages > 1 && (
-          <div className="mt-12 flex flex-col items-center gap-4">
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {/* Prev */}
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={!pagination.has_previous}
-                aria-label="Previous page"
-                className="inline-flex h-10 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
-              >
-                <FiChevronLeft size={16} />
-                <span className="hidden sm:inline">
-                  {" "}
-                  {t("upcomingCourse.previous")}
+          <nav
+            className="mt-10 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
+            aria-label="Upcoming courses pagination"
+          >
+            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <p className="text-xs font-medium text-slate-500 sm:text-sm">
+                {t("upcomingCourse.page")} {" "}
+                <span className="font-semibold text-slate-800">{page}</span>{" "}
+                {t("upcomingCourse.of")} {" "}
+                <span className="font-semibold text-slate-800">
+                  {pagination.total_pages}
                 </span>
-              </button>
-
-              {/* Page numbers */}
-              {pageNumbers.map((item, idx) =>
-                item === "..." ? (
-                  <span
-                    key={`ellipsis-${idx}`}
-                    className="px-2 text-sm text-gray-400"
-                  >
-                    …
+                {Number.isFinite(pagination.total) && (
+                  <span className="hidden sm:inline"> · {pagination.total} courses</span>
+                )}
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+                {/* Prev */}
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={!pagination.has_previous || isFetching}
+                  aria-label="Previous page"
+                  className="inline-flex h-10 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
+                >
+                  <FiChevronLeft size={16} />
+                  <span className="hidden sm:inline">
+                    {t("upcomingCourse.previous")}
                   </span>
-                ) : (
-                  <button
-                    key={item}
-                    onClick={() => setPage(item)}
-                    aria-current={page === item ? "page" : undefined}
-                    className={`h-10 min-w-10 rounded-lg px-3 text-sm font-semibold transition ${
-                      page === item
-                        ? "bg-yellow-400 text-gray-900 shadow-sm"
-                        : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ),
-              )}
+                </button>
 
-              {/* Next */}
-              <button
-                onClick={() =>
-                  setPage((p) => Math.min(pagination.total_pages, p + 1))
-                }
-                disabled={!pagination.has_next}
-                aria-label="Next page"
-                className="inline-flex h-10 items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
-              >
-                <span className="hidden sm:inline">
-                  {" "}
-                  {t("upcomingCourse.next")}
-                </span>
-                <FiChevronRight size={16} />
-              </button>
+                {/* Page numbers */}
+                {pageNumbers.map((item, idx) =>
+                  item === "..." ? (
+                    <span
+                      key={`ellipsis-${idx}`}
+                      className="px-2 text-sm text-slate-400"
+                      aria-hidden="true"
+                    >
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => setPage(item)}
+                      disabled={isFetching || page === item}
+                      aria-current={page === item ? "page" : undefined}
+                      className={`h-10 min-w-10 rounded-lg px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 disabled:cursor-default ${
+                        page === item
+                          ? "bg-[#173c2d] text-white shadow-sm"
+                          : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50"
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  ),
+                )}
+
+                {/* Next */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setPage((p) => Math.min(pagination.total_pages, p + 1))
+                  }
+                  disabled={!pagination.has_next || isFetching}
+                  aria-label="Next page"
+                  className="inline-flex h-10 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/30 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
+                >
+                  <span className="hidden sm:inline">
+                    {t("upcomingCourse.next")}
+                  </span>
+                  <FiChevronRight size={16} />
+                </button>
+              </div>
             </div>
-
-            {/* Page indicator (mobile) */}
-            <p className="text-xs text-gray-500 sm:hidden">
-              {t("upcomingCourse.page")} {page} {t("upcomingCourse.of")}{" "}
-              {pagination.total_pages}
-            </p>
-          </div>
+          </nav>
         )}
       </section>
     </main>

@@ -93,8 +93,7 @@ const SideLogin = ({ isOpen, onClose }) => {
           sm:max-w-md
           md:max-w-lg
           lg:max-w-xl
-          bg-gray-200
-          shadow-2xl
+          rounded-l-2xl border-l border-slate-200 bg-[#f4f7f5] shadow-2xl shadow-slate-950/20
           transform
           transition-transform
           duration-500
@@ -118,25 +117,26 @@ const SideLogin = ({ isOpen, onClose }) => {
             w-10
             items-center
             justify-center
-            rounded-full
-            bg-gray-100
-            text-gray-600
+            rounded-xl
+            border border-slate-200
+            bg-white
+            text-slate-500
             transition-all
             duration-200
-            hover:bg-gray-200
-            hover:text-gray-900
-            hover:scale-105 cursor-pointer
+            hover:bg-slate-50
+            hover:text-slate-900
+            cursor-pointer
           "
         >
           <HiXMark className="h-5 w-5" />
         </button>
 
-        <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center p-4">
-          <div className="w-full max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
+        <div className="auth-drawer flex min-h-full items-center justify-center overflow-y-auto bg-[#f4f7f5] p-4 sm:p-6">
+          <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5">
             {/* Header */}
             {!isVerifyingEmail && (
-              <div className="border-b border-gray-200 bg-gray-50 p-5">
-                <div className="relative mx-auto flex h-14 w-full max-w-md rounded-xl bg-white p-1 shadow-sm">
+              <div className="border-b border-slate-100 bg-slate-50/70 p-4 sm:p-5">
+                <div className="relative mx-auto flex h-12 w-full max-w-md rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
                   {/* Active Background */}
                   <span
                     className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)]
@@ -244,7 +244,7 @@ const SideLogin = ({ isOpen, onClose }) => {
               transition={{ duration: 0.25 }}
               className="fixed inset-0 z-[61] flex items-center justify-center p-4"
             >
-              <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl">
                 <div className="flex justify-center">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100">
                     <svg
@@ -271,7 +271,7 @@ const SideLogin = ({ isOpen, onClose }) => {
                 <div className="mt-8 flex gap-3">
                   <button
                     onClick={() => setShowCloseConfirm(false)}
-                    className="flex-1 rounded border border-gray-300 py-3 font-semibold text-gray-700 transition hover:bg-gray-100 cursor-pointer"
+                    className="flex-1 rounded-lg border border-slate-200 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -281,7 +281,7 @@ const SideLogin = ({ isOpen, onClose }) => {
                       setShowCloseConfirm(false);
                       onClose();
                     }}
-                    className="flex-1 rounded bg-yellow-500 py-3 font-semibold text-black transition hover:bg-yellow-600 cursor-pointer"
+                    className="flex-1 rounded-lg bg-yellow-500 py-3 font-semibold text-black transition hover:bg-yellow-600 cursor-pointer"
                   >
                     Yes, Close
                   </button>

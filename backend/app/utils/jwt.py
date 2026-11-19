@@ -21,14 +21,19 @@ def create_access_token(data: dict):
     )
 
 
-def create_refresh_token(data: dict):
+def create_refresh_token(data: dict, remember_me: bool = False):
     payload = data.copy()
 
     payload["type"] = "refresh"
+    payload["rm"] = remember_me
 
-    payload["exp"] = datetime.now(UTC) + timedelta(
-        days=settings.REFRESH_TOKEN_EXPIRE_DAYS
+    expiry_days = (
+        settings.REMEMBER_ME_REFRESH_TOKEN_EXPIRE_DAYS
+        if remember_me
+        else settings.REFRESH_TOKEN_EXPIRE_DAYS
     )
+
+    payload["exp"] = datetime.now(UTC) + timedelta(days=expiry_days)
 
     return jwt.encode(
         payload,

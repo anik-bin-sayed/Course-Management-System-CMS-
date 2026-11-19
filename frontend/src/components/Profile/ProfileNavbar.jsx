@@ -1,46 +1,33 @@
-import {
-  authApi,
-  useLogoutUserMutation,
-} from "../../lib/features/auth/authApi";
+import { useEffect, useRef, useState } from "react";
+import { FaChevronDown, FaSignOutAlt } from "react-icons/fa";
+import { authApi, useLogoutUserMutation } from "../../lib/features/auth/authApi";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "@/lib/navigation";
-
 import { useDispatch } from "react-redux";
-
-import { FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 
 const ProfileNavbar = ({ profile }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
-
   const router = useRouter();
   const dispatch = useDispatch();
-
-  //   redux
   const [logoutUser] = useLogoutUserMutation();
 
   const hour = new Date().getHours();
-
   const greeting =
     hour >= 5 && hour < 12
-      ? "Good Morning "
+      ? "Good morning"
       : hour >= 12 && hour < 17
-        ? "Good Afternoon "
+        ? "Good afternoon"
         : hour >= 17 && hour < 21
-          ? "Good Evening "
-          : "Good Night";
+          ? "Good evening"
+          : "Good night";
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!dropdownRef.current?.contains(e.target)) {
-        setOpen(false);
-      }
+    const handleClickOutside = (event) => {
+      if (!dropdownRef.current?.contains(event.target)) setOpen(false);
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -56,129 +43,93 @@ const ProfileNavbar = ({ profile }) => {
   };
 
   return (
-    <div className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-100/80 bg-white/80 px-6 py-3 shadow-sm backdrop-blur-md transition-all duration-300 md:px-10 lg:px-16">
-      <div className="flex items-center gap-4">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500 text-lg font-bold text-black">
-            L
-          </div>
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-4">
+          <Link href="/" className="flex shrink-0 items-center gap-2.5">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-400 text-lg font-bold text-slate-950">
+              L
+            </span>
+            <span>
+              <span className="block text-base font-bold tracking-tight text-slate-900">Learn Hub</span>
+              <span className="block text-[11px] text-slate-500">Learning platform</span>
+            </span>
+          </Link>
 
-          <div className="">
-            <h2 className="text-lg font-bold text-gray-800">Learn Hub</h2>
-            <p className="text-xs text-gray-500">Learning Platform</p>
-          </div>
-        </Link>
-
-        <div className="h-10 w-px bg-gray-200 hidden sm:block" />
-
-        <div className=" flex-col hidden sm:block">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-medium text-gray-800">{greeting}</h2>
-
-            <p className="hidden md:block font-medium text-gray-700">
-              {profile?.name}
+          <span className="hidden h-9 w-px bg-slate-200 sm:block" />
+          <div className="hidden min-w-0 sm:block">
+            <p className="text-sm font-semibold text-slate-800">
+              {greeting}{profile?.name ? `, ${profile.name.split(" ")[0]}` : ""}
             </p>
+            <p className="max-w-64 truncate text-xs text-slate-500">{profile?.email}</p>
           </div>
-
-          <p className="text-sm text-gray-500">{profile?.email}</p>
         </div>
-      </div>
 
-      {/* Right - Actions */}
-      <div className="flex items-center gap-3">
-        {/* Profile Dropdown */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative shrink-0" ref={dropdownRef}>
           <button
-            onClick={() => setOpen(!open)}
-            className={`
-              flex items-center gap-2.5 
-              rounded-xl border-2  transition-all duration-300
-              hover:shadow-lg hover:scale-[1.02] active:scale-95
-              ${
-                open
-                  ? "border-yellow-400 shadow-lg shadow-indigo-500/25"
-                  : " bg-white/80 hover:border-gray-200 border-gray-200"
-              }
-              backdrop-blur-sm
-              px-2 py-1.5
-            `}
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-haspopup="menu"
+            aria-label="Open account menu"
+            className={`flex items-center gap-2 rounded-xl border px-2 py-1.5 transition-colors duration-200 hover:shadow-sm ${
+              open
+                ? "border-emerald-700/40 bg-emerald-50/50"
+                : "border-slate-200 bg-white hover:border-slate-300"
+            }`}
           >
-            <div className="relative">
-              <div
-                className={`
-                  absolute -inset-0.5 rounded-full opacity-75 blur-sm transition-opacity duration-300
-                  ${open ? "opacity-100" : "opacity-0"}
-                `}
-              />
-              <Image
-                src={profile?.avatar || "/images/default.jpg"}
-                alt="Profile"
-                width={40}
-                height={40}
-                className="h-12 w-12 rounded-full object-cover border border-gray-300 shrink-0"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <FaChevronDown
-                className={`text-xs transition-all duration-300 ${
-                  open ? "rotate-180 text-yellow-400" : "text-gray-400"
-                }`}
-              />
-            </div>
+            <Image
+              src={profile?.avatar || "/images/default.jpg"}
+              alt={profile?.name || "Profile"}
+              width={40}
+              height={40}
+              className="h-9 w-9 rounded-full border border-slate-200 object-cover"
+            />
+            <span className="hidden max-w-32 text-left sm:block">
+              <span className="block truncate text-sm font-semibold text-slate-800">
+                {profile?.name || "Account"}
+              </span>
+              <span className="block text-xs capitalize text-slate-500">{profile?.role || "Member"}</span>
+            </span>
+            <FaChevronDown className={`mr-1 text-[11px] text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
           </button>
 
-          {/* Dropdown Menu */}
           {open && (
-            <div className="absolute right-0 mt-3 w-72 rounded-2xl overflow-hidden border shadow-2xl shadow-black/10 bg-white/95 border-gray-100/80 backdrop-blur-xl z-50">
-              {/* User Info Header */}
-              <div className="px-5 py-4 border-b border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <div className="relative w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold  border-2">
-                      <Image
-                        src={profile?.avatar || "/images/default.jpg"}
-                        alt="Profile"
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 rounded-full object-cover border border-gray-300 shrink-0"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-base text-gray-800">
-                      {profile?.name}
-                    </h4>
-                    <p className="text-sm text-gray-500">{profile?.email}</p>
-                  </div>
+            <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10">
+              <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50 px-4 py-4">
+                <Image
+                  src={profile?.avatar || "/images/default.jpg"}
+                  alt=""
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-full border border-slate-200 object-cover"
+                />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-800">{profile?.name || "Account"}</p>
+                  <p className="truncate text-xs text-slate-500">{profile?.email}</p>
                 </div>
               </div>
-
-              {/* Divider */}
-              <div className="mx-4 h-px bg-gray-100" />
-
-              {/* Logout Button */}
               <div className="p-2">
                 <button
-                  className="flex w-full items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 cursor-pointer border"
+                  type="button"
+                  role="menuitem"
+                  className="flex w-full items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-left text-rose-700 transition hover:border-rose-100 hover:bg-rose-50"
                   onClick={logout}
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center border  transition-all duration-200">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
                     <FaSignOutAlt />
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Logout</p>
-                    <p className="text-xs text-gray-400">
-                      Sign out of your account
-                    </p>
-                  </div>
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold">Log out</span>
+                    <span className="block text-xs text-slate-500">Sign out of your account</span>
+                  </span>
                 </button>
               </div>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

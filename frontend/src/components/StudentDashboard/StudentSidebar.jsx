@@ -1,7 +1,7 @@
 import {
   FiAward,
   FiBookOpen,
-  FiBriefcase,
+  FiCalendar,
   FiChevronLeft,
   FiChevronRight,
   FiFileText,
@@ -10,19 +10,19 @@ import {
   FiX,
 } from "react-icons/fi";
 import AppLink from "@/components/common/AppLink";
+import { useLocation } from "react-router-dom";
 
 const primaryItems = [
   { label: "My Courses", href: "/dashboard", icon: FiBookOpen },
 ];
 
-const unavailableItems = [
-  { label: "Live Classes", icon: FiVideo },
-  { label: "Recordings", icon: FiPlayCircle },
-  { label: "Resources", icon: FiFileText },
-  { label: "Job Board", icon: FiBriefcase },
-  { label: "Rewards", icon: FiAward },
-  { label: "Build My CV", icon: FiFileText },
-  { label: "AI Academy", icon: FiBookOpen },
+const toolItems = [
+  { label: "Build My CV", href: "/dashboard/build-my-cv", icon: FiFileText },
+  { label: "Rewards", href: "/dashboard/rewards", icon: FiAward },
+  { label: "Resources", href: "/dashboard/resources", icon: FiBookOpen },
+  { label: "Recordings", href: "/dashboard/recordings", icon: FiPlayCircle },
+  { label: "Live Class", href: "/dashboard/live-classes", icon: FiVideo },
+  { label: "Schedules", href: "/dashboard/schedules", icon: FiCalendar },
 ];
 
 function NavigationItem({ item, active, collapsed, onNavigate }) {
@@ -34,10 +34,10 @@ function NavigationItem({ item, active, collapsed, onNavigate }) {
       onClick={onNavigate}
       title={collapsed ? item.label : undefined}
       aria-current={active ? "page" : undefined}
-      className={`flex min-h-11 items-center gap-3 px-3 text-sm font-medium transition-colors ${
+      className={`relative flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors ${
         active
-          ? "bg-amber-300 text-slate-950"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+          ? "bg-emerald-50 font-semibold text-emerald-900 before:absolute before:bottom-2 before:left-0 before:top-2 before:w-1 before:rounded-r before:bg-emerald-800"
+          : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
       } ${collapsed ? "justify-center" : ""}`}
     >
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -52,6 +52,7 @@ export default function StudentSidebar({
   mobileOpen,
   onClose,
 }) {
+  const { pathname } = useLocation();
   return (
     <>
       {mobileOpen && (
@@ -64,12 +65,12 @@ export default function StudentSidebar({
       )}
       <aside
         aria-label="Student navigation"
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-[width,transform] duration-200 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white shadow-xl shadow-slate-900/5 transition-[width,transform] duration-200 lg:shadow-none lg:translate-x-0 ${
           collapsed ? "lg:w-20" : "lg:w-64"
         } ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div
-          className={`flex h-[72px] shrink-0 items-center border-b border-slate-200 ${
+          className={`flex h-[72px] shrink-0 items-center border-b border-slate-100 ${
             collapsed ? "justify-center px-3" : "justify-between px-5"
           }`}
         >
@@ -80,7 +81,7 @@ export default function StudentSidebar({
             aria-label="LearnHub dashboard"
           >
             {!collapsed && (
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-amber-300 text-slate-950">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-300 text-slate-950">
                 <FiBookOpen size={19} aria-hidden="true" />
               </span>
             )}
@@ -93,7 +94,7 @@ export default function StudentSidebar({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
+            className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 lg:hidden"
             aria-label="Close navigation menu"
           >
             <FiX size={19} />
@@ -101,7 +102,7 @@ export default function StudentSidebar({
           <button
             type="button"
             onClick={onToggle}
-            className="hidden p-2 text-slate-500 hover:bg-slate-100 lg:block border"
+            className="hidden rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900 lg:block"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
@@ -114,7 +115,7 @@ export default function StudentSidebar({
         </div>
         <nav className="flex-1 overflow-y-auto px-3 py-5">
           <p
-            className={`mb-2 px-3 text-[11px] font-semibold uppercase text-slate-400 ${
+            className={`mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 ${
               collapsed ? "sr-only" : ""
             }`}
           >
@@ -125,7 +126,7 @@ export default function StudentSidebar({
               <NavigationItem
                 key={item.label}
                 item={item}
-                active={item.href === "/dashboard"}
+                active={pathname === item.href}
                 collapsed={collapsed}
                 onNavigate={onClose}
               />
@@ -133,36 +134,27 @@ export default function StudentSidebar({
           </div>
 
           <p
-            className={`mb-2 mt-8 px-3 text-[11px] font-semibold uppercase text-slate-400 ${
+            className={`mb-2 mt-8 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 ${
               collapsed ? "sr-only" : ""
             }`}
           >
-            More from LearnHub
+            Career & resources
           </p>
           <div className="space-y-1">
-            {unavailableItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  disabled
-                  title={`${item.label} is not available yet`}
-                  aria-label={`${item.label}, not available yet`}
-                  className={`flex min-h-11 w-full cursor-not-allowed items-center gap-3 px-3 text-left text-sm text-slate-400 ${
-                    collapsed ? "justify-center" : ""
-                  }`}
-                >
-                  <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  {!collapsed && <span>{item.label}</span>}
-                </button>
-              );
-            })}
+            {toolItems.map((item) => (
+              <NavigationItem
+                key={item.label}
+                item={item}
+                active={pathname === item.href}
+                collapsed={collapsed}
+                onNavigate={onClose}
+              />
+            ))}
           </div>
         </nav>
 
         {!collapsed && (
-          <div className="border-t border-slate-200 px-5 py-4 text-xs text-slate-500">
+          <div className="border-t border-slate-100 px-5 py-4 text-xs text-slate-500">
             Course learning portal
           </div>
         )}

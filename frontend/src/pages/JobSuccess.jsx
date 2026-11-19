@@ -1,14 +1,6 @@
-import React from "react";
+import { useTranslation } from "react-i18next";
 import JobSuccessCard from "../components/jobSuccess/JobSuccessCard";
-import {
-  FaSearch,
-  FaFilter,
-  FaChevronRight,
-  FaBriefcase,
-  FaLaptopCode,
-  FaPaintBrush,
-  FaChartLine,
-} from "react-icons/fa";
+import { FaBriefcase } from "react-icons/fa";
 
 // Demo Data based on the image
 const students = [
@@ -181,31 +173,39 @@ const students = [
 ];
 
 const JobSuccess = () => {
-  return (
-    <div className="bg-white min-h-screen mt-16">
-      {/* Hero Banner */}
-      <div className="bg-[#8B5CF6] py-12 px-4 text-center text-white max-w-6xl mx-auto ">
-        <h1 className="text-3xl md:text-4xl font-bold mb-3 font-sans">
-          Successful Job Placement
-        </h1>
-        <p className="text-sm md:text-base opacity-90">
-          Dhukkul's successful learners have secured job placements at various
-          renowned organizations, as listed below.
-        </p>
-      </div>
+  const { t } = useTranslation();
 
-      {/* Main Content Container */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Grid Container */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {students.map((student) => (
-              <JobSuccessCard key={student.id} student={student} />
-            ))}
+  return (
+    <main className="mt-16 min-h-screen bg-[#f7faf8] pb-16 pt-7 sm:pt-10">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-xl bg-[#173c2d] px-6 py-9 text-white shadow-[0_18px_45px_-30px_rgba(16,37,29,0.65)] sm:px-10 sm:py-12 lg:px-14">
+          <div className="pointer-events-none absolute -right-16 -top-24 h-64 w-64 rounded-full border border-white/10" />
+          <div className="pointer-events-none absolute -right-4 -top-14 h-44 w-44 rounded-full border border-white/10" />
+          <div className="relative max-w-3xl">
+            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-[#ffd84d]">
+              <FaBriefcase aria-hidden="true" />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.75rem]">
+              {t("jobSuccessPage.title")}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-white/75 sm:text-base sm:leading-7">
+              {t("jobSuccessPage.description")}
+            </p>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section
+        aria-label={t("jobSuccessPage.title")}
+        className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8"
+      >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {students.map((student) => (
+            <JobSuccessCard key={student.id} student={student} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 };
 

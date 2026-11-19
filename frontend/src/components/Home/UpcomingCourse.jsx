@@ -1,4 +1,4 @@
-import { FiClock, FiArrowRight, FiBookOpen, FiUsers } from "react-icons/fi";
+import { FiClock, FiArrowRight, FiBookOpen } from "react-icons/fi";
 import Image from "@/components/common/AppImage";
 import Link from "@/components/common/AppLink";
 import CourseCardLoader from "./CourseCardLoader";
@@ -16,14 +16,21 @@ const UpcomingCourse = ({ data, loading, isError }) => {
     return `${days} days left`;
   };
 
-  const tabs = [
-    "All Courses",
-    "Artificial Intelligence",
-    "Web & App Development",
-    "Product Management & Design",
-    "Business & Marketing",
-    "Data Science",
-  ];
+  const formatStartDate = (date) => {
+    if (!date) return "Date to be announced";
+    return new Intl.DateTimeFormat("en-BD", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(date));
+  };
+
+  const getDiscountPercent = (price, discountPrice) => {
+    const original = Number(price);
+    const discounted = Number(discountPrice);
+    if (!original || !discounted || discounted >= original) return null;
+    return Math.round(((original - discounted) / original) * 100);
+  };
 
   if (loading) {
     return <CourseCardLoader />;
@@ -31,7 +38,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
 
   if (isError) {
     return (
-      <section className="bg-gray-50 py-16">
+      <section className="bg-[#f7faf8] py-16">
         <div className="mx-auto max-w-7xl px-4 text-center">
           <div className="rounded-2xl border border-red-100 bg-red-50 p-8">
             <p className="font-medium text-red-600">
@@ -44,32 +51,29 @@ const UpcomingCourse = ({ data, loading, isError }) => {
   }
 
   return (
-    <section className="bg-[#F8F9FA] py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
-            <FiBookOpen size={20} />
+    <section className="bg-[#f7faf8] px-4 py-16 sm:px-6 lg:py-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-9 flex flex-col gap-5 sm:mb-11 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#276143]">
+              <FiBookOpen />
+              Learn with a live instructor
+            </span>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-[#17251d] sm:text-4xl">
+              Upcoming live courses
+            </h2>
+            <p className="mt-3 max-w-xl text-base leading-7 text-gray-600">
+              Join a guided course, learn alongside a cohort, and keep moving
+              toward your goals.
+            </p>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Upcoming Live Course
-          </h2>
-        </div>
-
-        {/* Tabs */}
-        <div className="mb-8 flex overflow-x-auto hide-scrollbar gap-3 pb-2">
-          {tabs.map((tab, idx) => (
-            <button
-              key={idx}
-              className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-                idx === 0
-                  ? "bg-gray-900 text-white border-gray-900"
-                  : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          <Link
+            href="/upcoming-course"
+            className="group inline-flex w-fit items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-[#17251d] transition duration-300 hover:border-[#1b704b] hover:bg-[#f1f8f4]"
+          >
+            Browse all courses
+            <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </div>
 
         {/* Empty State */}
@@ -89,16 +93,16 @@ const UpcomingCourse = ({ data, loading, isError }) => {
             {courses.map((course) => (
               <div
                 key={course.id}
-                className="group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-[0_8px_30px_-22px_rgba(16,37,29,0.35)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_22px_48px_-28px_rgba(16,37,29,0.38)]"
               >
                 <Link href={`/upcoming-course/${course.id}`}>
                   {/* Thumbnail */}
-                  <div className="relative h-48 overflow-hidden bg-gray-900">
+                  <div className="relative aspect-[1.55/1] overflow-hidden bg-gray-900">
                     <Image
                       src={course.thumbnail}
                       alt={course.title}
                       fill
-                      className="object-cover opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-90"
+                      className="object-cover opacity-85 transition duration-700 ease-out group-hover:scale-105 group-hover:opacity-100"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
 
@@ -113,10 +117,11 @@ const UpcomingCourse = ({ data, loading, isError }) => {
 
                     {/* Discount Badge */}
                     {course.discount_price && (
-                      <div className="absolute right-3 top-3 rounded bg-red-500 px-2 py-1 text-[10px] font-bold text-white shadow-sm">
-                        {/* Calculate discount percentage dynamically if possible, else static */}
-                        20% OFF
-                      </div>
+                      getDiscountPercent(course.price, course.discount_price) && (
+                        <div className="absolute right-3 top-3 rounded-full bg-[#ffd84d] px-2.5 py-1 text-[10px] font-bold text-[#17251d] shadow-sm">
+                          {getDiscountPercent(course.price, course.discount_price)}% OFF
+                        </div>
+                      )
                     )}
 
                     {/* Bottom overlay content */}
@@ -128,19 +133,16 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 cursor-pointer">
+                  <div className="cursor-pointer p-5">
                     {/* Title */}
                     <h3 className="line-clamp-2 min-h-[3.5rem] text-base font-bold leading-snug text-gray-900 transition group-hover:text-green-600">
                       {course.title}
                     </h3>
 
                     {/* Meta Info (Date & Time) */}
-                    <div className="mt-3 flex items-center justify-between text-xs text-gray-500 mb-4">
+                    <div className="mb-4 mt-3 flex items-center text-xs text-gray-500">
                       <span className="flex items-center gap-1.5">
-                        <FiClock size={14} /> Starts: 25 Nov
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <FiClock size={14} /> 10:00 PM
+                        <FiClock size={14} /> {formatStartDate(course.start_date)}
                       </span>
                     </div>
 
@@ -149,7 +151,7 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                       <div>
                         {course.discount_price ? (
                           <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-bold text-green-600">
+                            <span className="text-xl font-bold text-[#1b704b]">
                               ৳{course.discount_price}
                             </span>
                             <span className="text-xs text-gray-400 line-through">
@@ -157,21 +159,17 @@ const UpcomingCourse = ({ data, loading, isError }) => {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-xl font-bold text-green-600">
+                          <span className="text-xl font-bold text-[#1b704b]">
                             ৳{course.price}
                           </span>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1 text-xs text-gray-500 font-medium">
-                        <FiUsers size={14} /> 500+ Enrolled
-                      </div>
                     </div>
 
-                    {/* See Details Button */}
-                    <button className="mt-4 flex w-full items-center justify-center gap-2 rounded border border-gray-300 py-2 text-sm font-semibold text-gray-700 transition hover:border-green-600 hover:bg-green-600 hover:text-white">
-                      SEE DETAILS <FiArrowRight size={14} />
-                    </button>
+                    <span className="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#173c2d] py-2 text-sm font-semibold text-white transition duration-300 group-hover:bg-[#225c42]">
+                      View course <FiArrowRight size={14} />
+                    </span>
                   </div>
                 </Link>
               </div>
@@ -179,15 +177,6 @@ const UpcomingCourse = ({ data, loading, isError }) => {
           </div>
         )}
 
-        {/* See All Button */}
-        <div className="mt-12 flex items-center justify-center">
-          <Link
-            href="/upcoming-course"
-            className="rounded-full bg-gray-200 px-10 py-2.5 text-sm font-bold text-gray-700 uppercase transition hover:bg-gray-300"
-          >
-            See All
-          </Link>
-        </div>
       </div>
     </section>
   );

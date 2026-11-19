@@ -7,30 +7,21 @@ const FreeCoursesContent = lazy(
 );
 
 const PageSkeleton = () => (
-  <div className="min-h-[70vh] bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 flex items-start justify-center">
-    <div className="border max-w-6xl w-full shadow p-10 rounded-md border-gray-200 bg-white animate-pulse">
-      <div className="flex items-center gap-4 mb-10">
-        <div className="h-16 w-16 bg-gray-300 rounded-2xl"></div>
-        <div className="flex flex-col gap-2 w-1/2">
-          <div className="h-4 w-24 bg-gray-200 rounded-full"></div>
-          <div className="h-8 w-64 bg-gray-300 rounded-md"></div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[...Array(16)].map((_, i) => (
+  <div className="min-h-[70vh] bg-[#f7faf8] px-5 py-10 sm:px-8 lg:px-10">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({ length: 8 }, (_, index) => (
           <div
-            key={i}
-            className="flex flex-col overflow-hidden rounded-md border border-gray-200 bg-white"
+            key={index}
+            className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white"
           >
-            <div className="h-48 w-full bg-gray-300"></div>
-            <div className="p-5 flex flex-col gap-3">
-              <div className="h-6 w-full bg-gray-300 rounded"></div>
-              <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
-              <div className="h-10 w-full bg-gray-200 rounded-lg mt-4"></div>
+            <div className="aspect-[1.55/1] w-full animate-pulse bg-gray-100" />
+            <div className="flex flex-col gap-3 p-5">
+              <div className="h-5 w-full animate-pulse rounded bg-gray-100" />
+              <div className="h-4 w-3/4 animate-pulse rounded bg-gray-100" />
+              <div className="mt-2 h-10 w-full animate-pulse rounded-lg bg-gray-100" />
             </div>
           </div>
-        ))}
-      </div>
+      ))}
     </div>
   </div>
 );
@@ -40,7 +31,7 @@ const FreeCoursesPage = () => {
   const currentPage = Number(searchParams.get("page")) || 1;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-[#f7faf8]">
       {/* Static Header */}
       <HeroSection />
 

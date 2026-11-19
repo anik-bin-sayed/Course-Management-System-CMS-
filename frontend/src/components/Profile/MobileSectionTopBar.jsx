@@ -26,17 +26,19 @@ const MobileSectionTopBar = () => {
   };
 
   return (
-    <div className="flex items-center justify-between mb-4 lg:hidden">
+    <div className="mb-5 flex items-center justify-between gap-3 lg:hidden">
       <button
+        type="button"
         onClick={() => router.back()}
-        className="flex items-center gap-2 bg-gray-300 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded hover:gap-1 transition-all duration-300"
+        className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
       >
         <IoMdArrowBack />
         Back
       </button>
       <button
+        type="button"
         onClick={handleLogout}
-        className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-rose-100 bg-rose-50 px-3.5 text-sm font-semibold text-rose-700 transition hover:bg-rose-100"
       >
         Logout
         <IoIosLogOut className="font-medium" />

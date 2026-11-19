@@ -23,6 +23,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const SearchPage = lazy(() => import("@/pages/SearchPage"));
 const StudentCoursePage = lazy(() => import("@/pages/StudentCoursePage"));
 const StudentDashboardPage = lazy(() => import("@/pages/StudentDashboardPage"));
+const StudentDashboardToolsPage = lazy(() => import("@/pages/StudentDashboardToolsPage"));
 const UpcomingCourseDetailsPage = lazy(
   () => import("@/pages/UpcomingCourseDetailsPage"),
 );
@@ -67,6 +68,12 @@ function AppPageRoutes() {
       <Route element={<StudentGuard />}>
         <Route path="/dashboard" element={<StudentDashboardLayout />}>
           <Route index element={<StudentDashboardPage />} />
+          <Route path="build-my-cv" element={<StudentDashboardToolsPage tool="build-my-cv" />} />
+          <Route path="rewards" element={<StudentDashboardToolsPage tool="rewards" />} />
+          <Route path="resources" element={<StudentDashboardToolsPage tool="resources" />} />
+          <Route path="recordings" element={<StudentDashboardToolsPage tool="recordings" />} />
+          <Route path="live-classes" element={<StudentDashboardToolsPage tool="live-classes" />} />
+          <Route path="schedules" element={<StudentDashboardToolsPage tool="schedules" />} />
           <Route
             path=":courseSlug/:lessonId/watch"
             element={<LessonWatchPage />}
