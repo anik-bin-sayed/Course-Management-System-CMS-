@@ -6,6 +6,7 @@ import { LoadingFallback } from "@/components/common/LazyLoadBoundary";
 import { LuGalleryThumbnails } from "react-icons/lu";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { IoMdArrowBack } from "react-icons/io";
+import { FiBookOpen } from "react-icons/fi";
 
 import { useGetAllCategoryQuery } from "../../../../../lib/features/category/category-api";
 import { useRouter } from "@/lib/navigation";
@@ -16,6 +17,7 @@ import {
   useUpdateCourseMutation,
 } from "../../../../../lib/features/courses/paid-course-api";
 import InstructorMultiSelect from "../InstructorMultiSelect";
+import LearningOutcomesEditor from "../LearningOutcomesEditor";
 import { toast } from "sonner";
 
 const CreateCategoryModal = lazy(
@@ -27,6 +29,7 @@ const initialState = {
   slug: "",
   short_description: "",
   description: "",
+  learning_outcomes: [],
   price: "",
   discount_price: "",
   discount_percentage: "",
@@ -72,6 +75,7 @@ const UpdataPaidCourseForm = ({ courseData }) => {
         slug: courseData.slug || "",
         short_description: courseData.short_description || "",
         description: courseData.description || "",
+        learning_outcomes: courseData.learning_outcomes || [],
         price: courseData.price || "",
         discount_price: courseData.discount_price || "",
         discount_percentage: courseData.discount_percentage || "",
@@ -125,6 +129,10 @@ const UpdataPaidCourseForm = ({ courseData }) => {
     }));
   };
 
+  const setLearningOutcomes = (learning_outcomes) => {
+    setFormData((prev) => ({ ...prev, learning_outcomes }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError("");
@@ -149,6 +157,17 @@ const UpdataPaidCourseForm = ({ courseData }) => {
         data.append(field, value);
       }
     });
+    const learningOutcomes = formData.learning_outcomes
+      .map((outcome) => outcome.trim())
+      .filter(Boolean);
+    if (learningOutcomes.length) {
+      learningOutcomes.forEach((outcome) =>
+        data.append("learning_outcomes", outcome),
+      );
+    } else {
+      // An explicit empty value lets the API clear all outcomes on update.
+      data.append("learning_outcomes", "");
+    }
     if (formData.thumbnail instanceof File) {
       data.append("thumbnail", formData.thumbnail);
     }
@@ -183,22 +202,24 @@ const UpdataPaidCourseForm = ({ courseData }) => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
+      <div className="w-full px-0 py-1">
         <div className="mx-auto max-w-5xl">
           <button
             disabled={isSubmitting}
-            className="cursor-pointer py-2 px-4 mb-4 rounded bg-gray-300 flex items-center gap-2 disabled:cursor-not-allowed"
+            className="mb-4 inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={handleBack}
           >
             <IoMdArrowBack />
             Back
           </button>
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Update Course</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Edit your course information.
-            </p>
+          <div className="mb-6 flex items-center gap-4 rounded-xl border border-emerald-900/10 bg-gradient-to-r from-white to-emerald-50/70 p-5 shadow-sm sm:p-6">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#173c2d] text-xl text-[#facc15]"><FiBookOpen /></span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-emerald-800">Content studio</p>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">Update Course</h1>
+              <p className="mt-1 text-sm text-slate-600">Edit course details, outcomes, pricing, and instructors.</p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -318,6 +339,11 @@ const UpdataPaidCourseForm = ({ courseData }) => {
                 </div>
               </div>
             </div>
+
+            <LearningOutcomesEditor
+              outcomes={formData.learning_outcomes}
+              onChange={setLearningOutcomes}
+            />
 
             {/* Course Settings */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">

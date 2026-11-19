@@ -33,7 +33,7 @@ const LanguageSwitchButton = () => {
     <button
       type="button"
       onClick={toggleLanguage}
-      className="flex items-center gap-2.5 px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 ease-in-out group cursor-pointer"
+      className="group inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 text-xs font-bold text-gray-700 transition duration-200 hover:border-[#1b704b]/30 hover:bg-[#f4f8f5] hover:text-[#1b704b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b704b]"
       title={i18n.t("common.language")}
       aria-label={i18n.t(
         language === "bn" ? "common.switchToEnglish" : "common.switchToBangla",
@@ -46,10 +46,10 @@ const LanguageSwitchButton = () => {
             : "https://flagcdn.com/w40/bd.png"
         }
         alt={language === "bn" ? "Bangla" : "English"}
-        className="w-6 h-4 object-cover rounded shadow-sm border border-gray-100"
+        className="h-4 w-6 rounded-sm border border-gray-200 object-cover shadow-sm"
       />
 
-      <span className="text-sm font-semibold text-gray-700 group-hover:text-black">
+      <span className="tracking-wide">
         {language === "bn" ? "EN" : "BN"}
       </span>
     </button>

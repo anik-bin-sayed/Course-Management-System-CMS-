@@ -52,25 +52,24 @@ const UpdateCategoryModal = ({ onClose, setCategoryData, categoryData }) => {
   }, [categoryData]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 py-6 backdrop-blur-sm">
+      <div className="w-full max-w-md overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl shadow-slate-950/20">
         {/* Header */}
-        <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Create Category
-          </h2>
+        <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-white to-emerald-50/70 px-6 py-5">
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-800">Course organization</p><h2 className="mt-1 text-lg font-bold text-slate-900">Edit category</h2></div>
 
           <button
             type="button"
             onClick={handleClose}
-            className="text-2xl text-gray-400 hover:text-gray-600 px-2 flex items-center justify-center cursor-pointer"
+            aria-label="Close dialog"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-xl text-slate-400 transition hover:bg-white hover:text-slate-700"
           >
             &times;
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 p-6">
           {/* Title */}
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -81,7 +80,7 @@ const UpdateCategoryModal = ({ onClose, setCategoryData, categoryData }) => {
               type="text"
               name="name"
               placeholder="Enter category title"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               required
               value={formData.name}
               onChange={handleChange}
@@ -98,26 +97,27 @@ const UpdateCategoryModal = ({ onClose, setCategoryData, categoryData }) => {
               name="description"
               rows={4}
               placeholder="Enter category description"
-              className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100"
+              className="w-full resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               value={formData.description}
               onChange={handleChange}
             />
           </div>
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="rounded-lg border border-rose-100 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
+              className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="rounded-lg bg-yellow-400 px-5 py-2 text-sm font-medium text-black hover:bg-yellow-500 cursor-pointer"
+              disabled={isLoading}
+              className="rounded-lg bg-[#facc15] px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-[#e9b900] disabled:opacity-60"
             >
               {isLoading ? "Updating" : " update Category"}
             </button>

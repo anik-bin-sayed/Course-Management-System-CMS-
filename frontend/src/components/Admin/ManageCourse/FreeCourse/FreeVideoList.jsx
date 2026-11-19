@@ -5,6 +5,7 @@ import Image from "@/components/common/AppImage";
 import { useRouter } from "@/lib/navigation";
 
 import VideoModal from "../../../Home/VideoModal";
+import { FiVideo, FiPlus } from "react-icons/fi";
 
 import {
   useDeleteFreeCourseMutation,
@@ -26,6 +27,7 @@ const FreeVideoList = () => {
     refetch,
   } = useGetFreeCoursesQuery();
   const [deleteFreeCourse] = useDeleteFreeCourseMutation();
+  const freeVideos = freeCoursesData?.data ?? [];
 
   if (isFreeCoursesLoading) {
     return <FreeCourseListLoader />;
@@ -51,22 +53,29 @@ const FreeVideoList = () => {
   };
 
   return (
-    <div className="px-4 py-12">
+    <div className="w-full px-0 py-1">
       {/* Header */}
-      <div className="mx-auto mb-10 max-w-3xl text-center">
-        <h1 className="text-3xl font-bold text-gray-900">Free Video Courses</h1>
-
-        <p className="mt-3 text-gray-600">
-          Learn from industry experts – all content is completely free to watch.
-        </p>
+      <div className="mx-auto mb-6 flex max-w-7xl flex-col gap-4 rounded-xl border border-emerald-900/10 bg-gradient-to-r from-white to-emerald-50/70 p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <div className="flex items-center gap-4">
+          <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#173c2d] text-xl text-[#facc15]"><FiVideo /></span>
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-emerald-800">Free learning library</p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">Free Video Courses</h1>
+            <p className="mt-1 text-sm text-slate-600">Manage the free video content available to every learner.</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 self-start sm:self-center">
+          <span className="rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm font-semibold text-emerald-900">{freeVideos.length} videos</span>
+          <Link href="/admin/manage-course?tab=create-free-video" className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#facc15] px-4 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#e9b900]"><FiPlus size={16} /> Add video</Link>
+        </div>
       </div>
 
       {/* Course Grid */}
-      <div className="mx-auto max-w-7xl overflow-x-auto rounded-xl border border-yellow-100 bg-white shadow-sm">
+      <div className="mx-auto max-w-7xl overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full min-w-237.5">
           {/* Header */}
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-slate-100 bg-slate-50/80">
               <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Course
               </th>
@@ -87,16 +96,16 @@ const FreeVideoList = () => {
 
           {/* Body */}
           <tbody className="divide-y divide-gray-100">
-            {freeCoursesData?.data?.map((course) => (
+              {freeVideos.length ? freeVideos.map((course) => (
               <tr
                 key={course.id}
-                className="transition-colors duration-200 hover:bg-yellow-50/50"
+                className="transition-colors duration-200 hover:bg-emerald-50/40"
               >
                 {/* Course */}
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-4">
                     {/* Thumbnail */}
-                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-slate-100">
                       {course.thumbnail ? (
                         <Image
                           src={course.thumbnail}
@@ -137,7 +146,7 @@ const FreeVideoList = () => {
 
                 {/* Language */}
                 <td className="px-4 py-4">
-                  <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                  <span className="inline-flex rounded-md bg-amber-50 px-3 py-1 text-xs font-semibold capitalize text-amber-900">
                     {course.language}
                   </span>
                 </td>
@@ -149,7 +158,7 @@ const FreeVideoList = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCourse(course)}
-                      className="rounded-lg bg-yellow-400 px-4 py-2 text-sm font-medium text-black transition hover:bg-yellow-500 active:scale-95"
+                      className="rounded-lg bg-[#facc15] px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-[#e9b900] active:scale-95"
                     >
                       Watch
                     </button>
@@ -158,7 +167,7 @@ const FreeVideoList = () => {
                     <button
                       type="button"
                       onClick={() => handleEdit(course)}
-                      className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 active:scale-95"
+                      className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 active:scale-95"
                     >
                       Edit
                     </button>
@@ -168,14 +177,14 @@ const FreeVideoList = () => {
                       type="button"
                       disabled={deletingId === course.id}
                       onClick={() => handleDelete(course.id)}
-                      className="min-w-21.25 rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="min-w-21.25 rounded-lg border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {deletingId === course.id ? "Deleting..." : "Delete"}
                     </button>
                   </div>
                 </td>
               </tr>
-            ))}
+            )) : <tr><td colSpan="4" className="px-6 py-16 text-center"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-amber-50 text-amber-800"><FiVideo /></span><p className="mt-4 font-semibold text-slate-800">No free videos yet</p><p className="mt-1 text-sm text-slate-500">Create a free video course to get started.</p></td></tr>}
           </tbody>
         </table>
       </div>
@@ -187,8 +196,8 @@ const FreeVideoList = () => {
           onClose={() => setSelectedCourse(null)}
         />
       )}
-      <div className="text-center text-lg text-gray-900 mt-8">
-        {freeCoursesData && freeCoursesData.length > 7 && (
+      <div className="mt-6 text-center text-lg text-gray-900">
+        {freeVideos.length > 7 && (
           <Link
             href="/free-courses"
             className="py-2 px-4 rounded bg-yellow-400 text-black text-sm font-medium hover:bg-yellow-500 transition-colors duration-200"

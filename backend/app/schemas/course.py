@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from datetime import datetime
 
 from app.models.course import CourseType
@@ -12,10 +12,24 @@ from app.models.course import (
 )
 
 
+def normalize_learning_outcomes(value):
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = [value]
+    outcomes = [item.strip() for item in value if isinstance(item, str) and item.strip()]
+    if len(outcomes) > 20:
+        raise ValueError("A course can have at most 20 learning outcomes.")
+    if any(len(item) > 200 for item in outcomes):
+        raise ValueError("Each learning outcome must be 200 characters or fewer.")
+    return outcomes
+
+
 class CourseCreate(BaseModel):
     title: str = Field(..., min_length=3, max_length=255)
     short_description: str
     description: str
+    learning_outcomes: list[str] = Field(default_factory=list)
 
     price: Decimal
     discount_price: Decimal | None = None
@@ -30,6 +44,11 @@ class CourseCreate(BaseModel):
 
     category_id: int | None = None
     instructor_ids: list[str] = Field(default_factory=list)
+
+    @field_validator("learning_outcomes", mode="before")
+    @classmethod
+    def clean_learning_outcomes(cls, value):
+        return normalize_learning_outcomes(value) or []
 
 
 class CourseInstructorSummary(BaseModel):
@@ -68,6 +87,7 @@ class CourseResponse(BaseModel):
 
     short_description: str
     description: str
+    learning_outcomes: list[str] = Field(default_factory=list)
 
     category: CategoryResponse
 
@@ -103,6 +123,7 @@ class UpdateCourse(BaseModel):
     title: str = Field(..., min_length=3, max_length=255)
     short_description: str
     description: str
+    learning_outcomes: list[str] | None = None
 
     price: Decimal
     discount_price: Decimal | None = None
@@ -116,3 +137,8 @@ class UpdateCourse(BaseModel):
     end_date: datetime | None = None
 
     category_id: int | None = None
+
+    @field_validator("learning_outcomes", mode="before")
+    @classmethod
+    def clean_learning_outcomes(cls, value):
+        return normalize_learning_outcomes(value)

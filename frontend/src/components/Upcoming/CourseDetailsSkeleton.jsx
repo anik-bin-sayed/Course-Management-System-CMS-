@@ -2,30 +2,31 @@
 
 const CourseDetailsSkeleton = () => {
   return (
-    <main className="min-h-screen animate-pulse bg-gray-50">
+    <main className="min-h-screen animate-pulse bg-[#f6f8f7]">
       {/* Hero Section */}
-      <section className="bg-gray-900 pt-28 pb-12">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
+      <section className="bg-[#10251d] pb-12 pt-24 sm:pb-16 sm:pt-28">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-7 lg:px-10">
+          <div className="mb-6 h-4 w-48 rounded bg-white/10" />
+          <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
             {/* Left Content */}
             <div>
               {/* Badges */}
               <div className="mb-5 flex flex-wrap gap-3">
-                <div className="h-8 w-36 rounded-full bg-gray-700" />
-                <div className="h-8 w-28 rounded-full bg-gray-700" />
+                <div className="h-8 w-36 rounded-md bg-white/10" />
+                <div className="h-8 w-28 rounded-md bg-white/10" />
               </div>
 
               {/* Title */}
               <div className="space-y-3">
-                <div className="h-10 w-full rounded bg-gray-700 sm:h-12" />
-                <div className="h-10 w-4/5 rounded bg-gray-700 sm:h-12" />
+                <div className="h-10 w-full rounded-md bg-white/10 sm:h-12" />
+                <div className="h-10 w-4/5 rounded-md bg-white/10 sm:h-12" />
               </div>
 
               {/* Description */}
               <div className="mt-5 space-y-3">
-                <div className="h-4 w-full rounded bg-gray-700" />
-                <div className="h-4 w-11/12 rounded bg-gray-700" />
-                <div className="h-4 w-3/4 rounded bg-gray-700" />
+                <div className="h-4 w-full rounded-md bg-white/10" />
+                <div className="h-4 w-11/12 rounded-md bg-white/10" />
+                <div className="h-4 w-3/4 rounded-md bg-white/10" />
               </div>
 
               {/* Course Meta */}
@@ -37,20 +38,20 @@ const CourseDetailsSkeleton = () => {
             </div>
 
             {/* Thumbnail */}
-            <div className="overflow-hidden rounded-2xl bg-gray-800 shadow-2xl">
-              <div className="aspect-video w-full bg-gray-700" />
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5 shadow-xl">
+              <div className="aspect-video w-full bg-white/10" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12">
-        <div className="grid gap-8 lg:grid-cols-3">
+      <section className="mx-auto max-w-[1400px] px-4 py-8 sm:px-7 sm:py-10 lg:px-10 lg:py-12">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px] xl:gap-8">
           {/* Left Content */}
-          <div className="space-y-8 lg:col-span-2">
+          <div className="order-last min-w-0 space-y-5 lg:order-first">
             {/* About Course */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 sm:p-8">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="h-7 w-52 rounded bg-gray-200" />
 
               <div className="mt-5 space-y-3">
@@ -67,7 +68,7 @@ const CourseDetailsSkeleton = () => {
             </div>
 
             {/* What You'll Learn */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 sm:p-8">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="h-7 w-48 rounded bg-gray-200" />
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -85,7 +86,7 @@ const CourseDetailsSkeleton = () => {
             </div>
 
             {/* Course Information */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 sm:p-8">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="h-7 w-52 rounded bg-gray-200" />
 
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -106,7 +107,7 @@ const CourseDetailsSkeleton = () => {
             </div>
 
             {/* Course Schedule */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 sm:p-8">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="h-7 w-48 rounded bg-gray-200" />
 
               <div className="mt-6 space-y-4">
@@ -128,8 +129,8 @@ const CourseDetailsSkeleton = () => {
           </div>
 
           {/* Right Sidebar */}
-          <aside>
-            <div className="sticky top-24 overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
+          <aside className="order-first min-w-0 lg:order-last">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:sticky lg:top-24">
               {/* Price */}
               <div className="border-b border-gray-100 p-6">
                 <div className="h-4 w-24 rounded bg-gray-200" />

@@ -27,11 +27,12 @@ const MobileNavUserDetails = ({ profileData, setMobileMenuOpen }) => {
     }
   };
   return (
-    <div className="border-b border-gray-200 bg-gray-50">
+    <div className="border-b border-gray-100 bg-[#f7faf8] p-4">
       {/* Header */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between p-4 cursor-pointer"
+        aria-expanded={open}
+        className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl p-2 text-left transition hover:bg-white"
       >
         <div className="flex items-center gap-3">
           <Image
@@ -39,15 +40,15 @@ const MobileNavUserDetails = ({ profileData, setMobileMenuOpen }) => {
             alt="Profile"
             width={48}
             height={48}
-            className="h-12 w-12 rounded-full object-cover border border-gray-300 shrink-0"
+            className="h-12 w-12 shrink-0 rounded-full border border-white object-cover shadow-sm ring-2 ring-[#dcece1]"
           />
 
           <div className="min-w-0">
-            <h3 className="truncate font-semibold text-gray-800">
+            <h3 className="truncate text-sm font-bold text-[#17251d]">
               {profileData?.name}
             </h3>
 
-            <p className="truncate text-sm text-gray-500">
+            <p className="truncate text-xs text-gray-500">
               {profileData?.email}
             </p>
           </div>
@@ -62,14 +63,14 @@ const MobileNavUserDetails = ({ profileData, setMobileMenuOpen }) => {
 
       {/* Menu */}
       <div
-        className={`overflow-hidden transition-all duration-300 ${
+        className={`overflow-hidden transition-[max-height,opacity] duration-300 ${
           open ? "max-h-60" : "max-h-0"
         }`}
       >
-        <div className="px-3 pb-3 space-y-1">
+        <div className="space-y-1 px-2 pb-2 pt-1">
           <Link
             href="/profile"
-            className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+            className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm font-medium text-gray-700 transition hover:border-[#1b704b]/25 hover:bg-[#eff6f1] hover:text-[#1b704b]"
             onClick={() => setMobileMenuOpen(false)}
           >
             <FaUser />
@@ -79,7 +80,7 @@ const MobileNavUserDetails = ({ profileData, setMobileMenuOpen }) => {
           {profileData?.role === "admin" && (
             <Link
               href="/admin/users"
-              className="flex border border-gray-200 items-center gap-3 rounded-lg px-3 py-3 hover:bg-gray-100"
+              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm font-medium text-gray-700 transition hover:border-[#1b704b]/25 hover:bg-[#eff6f1] hover:text-[#1b704b]"
               onClick={() => setMobileMenuOpen(false)}
             >
               <FaUser />
@@ -89,7 +90,7 @@ const MobileNavUserDetails = ({ profileData, setMobileMenuOpen }) => {
 
           <button
             onClick={handleLogout}
-            className="flex border border-gray-200  w-full items-center gap-3 rounded-lg px-3 py-3 text-red-600 hover:bg-red-50 cursor-pointer"
+            className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm font-medium text-red-600 transition hover:border-red-100 hover:bg-red-50"
           >
             <FaSignOutAlt />
             <span>Logout</span>

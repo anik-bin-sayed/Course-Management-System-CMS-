@@ -50,7 +50,10 @@ const StudentGuard = ({ children }) => {
     return <Navigate to="/" replace state={{ from: location }} />;
   }
 
-  const hasEligibleEnrollment = enrollments?.some(isEnrollmentEligible);
+  const hasDashboardEnrollment = enrollments?.some(
+    (enrollment) =>
+      isEnrollmentEligible(enrollment) || enrollment?.status === "pending",
+  );
 
   if (isEnrollmentError && isDefinitiveAuthError(enrollmentError)) {
     return (
@@ -61,9 +64,9 @@ const StudentGuard = ({ children }) => {
   const isEnrollmentLoading =
     areEnrollmentsUninitialized ||
     isLoadingEnrollments ||
-    (isFetchingEnrollments && !hasEligibleEnrollment);
+    (isFetchingEnrollments && !hasDashboardEnrollment);
 
-  if (!isEnrollmentLoading && !isEnrollmentError && !hasEligibleEnrollment) {
+  if (!isEnrollmentLoading && !isEnrollmentError && !hasDashboardEnrollment) {
     return <Navigate to="/upcoming-course" replace />;
   }
 

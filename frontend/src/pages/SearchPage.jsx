@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -22,11 +23,12 @@ const VideoModal = lazy(() => import("@/components/Home/VideoModal"));
 
 // Updated Pagination: Cleaner button styles with subtle border and hover effects
 function SectionPagination({ page, totalPages, onChange }) {
+  const { t } = useTranslation();
   if (totalPages < 2) return null;
 
   return (
     <nav
-      className="mt-8 flex items-center justify-end gap-4"
+      className="mt-7 flex items-center justify-center gap-3 sm:justify-end"
       aria-label="Course result pages"
     >
       <button
@@ -34,19 +36,19 @@ function SectionPagination({ page, totalPages, onChange }) {
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
         aria-label="Previous page"
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-40"
+        className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition hover:border-[#1b704b]/30 hover:bg-[#eff6f1] hover:text-[#1b704b] disabled:cursor-not-allowed disabled:opacity-40"
       >
         <FiChevronLeft size={18} />
       </button>
-      <span className="text-sm font-medium text-gray-600">
-        Page {page} of {totalPages}
+      <span className="min-w-28 text-center text-sm font-medium text-gray-500">
+        {t("searchPage.pageOf", { page, total: totalPages })}
       </span>
       <button
         type="button"
         onClick={() => onChange(page + 1)}
         disabled={page >= totalPages}
         aria-label="Next page"
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-40"
+        className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition hover:border-[#1b704b]/30 hover:bg-[#eff6f1] hover:text-[#1b704b] disabled:cursor-not-allowed disabled:opacity-40"
       >
         <FiChevronRight size={18} />
       </button>
@@ -56,11 +58,12 @@ function SectionPagination({ page, totalPages, onChange }) {
 
 // Updated CourseCard: Enhanced shadows, border radius, badge styling, and image handling
 function CourseCard({ course, kind, onWatch }) {
+  const { t } = useTranslation();
   const isPaid = kind === "paid";
 
   const content = (
     <>
-      <div className="relative aspect-video w-full overflow-hidden bg-gray-100 rounded-t-xl">
+      <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
         {course.thumbnail ? (
           <AppImage
             src={course.thumbnail}
@@ -71,24 +74,24 @@ function CourseCard({ course, kind, onWatch }) {
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-gray-400">
-            Course image unavailable
+            {t("searchPage.missingImage")}
           </div>
         )}
 
         {/* Modern Badge with slight backdrop blur */}
         <span
           className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-sm backdrop-blur-sm ${
-            isPaid ? "bg-amber-500/90" : "bg-emerald-600/90"
+            isPaid ? "bg-[#173c2d]/90" : "bg-[#547160]/90"
           }`}
         >
-          {isPaid ? "Paid" : "Free"}
+          {isPaid ? t("courses.paid") : t("courses.free")}
         </span>
       </div>
 
       <div className="flex grow flex-col p-5">
         <div className="mb-3 flex items-center gap-2 text-xs font-medium capitalize text-gray-500">
           {course.level && (
-            <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600">
+            <span className="rounded-md bg-[#eff6f1] px-2 py-1 text-gray-600">
               {course.level}
             </span>
           )}
@@ -100,7 +103,7 @@ function CourseCard({ course, kind, onWatch }) {
           )}
         </div>
 
-        <h3 className="line-clamp-2 text-[17px] font-bold leading-snug text-gray-900 transition-colors group-hover:text-gray-700">
+        <h3 className="line-clamp-2 text-[17px] font-bold leading-snug text-[#17251d] transition-colors group-hover:text-[#1b704b]">
           {course.title}
         </h3>
 
@@ -132,9 +135,9 @@ function CourseCard({ course, kind, onWatch }) {
               event.preventDefault();
               onWatch(course);
             }}
-            className="mt-5 self-start rounded-md bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 hover:text-emerald-800"
+            className="mt-5 self-start rounded-lg bg-[#eff6f1] px-4 py-2.5 text-sm font-semibold text-[#1b704b] transition hover:bg-[#e1f1e7]"
           >
-            Watch course
+            {t("searchPage.watchCourse")}
           </button>
         )}
       </div>
@@ -144,12 +147,12 @@ function CourseCard({ course, kind, onWatch }) {
   return isPaid ? (
     <AppLink
       href={`/upcoming-course/${course.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-amber-200 hover:shadow-xl"
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_18px_40px_-24px_rgba(16,37,29,0.35)]"
     >
       {content}
     </AppLink>
   ) : (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl">
+    <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_18px_40px_-24px_rgba(16,37,29,0.35)]">
       {content}
     </article>
   );
@@ -169,43 +172,40 @@ function ResultsSection({
   onPageChange,
   onWatch,
 }) {
+  const { t } = useTranslation();
   const isPaid = kind === "paid";
 
   return (
-    <section className="py-10 first:pt-4">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-gray-100 pb-4">
+    <section className="py-8 first:pt-3">
+      <div className="mb-5 flex flex-col justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-end">
         <div>
-          <p
-            className={`text-xs font-bold uppercase tracking-widest ${
-              isPaid ? "text-amber-600" : "text-emerald-600"
-            }`}
-          >
-            {isPaid ? "Premium Learning" : "Learn for Free"}
+          <p className="inline-flex rounded-md bg-[#eff6f1] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#276143]">
+            {isPaid ? t("searchPage.premiumLabel") : t("searchPage.freeLabel")}
           </p>
-          <h2 className="mt-1.5 text-2xl font-extrabold text-gray-900">
-            {title}
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-[#17251d]">
+            {t(title)}
           </h2>
-          <p className="mt-1 text-sm text-gray-500">{description}</p>
+          <p className="mt-1 text-sm text-gray-500">{t(description)}</p>
         </div>
         {!isLoading && !isError && (
-          <span className="shrink-0 rounded-full bg-gray-50 px-3 py-1 text-sm font-medium text-gray-600 border border-gray-100">
-            {total} {total === 1 ? "course" : "courses"}
+          <span className="inline-flex w-fit shrink-0 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-600">
+            {t("searchPage.courseCount", { count: total })}
           </span>
         )}
       </div>
 
       {isLoading ? (
         <div
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
-          aria-label={`Loading ${title}`}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          aria-label={`Loading ${t(title)}`}
         >
           {Array.from({ length: 4 }, (_, index) => (
             <div
               key={index}
-              className="flex h-[340px] animate-pulse flex-col overflow-hidden rounded-xl border border-gray-100 bg-white"
+              className="flex h-[340px] animate-pulse flex-col overflow-hidden rounded-lg border border-gray-200 bg-white"
             >
-              <div className="h-48 w-full bg-gray-100" />
-              <div className="p-5 flex flex-col gap-3">
+              <div className="aspect-video w-full bg-gray-100" />
+              <div className="flex flex-col gap-3 p-5">
                 <div className="h-4 w-1/3 rounded bg-gray-100" />
                 <div className="h-5 w-full rounded bg-gray-100" />
                 <div className="h-5 w-4/5 rounded bg-gray-100" />
@@ -217,19 +217,19 @@ function ResultsSection({
       ) : isError ? (
         <div
           role="alert"
-          className="flex items-center justify-center rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm font-medium text-red-600"
+          className="flex items-center justify-center rounded-lg border border-red-100 bg-white p-8 text-center text-sm font-medium text-red-600"
         >
-          Could not load {title.toLowerCase()}. Please try again.
+          {t("searchPage.loadError", { title: t(title).toLowerCase() })}
         </div>
       ) : courses.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center sm:p-12">
           <p className="text-sm font-medium text-gray-500">
-            No matching {isPaid ? "paid" : "free"} courses found.
+            {t(isPaid ? "searchPage.paidEmpty" : "searchPage.freeEmpty")}
           </p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {courses.map((course) => (
               <CourseCard
                 key={course.id}
@@ -251,6 +251,7 @@ function ResultsSection({
 }
 
 export default function SearchPage() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = (searchParams.get("q") || "").trim();
@@ -287,91 +288,117 @@ export default function SearchPage() {
 
   const handleWatch = (course) => {
     if (!isAuthenticated) {
-      toast.error("Please log in to watch this course.");
+      toast.error(t("searchPage.loginPrompt"));
       return;
     }
     setSelectedCourse(course);
   };
 
+  const paidData = paidResults.data || cachedPaidData;
+  const freeData = freeResults.data;
+  const resultCount = (paidData?.total || 0) + (freeData?.total || 0);
+
   return (
-    <main className="min-h-screen bg-gray-50/50 px-4 pb-20 pt-28 sm:px-6 lg:px-8 font-sans">
+    <main className="min-h-screen bg-[#f7faf8] px-5 pb-16 pt-24 sm:px-8 sm:pt-28 lg:px-10">
       <div className="mx-auto max-w-7xl">
-        <header className="mb-10  p-8 sm:p-10">
-          <div className="max-w-3xl">
-            <form
-              className="mt-8 flex flex-col sm:flex-row gap-3"
-              onSubmit={(event) => {
-                event.preventDefault();
-                const value = new FormData(event.currentTarget)
-                  .get("q")
-                  .toString()
-                  .trim();
-                router.push(
-                  value ? `/search?q=${encodeURIComponent(value)}` : "/search",
-                );
-              }}
-            >
-              <label className="sr-only" htmlFor="course-search">
-                Search courses
-              </label>
-              <div className="relative grow">
-                <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-                <input
-                  id="course-search"
-                  name="q"
-                  defaultValue={query}
-                  placeholder="Try Python, UI/UX design, or marketing..."
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-4 py-3.5 text-gray-900 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10"
-                />
-              </div>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-8 py-3.5 font-semibold text-white transition hover:bg-gray-800 focus:ring-4 focus:ring-gray-900/20"
-              >
-                <span className="hidden sm:inline">Search</span>
-                <FiSearch className="sm:hidden text-lg" />
-              </button>
-            </form>
+        <header className="mb-7 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_8px_30px_-24px_rgba(16,37,29,0.4)] sm:mb-8 sm:p-7 lg:p-8">
+          <div className="flex items-start gap-3.5 sm:gap-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#eff6f1] text-[#1b704b] sm:h-12 sm:w-12">
+              <FiSearch className="text-xl" />
+            </span>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold tracking-tight text-[#17251d] sm:text-3xl">
+                {t("searchPage.title")}
+              </h1>
+              <p className="mt-1.5 text-sm leading-6 text-gray-500 sm:text-base">
+                {t("searchPage.description")}
+              </p>
+            </div>
           </div>
+
+          <form
+            className="mt-6 flex flex-col gap-3 sm:flex-row"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const value = new FormData(event.currentTarget)
+                .get("q")
+                ?.toString()
+                .trim();
+              router.push(
+                value ? `/search?q=${encodeURIComponent(value)}` : "/search",
+              );
+            }}
+          >
+            <label className="sr-only" htmlFor="course-search">
+              {t("common.searchCourses")}
+            </label>
+            <div className="relative grow">
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-lg text-gray-400" />
+              <input
+                key={query}
+                id="course-search"
+                name="q"
+                defaultValue={query}
+                placeholder={t("searchPage.placeholder")}
+                className="w-full rounded-lg border border-gray-200 bg-[#f8faf8] py-3.5 pl-11 pr-4 text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 hover:border-gray-300 focus:border-[#1b704b]/50 focus:bg-white focus:ring-4 focus:ring-[#1b704b]/10"
+              />
+            </div>
+            <button
+              type="submit"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#173c2d] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-[#225c42] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b704b] sm:min-w-32"
+            >
+              <FiSearch className="text-base" />
+              {t("searchPage.search")}
+            </button>
+          </form>
         </header>
 
         {!query ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white p-16 text-center shadow-sm">
-            <div className="mb-4 rounded-full bg-gray-100 p-4">
-              <FiSearch className="text-2xl text-gray-400" />
-            </div>
-            <p className="text-lg font-medium text-gray-900">
-              Ready to learn something new?
-            </p>
-            <p className="mt-2 text-gray-500 max-w-md">
-              Enter a topic in the search bar above to explore both our premium
-              and free courses.
+          <div className="flex min-h-64 flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center">
+            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#eff6f1] text-[#547160]">
+              <FiSearch className="text-xl" />
+            </span>
+            <h2 className="text-lg font-semibold text-[#17251d]">
+              {t("searchPage.emptyTitle")}
+            </h2>
+            <p className="mt-2 max-w-md text-sm leading-6 text-gray-500">
+              {t("searchPage.emptyDescription")}
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
+            <div className="mb-1 flex flex-wrap items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm">
+              <span className="text-gray-500">{t("searchPage.resultsFor")}</span>
+              <span className="max-w-full truncate rounded-md bg-[#eff6f1] px-2.5 py-1 font-semibold text-[#276143]">
+                {query}
+              </span>
+              {!paidResults.isLoading && !freeResults.isLoading && (
+                <span className="ml-auto text-xs font-medium text-gray-500">
+                  {t("searchPage.resultsCount", { count: resultCount })}
+                </span>
+              )}
+            </div>
+
             <ResultsSection
-              title="Paid courses"
-              description="Structured courses with one-time pricing and expert guidance."
+              title="searchPage.paidTitle"
+              description="searchPage.paidDescription"
               kind="paid"
-              courses={(paidResults.data || cachedPaidData)?.data || []}
-              total={(paidResults.data || cachedPaidData)?.total || 0}
+              courses={paidData?.data || []}
+              total={paidData?.total || 0}
               page={paidPage}
-              totalPages={
-                (paidResults.data || cachedPaidData)?.total_pages || 1
-              }
+              totalPages={paidData?.total_pages || 1}
               isLoading={paidResults.isLoading && !cachedPaidData}
               isError={paidResults.isError && !cachedPaidData}
               onPageChange={setPaidPage}
             />
             <ResultsSection
-              title="Free courses"
-              description="Start learning today with our free high-quality video courses."
+              title="searchPage.freeTitle"
+              description="searchPage.freeDescription"
               kind="free"
-              courses={freeResults.data?.data || []}
-              total={freeResults.data?.total || 0}
+              courses={freeData?.data || []}
+              total={freeData?.total || 0}
               page={freePage}
-              totalPages={freeResults.data?.total_pages || 1}
+              totalPages={freeData?.total_pages || 1}
               isLoading={freeResults.isLoading}
               isError={freeResults.isError}
               onPageChange={setFreePage}
@@ -384,7 +411,10 @@ export default function SearchPage() {
       {selectedCourse && (
         <Suspense
           fallback={
-            <LoadingFallback label="Loading video..." variant="modal" />
+            <LoadingFallback
+              label={t("freeCourse.loadingVideo")}
+              variant="modal"
+            />
           }
         >
           <VideoModal

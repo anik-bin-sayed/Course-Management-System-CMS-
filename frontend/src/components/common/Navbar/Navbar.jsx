@@ -1,8 +1,15 @@
-import { useEffect, useState, useRef } from "react";
-import Link from "@/components/common/AppLink";
+import { useEffect, useRef, useState } from "react";
+import { FaBars, FaSearch, FaTimes } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
+
+import AppLink from "../AppLink.jsx";
+import Search from "./Search.jsx";
+import SideLogin from "../../Sidebar/SideLogin.jsx";
+import NavbarUserDetails from "./NavbarUserDetails.jsx";
+import MobileNavUserDetails from "./MovileNavUserDetails.jsx";
+import LanguageSwitchButton from "./LanguageSwitchButton.jsx";
 import { setUser } from "../../../lib/features/auth/authSlice.js";
 import { useGetProfileQuery } from "../../../lib/features/auth/authApi";
 import {
@@ -10,35 +17,13 @@ import {
   useGetMyEnrollmentsQuery,
 } from "../../../lib/features/enrollment/enrollmentApi";
 
-import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
-
-import Search from "./Search.jsx";
-import SideLogin from "../../Sidebar/SideLogin.jsx";
-import NavbarUserDetails from "./NavbarUserDetails.jsx";
-import MobileNavUserDetails from "./MovileNavUserDetails.jsx";
-import LanguageSwitchButton from "./LanguageSwitchButton.jsx";
-import AppLink from "../AppLink.jsx";
-
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const navRef = useRef();
-  const menuRef = useRef();
-  const searchInputRef = useRef();
-  const dropdownRef = useRef(null);
-
-  const desktopLinksRef = useRef(null);
-  const desktopLinkRefs = useRef({});
-  const [highlightStyle, setHighlightStyle] = useState({
-    left: 0,
-    width: 0,
-    opacity: 0,
-  });
+  const navRef = useRef(null);
+  const menuRef = useRef(null);
+  const lastScrollY = useRef(0);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -58,6 +43,7 @@ const Navbar = () => {
   } = useGetMyEnrollmentsQuery(undefined, {
     skip: profileData?.role !== "student",
   });
+
   const dashboardHref =
     profileData?.role === "student" ? "/dashboard" : "/admin/manage-course";
   const hasEligibleEnrollment = enrollments?.some(isEnrollmentEligible);
@@ -71,72 +57,21 @@ const Navbar = () => {
       : ["admin", "instructor"].includes(profileData?.role);
 
   useEffect(() => {
-    if (location.state?.openLogin) {
-      setSidebarOpen(true);
-    }
+    if (location.state?.openLogin) setSidebarOpen(true);
   }, [location.state]);
 
-  const desktopNavItems = [
-    { id: "job-success", href: "/job-success", label: t("common.jobSuccess") },
-    {
-      id: "upcoming-course",
-      href: "/upcoming-course",
-      label: t("common.allCourses"),
-    },
-    {
-      id: "free-courses",
-      href: "/free-courses",
-      label: t("common.freeCourses"),
-    },
-  ];
-
-  const activeDesktopId =
-    desktopNavItems.find((item) => location.pathname === item.href)?.id || null;
-
   useEffect(() => {
-    const updateHighlight = () => {
-      if (!desktopLinksRef.current) return;
-      const activeEl = desktopLinkRefs.current[activeDesktopId];
-      const navEl = desktopLinksRef.current;
-      if (!activeEl || !navEl) {
-        setHighlightStyle((prev) => ({ ...prev, opacity: 0 }));
-        return;
-      }
-      const navRect = navEl.getBoundingClientRect();
-      const elRect = activeEl.getBoundingClientRect();
-      setHighlightStyle({
-        left: elRect.left - navRect.left + navEl.scrollLeft,
-        width: elRect.width,
-        opacity: 1,
-      });
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const shouldShow = currentScrollY <= 100 || currentScrollY < lastScrollY.current;
+      setShowNavbar((current) => (current === shouldShow ? current : shouldShow));
+      if (!shouldShow) setMobileMenuOpen(false);
+      lastScrollY.current = currentScrollY;
     };
 
-    updateHighlight();
-
-    const raf = requestAnimationFrame(updateHighlight);
-    window.addEventListener("resize", updateHighlight);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", updateHighlight);
-    };
-  }, [activeDesktopId, location.pathname]);
-
-  const handleScroll = () => {
-    const currentScrollY = window.scrollY;
-    if (currentScrollY > lastScrollY && currentScrollY > 100) {
-      setShowNavbar(false);
-      if (mobileMenuOpen) setMobileMenuOpen(false);
-    } else {
-      setShowNavbar(true);
-    }
-    setLastScrollY(currentScrollY);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, mobileMenuOpen]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -156,22 +91,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setMobileMenuOpen(false);
+      if (window.innerWidth >= 1280) setMobileMenuOpen(false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
   useEffect(() => {
@@ -181,139 +104,132 @@ const Navbar = () => {
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent("navbar-visibility-change", {
-        detail: {
-          visible: showNavbar,
-        },
+        detail: { visible: showNavbar },
       }),
     );
   }, [showNavbar]);
 
-  const handleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  const normalizedPath = location.pathname.replace(/^\/bn(?=\/|$)/, "") || "/";
+  const navItems = [
+    { href: "/job-success", label: t("common.jobSuccess") },
+    { href: "/upcoming-course", label: t("common.allCourses") },
+    { href: "/free-courses", label: t("common.freeCourses") },
+  ];
+
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+  const openLogin = () => {
+    setMobileMenuOpen(false);
+    setSidebarOpen(true);
   };
 
   return (
     <>
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
-          onClick={() => setMobileMenuOpen(false)}
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          className="fixed inset-0 z-40 bg-[#07130d]/45 backdrop-blur-sm xl:hidden"
+          onClick={closeMobileMenu}
         />
       )}
 
       <nav
         ref={navRef}
-        className={`bg-white border-b border-gray-100 px-4 sm:px-6 py-3 fixed top-0 left-0 right-0 z-50 transition-transform duration-150 ease-out ${
+        aria-label="Main navigation"
+        className={`fixed inset-x-0 top-0 z-50 border-b border-gray-200/70 bg-white/95 px-4 py-3 shadow-[0_8px_30px_-24px_rgba(16,37,29,0.45)] backdrop-blur-xl transition-transform duration-300 ease-out sm:px-6 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="max-w-350 mx-auto flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center font-bold text-lg">
-              Learn
-            </div>
-            <span className="text-xl font-bold text-gray-900 tracking-tight">
-              Hub
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <AppLink href="/" className="group inline-flex shrink-0 items-center gap-2.5">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffd84d] text-xs font-black tracking-tight text-[#17251d] shadow-sm transition duration-300 group-hover:-rotate-3 group-hover:scale-105">
+              LH
             </span>
-          </Link>
+            <span className="text-lg font-bold tracking-tight text-[#17251d] sm:text-xl">
+              Learn<span className="text-[#1b704b]">Hub</span>
+            </span>
+          </AppLink>
 
-          <div className="hidden lg:flex flex-1 max-w-md ml-6">
-            <Search
-              query={""}
-              setQuery={() => {}}
-              searchInputRef={searchInputRef}
-            />
+      <div className="hidden min-w-0 flex-1 xl:block xl:max-w-[260px]">
+            <Search />
           </div>
 
-          <div className="hidden lg:flex items-center gap-6">
-            <div
-              ref={desktopLinksRef}
-              className="relative flex items-center gap-6"
-            >
-              <div
-                className="pointer-events-none absolute bottom-0 rounded-full bg-black transition-all duration-300 ease-out"
-                style={{
-                  left: `${highlightStyle.left}px`,
-                  width: `${highlightStyle.width}px`,
-                  height: "2px",
-                  opacity: highlightStyle.opacity,
-                }}
-              />
+          <div className="hidden items-center gap-1 xl:flex">
+            {navItems.map((item) => {
+              const isActive =
+                normalizedPath === item.href ||
+                normalizedPath.startsWith(`${item.href}/`);
+              return (
+                <AppLink
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`rounded-xl px-3 py-2.5 text-[13px] font-semibold transition duration-200 xl:px-3.5 xl:text-sm ${
+                    isActive
+                      ? "bg-[#eff6f1] text-[#1b704b]"
+                      : "text-gray-600 hover:bg-gray-100/80 hover:text-[#17251d]"
+                  }`}
+                >
+                  {item.label}
+                </AppLink>
+              );
+            })}
+          </div>
 
-              {desktopNavItems.map((item) => {
-                const isActive = activeDesktopId === item.id;
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    ref={(el) => {
-                      desktopLinkRefs.current[item.id] = el;
-                    }}
-                    className={`relative pb-2 text-sm transition-colors duration-200 ${
-                      isActive
-                        ? "font-semibold text-black"
-                        : "font-medium text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-
-            <div className="h-5 w-px bg-gray-300 mx-1"></div>
-
+          <div className="hidden items-center gap-3 xl:flex">
             <LanguageSwitchButton />
-
             {!isLoading && profileData && showDashboardLink && (
               <AppLink
                 href={dashboardHref}
-                className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
+                className="rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm font-semibold text-gray-700 transition duration-200 hover:border-[#1b704b]/30 hover:bg-[#eff6f1] hover:text-[#1b704b]"
               >
-                <span>{t("dashboard.title")}</span>
+                {t("dashboard.title")}
               </AppLink>
             )}
-
-            {!isLoading && (
-              <>
-                {profileData ? (
-                  <NavbarUserDetails profileData={profileData} />
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={handleSidebar}
-                      className="bg-[#FFD700] text-black text-sm font-bold px-5 py-2 rounded-md hover:bg-yellow-500 transition shadow-sm cursor-pointer"
-                    >
-                      {t("common.login")} / {t("common.register")}
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
+            {!isLoading &&
+              (profileData ? (
+                <NavbarUserDetails profileData={profileData} />
+              ) : (
+                <button
+                  type="button"
+                  onClick={openLogin}
+                  className="rounded-xl bg-[#173c2d] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[#225c42] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b704b]"
+                >
+                  {t("common.login")} / {t("common.register")}
+                </button>
+              ))}
           </div>
 
-          <div className="flex lg:hidden items-center gap-3">
+          <div className="flex items-center gap-2 xl:hidden">
             <LanguageSwitchButton />
             <AppLink
               href="/search"
-              className="p-2 text-gray-600 bg-gray-100 rounded-full"
+              aria-label={t("common.search")}
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50 hover:text-[#1b704b]"
             >
-              <FaSearch size={18} />
+              <FaSearch size={15} />
             </AppLink>
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-600 bg-gray-100 rounded-full focus:outline-none"
-              aria-label="Toggle menu"
+              type="button"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173c2d] text-white transition hover:bg-[#225c42] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b704b]"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
-              {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+              {mobileMenuOpen ? <FaTimes size={17} /> : <FaBars size={17} />}
             </button>
           </div>
         </div>
       </nav>
 
-      <div
+      <aside
+        id="mobile-navigation"
         ref={menuRef}
-        className={`fixed top-15 right-0 h-full w-72 bg-white z-50 shadow-2xl lg:hidden transition-transform duration-300 ease-in-out ${
+        aria-label="Mobile navigation"
+        aria-hidden={!mobileMenuOpen}
+        inert={!mobileMenuOpen}
+        className={`fixed right-0 top-[65px] z-50 flex h-[calc(100dvh-65px)] w-[min(21rem,88vw)] flex-col overflow-y-auto border-l border-gray-200 bg-white shadow-2xl transition-transform duration-300 ease-out xl:hidden ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -324,60 +240,56 @@ const Navbar = () => {
           />
         )}
 
-        <div className="p-5 space-y-2 flex flex-col">
+        <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">
           {!isLoading &&
             !isFetchingProfile &&
             profileData &&
             showDashboardLink && (
-              <Link
+              <AppLink
                 href={dashboardHref}
-                className="px-4 py-2 text-gray-50 bg-gray-800 hover:text-white hover:bg-black rounded"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
+                className="mb-2 flex items-center justify-between rounded-xl bg-[#173c2d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#225c42]"
               >
                 {t("dashboard.title")}
-              </Link>
+                <span aria-hidden="true">→</span>
+              </AppLink>
             )}
 
-          <Link
-            href="/job-success"
-            className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {t("common.jobSuccess")}
-          </Link>
-          <Link
-            href="/free-courses"
-            className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {t("common.freeCourses")}
-          </Link>
-          <Link
-            href="/upcoming-course"
-            className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {t("common.allCourses")}
-          </Link>
+          {navItems.map((item) => {
+            const isActive =
+              normalizedPath === item.href ||
+              normalizedPath.startsWith(`${item.href}/`);
+            return (
+              <AppLink
+                key={item.href}
+                href={item.href}
+                onClick={closeMobileMenu}
+                aria-current={isActive ? "page" : undefined}
+                className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-semibold transition ${
+                  isActive
+                    ? "bg-[#eff6f1] text-[#1b704b]"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-[#1b704b]"
+                }`}
+              >
+                {item.label}
+                {isActive && <span className="h-1.5 w-1.5 rounded-full bg-[#1b704b]" />}
+              </AppLink>
+            );
+          })}
 
           {!isLoading && !profileData && (
-            <div className="pt-4 mt-2 border-t border-gray-100 flex flex-col gap-2">
+            <div className="mt-auto border-t border-gray-100 pt-5">
               <button
-                onClick={handleSidebar}
-                className="w-full py-2.5 text-center text-gray-700 font-semibold rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
+                type="button"
+                onClick={openLogin}
+                className="w-full rounded-xl bg-[#ffd84d] px-4 py-3.5 text-sm font-bold text-[#17251d] transition hover:bg-[#ffe47b]"
               >
-                {t("common.login")}
-              </button>
-              <button
-                onClick={handleSidebar}
-                className="w-full py-2.5 text-center text-black font-bold rounded-md bg-[#FFD700] hover:bg-yellow-500 transition-colors"
-              >
-                {t("common.register")}
+                {t("common.login")} / {t("common.register")}
               </button>
             </div>
           )}
         </div>
-      </div>
+      </aside>
 
       <SideLogin isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>

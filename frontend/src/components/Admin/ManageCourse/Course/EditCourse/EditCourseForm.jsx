@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "@/components/common/AppImage";
 import { useRouter } from "@/lib/navigation";
 import { IoMdClose } from "react-icons/io";
+import { FiVideo } from "react-icons/fi";
 import { useUpdateFreeCourseMutation } from "../../../../../lib/features/courses/free-course-api";
 
 const initialState = {
@@ -115,18 +116,20 @@ const EditCourseForm = ({ editData }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Edit Free Video</h1>
-        <p className="mt-2 text-sm text-gray-500">
-          Update your video course details.
-        </p>
+    <div className="mx-auto w-full max-w-5xl space-y-5 px-0 py-1">
+      <div className="flex items-center gap-4 rounded-xl border border-emerald-900/10 bg-gradient-to-r from-white to-emerald-50/70 p-5 shadow-sm sm:p-6">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#173c2d] text-xl text-[#facc15]"><FiVideo /></span>
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-emerald-800">Content studio</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">Edit Free Video</h1>
+          <p className="mt-1 text-sm text-slate-600">Update video details, thumbnail, and publishing status.</p>
+        </div>
       </div>
 
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 space-y-6"
+        className="space-y-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
       >
         <div>
           <label

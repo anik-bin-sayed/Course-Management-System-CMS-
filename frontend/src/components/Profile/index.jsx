@@ -86,31 +86,37 @@ const Profile = () => {
     }
   };
 
-  // if (isLoading) {
-  //   return <ProfileLoader />;
-  // }
+  if (isLoading) return <ProfileLoader />;
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#f6f8f7]">
       <ProfileNavbar profile={profile} />
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-9">
         <MobileSectionTopBar />
 
-        <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <div className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800">Account</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Your profile</h1>
+          <p className="mt-1 text-sm text-slate-500">Manage your personal information and account details.</p>
+        </div>
+
+        <div className="grid items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)] xl:gap-6">
           {/*  LEFT PROFILE CARD  */}
           <aside className="h-fit lg:sticky lg:top-24">
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
               {/* Profile Header */}
-              <div className="px-6 pb-6 pt-8">
+              <div className="relative px-5 pb-6 pt-0 sm:px-6">
+                <div className="-mx-5 h-24 bg-[#173c2d] sm:-mx-6 sm:h-28" />
                 <div className="flex flex-col items-center text-center">
                   {/* Avatar */}
-                  <div className="relative">
+                  <div className="relative -mt-14">
                     <button
                       type="button"
                       onClick={() => setPreviewOpen(true)}
                       className="group relative block cursor-pointer"
                     >
-                      <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-lg ring-1 ring-slate-200">
+                      <div className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-md ring-1 ring-slate-200 sm:h-32 sm:w-32">
                         <Image
                           src={profile?.avatar || "/images/default.jpg"}
                           alt={`${profile?.name || "User"} profile`}
@@ -141,7 +147,7 @@ const Profile = () => {
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploading}
                       aria-label="Change profile picture"
-                      className="absolute bottom-0 right-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-4 border-white bg-yellow-400 text-slate-900 shadow-md transition hover:bg-yellow-500 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="absolute bottom-0 right-0 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-4 border-white bg-yellow-400 text-slate-900 shadow-sm transition hover:bg-yellow-500 disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       <FaCamera size={15} />
                     </button>
@@ -156,9 +162,9 @@ const Profile = () => {
                   </div>
 
                   {/* Name */}
-                  <h1 className="mt-5 text-2xl font-bold tracking-tight text-slate-900">
-                    {profile?.name}
-                  </h1>
+                  <h2 className="mt-4 max-w-full truncate text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+                    {profile?.name || "Your name"}
+                  </h2>
 
                   {/* Country */}
                   <div className="mt-2">
@@ -166,19 +172,19 @@ const Profile = () => {
                   </div>
 
                   {/* Email */}
-                  <p className="mt-2 max-w-full truncate px-4 text-sm text-slate-500">
+                  <p className="mt-2 max-w-full truncate px-2 text-sm text-slate-500">
                     {profile?.email}
                   </p>
 
                   {/* Role */}
-                  <span className="mt-4 inline-flex items-center rounded-full bg-yellow-50 px-4 py-1.5 text-xs font-semibold capitalize text-yellow-700 ring-1 ring-yellow-200">
+                  <span className="mt-3 inline-flex items-center rounded-md bg-emerald-50 px-3 py-1.5 text-xs font-semibold capitalize text-emerald-800 ring-1 ring-emerald-100">
                     {profile?.role}
                   </span>
 
                   {/* Edit Button */}
                   <Link
                     href="/profile/edit"
-                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                    className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#173c2d] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#24563e]"
                   >
                     <FaEdit size={13} />
                     Edit Profile
@@ -187,7 +193,7 @@ const Profile = () => {
 
                 {/* Bio */}
                 {profile?.bio && (
-                  <div className="mt-7 border-t border-slate-100 pt-6">
+                  <div className="mt-6 border-t border-slate-100 pt-5">
                     <p className="text-center text-sm leading-6 text-slate-600">
                       {profile.bio}
                     </p>
@@ -196,7 +202,7 @@ const Profile = () => {
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-2 border-t border-slate-100 bg-slate-50">
+              <div className="grid grid-cols-2 border-t border-slate-100 bg-slate-50/80">
                 <div className="px-4 py-4 text-center">
                   <p className="text-xs font-medium text-slate-500">Status</p>
 
@@ -242,17 +248,17 @@ const Profile = () => {
 
           {/*  RIGHT CONTENT  */}
           <section className="min-w-0">
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
               {/* Header */}
               <div className="border-b border-slate-100 px-5 py-5 sm:px-7">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <h2 className="text-xl font-bold tracking-tight text-slate-900">
-                      Account Information
+                      Personal information
                     </h2>
 
                     <p className="mt-1 text-sm text-slate-500">
-                      View and manage your personal account details.
+                      Your contact, social and account details.
                     </p>
                   </div>
 
@@ -260,7 +266,7 @@ const Profile = () => {
                   <button
                     type="button"
                     onClick={copyId}
-                    className="group flex max-w-full items-center gap-2 self-start rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm transition hover:border-slate-300 hover:bg-slate-100 sm:self-auto"
+                    className="group flex max-w-full items-center gap-2 self-start rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm transition hover:border-slate-300 hover:bg-slate-100 sm:self-auto"
                   >
                     <span className="max-w-44 truncate font-medium text-slate-600">
                       ID: {profile?.id}

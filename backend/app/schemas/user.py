@@ -27,7 +27,7 @@ class VerifyEmailRequest(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
-    remember_me: bool = False
+    remember_me: bool = True
 
 
 class UserResponse(BaseModel):

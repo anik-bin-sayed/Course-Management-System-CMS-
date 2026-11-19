@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -25,7 +23,7 @@ const LoginRegister = ({
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
 
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   // LOADING
 
@@ -162,7 +160,9 @@ const LoginRegister = ({
       await login({
         email: email.trim().toLowerCase(),
         password,
+        remember_me: rememberMe,
       }).unwrap();
+
       onClose();
       setShowCloseConfirm(false);
       refetchProfile();
@@ -208,7 +208,7 @@ const LoginRegister = ({
   };
 
   return (
-    <div className="flex items-center justify-center px-4 py-8 md:py-0 m">
+    <div className="flex items-center justify-center px-4 py-8 md:py-0">
       <div className="w-full max-w-sm sm:px-8 sm:py-6 md:px-10 md:py-8">
         {/* LOGO */}
         <div className="flex items-center justify-center gap-2 mb-6">
@@ -466,7 +466,7 @@ const LoginRegister = ({
                         onChange={(e) => setRememberMe(e.target.checked)}
                         className="w-4 h-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500 accent-yellow-500"
                       />
-                      Remember me
+                      Keep me signed in
                     </label>
                   </div>
 

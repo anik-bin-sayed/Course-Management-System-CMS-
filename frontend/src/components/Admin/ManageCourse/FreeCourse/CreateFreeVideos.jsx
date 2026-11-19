@@ -2,6 +2,7 @@
 
 import Image from "@/components/common/AppImage";
 import React, { useEffect, useRef, useState } from "react";
+import { FiVideo } from "react-icons/fi";
 
 import { useCreateFreeVideoMutation } from "../../../../lib/features/courses/free-course-api";
 
@@ -124,20 +125,21 @@ const CreateFreeVideos = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8">
+    <div className="mx-auto w-full max-w-5xl space-y-5 px-0 py-1">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Create Free Video</h1>
-
-        <p className="mt-2 text-sm text-gray-500">
-          Create and publish a free video course for your audience.
-        </p>
+      <div className="flex items-center gap-4 rounded-xl border border-emerald-900/10 bg-gradient-to-r from-white to-emerald-50/70 p-5 shadow-sm sm:p-6">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#173c2d] text-xl text-[#facc15]"><FiVideo /></span>
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-emerald-800">Content studio</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">Create Free Video</h1>
+          <p className="mt-1 text-sm text-slate-600">Add a lesson video to the free learning library.</p>
+        </div>
       </div>
 
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 space-y-6"
+        className="space-y-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
       >
         {/* Title */}
         <div>
@@ -326,14 +328,14 @@ const CreateFreeVideos = () => {
           {!thumbnailPreview ? (
             <label
               htmlFor="thumbnail"
-              className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+              className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/70 transition hover:border-emerald-400 hover:bg-emerald-50/40"
             >
               <div className="text-center">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-semibold text-slate-800">
                   Click to upload thumbnail
                 </p>
 
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="mt-1 text-xs text-slate-500">
                   PNG, JPG, JPEG or WEBP
                 </p>
               </div>
@@ -355,7 +357,7 @@ const CreateFreeVideos = () => {
                   src={thumbnailPreview}
                   alt="Thumbnail preview"
                   fill
-                  className="object-cover rounded-lg border border-gray-200"
+                  className="rounded-lg border border-slate-200 object-cover"
                   sizes="160px"
                 />
 
@@ -382,7 +384,7 @@ const CreateFreeVideos = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="mt-2 text-sm font-medium text-blue-600 hover:text-blue-700 text-left"
+                  className="mt-2 text-left text-sm font-semibold text-emerald-800 hover:text-emerald-950"
                 >
                   Change thumbnail
                 </button>
@@ -401,11 +403,11 @@ const CreateFreeVideos = () => {
         </div>
 
         {/* Submit */}
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="flex justify-end border-t border-slate-100 pt-5">
           <button
             type="submit"
             disabled={creating}
-            className="rounded-lg bg-yellow-400 px-6 py-3 font-semibold text-black transition hover:bg-yellow-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500"
+            className="rounded-lg bg-[#facc15] px-6 py-3 font-semibold text-slate-950 shadow-sm transition hover:bg-[#e9b900] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
           >
             {creating ? "Saving..." : "Save Free Video"}
           </button>

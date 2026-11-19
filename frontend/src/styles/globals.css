@@ -6,6 +6,26 @@
   --navBackground: #fff;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -21,4 +41,111 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
+}
+
+/* Shared, restrained styling for every admin and instructor course screen. */
+.admin-dashboard-root aside {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfb 100%);
+}
+
+.admin-dashboard-root aside nav button {
+  min-height: 2.75rem;
+  letter-spacing: -0.01em;
+}
+
+.admin-dashboard-root aside nav button:focus-visible,
+.admin-dashboard-root aside button:focus-visible,
+.admin-dashboard-root main button:focus-visible {
+  outline: 2px solid rgb(23 60 45 / 55%);
+  outline-offset: 2px;
+}
+
+.admin-dashboard-root main {
+  color: #1e293b;
+}
+
+.admin-dashboard-root main .min-h-screen {
+  min-height: 0;
+  background-color: transparent;
+}
+
+.admin-dashboard-root main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.admin-dashboard-root main select,
+.admin-dashboard-root main textarea {
+  border-radius: 0.7rem;
+  border-color: #dbe3df;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.admin-dashboard-root main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+.admin-dashboard-root main select:focus,
+.admin-dashboard-root main textarea:focus {
+  border-color: #347455;
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(52 116 85 / 12%);
+}
+
+.admin-dashboard-root main [class*="rounded"][class*="bg-white"][class*="border"] {
+  border-color: #e2e8e5;
+  box-shadow: 0 2px 10px rgb(15 23 42 / 3%);
+}
+
+.admin-dashboard-root main .rounded-2xl {
+  border-radius: 0.8rem;
+}
+
+.admin-dashboard-root main table th {
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  letter-spacing: 0.09em;
+}
+
+.admin-dashboard-root main table td {
+  vertical-align: middle;
+}
+
+.admin-dashboard-root main form label {
+  color: #334155;
+}
+
+.admin-dashboard-root main form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.admin-dashboard-root main form select,
+.admin-dashboard-root main form textarea {
+  min-height: 2.75rem;
+}
+
+.admin-dashboard-root main button:not(:disabled) {
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-duration: 160ms;
+}
+
+.admin-dashboard-root main table thead {
+  background-color: #f7faf8;
+}
+
+.admin-dashboard-root main table tbody tr {
+  transition: background-color 150ms ease;
+}
+
+/* Login and registration drawer controls share the same soft rounded finish. */
+.auth-drawer input:not([type="checkbox"]):not([type="radio"]),
+.auth-drawer select,
+.auth-drawer textarea {
+  border-radius: 0.7rem;
+  border-color: #d8e0dc;
+  background-color: #f8faf9;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.auth-drawer input:not([type="checkbox"]):not([type="radio"]):focus,
+.auth-drawer select:focus,
+.auth-drawer textarea:focus {
+  border-color: #347455;
+  background-color: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(52 116 85 / 12%);
+}
+
+.auth-drawer input[type="checkbox"] {
+  accent-color: #c89b00;
 }

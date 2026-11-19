@@ -16,7 +16,7 @@ const FilterdCourseTable = ({
   return (
     <table className="w-full min-w-[1100px] border-collapse">
       <thead>
-        <tr className="border-b border-gray-200 bg-gray-50">
+        <tr className="border-b border-slate-100 bg-slate-50/80">
           <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
             Course
           </th>
@@ -55,7 +55,7 @@ const FilterdCourseTable = ({
         </tr>
       </thead>
 
-      <tbody className="divide-y divide-gray-100">
+      <tbody className="divide-y divide-slate-100">
         {filteredCourses.map((course) => {
           // console.log(course);
           const price = Number(course.price || 0);
@@ -76,13 +76,13 @@ const FilterdCourseTable = ({
             course.language?.slice(1);
 
           return (
-            <tr key={course.id} className="transition hover:bg-gray-50">
+            <tr key={course.id} className="transition hover:bg-emerald-50/40">
               {/* Course */}
               <td className="px-5 py-4">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleViewLessons(course)}
-                    className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100 cursor-pointer"
+                    className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200/70 cursor-pointer"
                   >
                     {course.thumbnail ? (
                       <Image
@@ -102,14 +102,14 @@ const FilterdCourseTable = ({
                     onClick={() => handleViewLessons(course)}
                     className="max-w-62.5 flex cursor-pointer flex-col items-start justify-start "
                   >
-                    <h2 className="line-clamp-1 font-semibold text-gray-900">
+                    <h2 className="line-clamp-1 font-semibold text-slate-900">
                       {course.title}
                     </h2>
 
-                    <p className="mt-1 line-clamp-1 text-sm text-gray-500">
+                    <p className="mt-1 line-clamp-1 text-xs text-slate-500">
                       {course.short_description || "No description available."}
                     </p>
-                    <p className="mt-1 line-clamp-1 text-xs text-gray-500">
+                    <p className="mt-1 line-clamp-1 text-[11px] text-slate-500">
                       Instructors:{" "}
                       {course.instructors?.length
                         ? course.instructors
@@ -133,8 +133,8 @@ const FilterdCourseTable = ({
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-semibold ${
                     course.course_type === "free"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-blue-100 text-blue-700"
+                      ? "bg-emerald-50 text-emerald-800"
+                      : "bg-amber-50 text-amber-900"
                   }`}
                 >
                   {typeLabel}
@@ -177,10 +177,10 @@ const FilterdCourseTable = ({
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-semibold ${
                     course.status === "published"
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-emerald-50 text-emerald-800"
                       : course.status === "draft"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-gray-100 text-gray-600"
+                        ? "bg-amber-50 text-amber-900"
+                        : "bg-slate-100 text-slate-600"
                   }`}
                 >
                   {statusLabel}
@@ -202,7 +202,7 @@ const FilterdCourseTable = ({
                   <button
                     type="button"
                     onClick={() => handleCreateLessons(course)}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-200 text-black transition hover:bg-gray-300 cursor-pointer"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-emerald-900 transition hover:bg-emerald-50 cursor-pointer"
                     title="Add Lessons"
                   >
                     <MdLibraryAdd size={18} />
@@ -211,7 +211,7 @@ const FilterdCourseTable = ({
                   <button
                     type="button"
                     onClick={() => handleEdit(course)}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400 text-black transition hover:bg-yellow-500 cursor-pointer"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#facc15] text-slate-950 transition hover:bg-[#e9b900] cursor-pointer"
                     title="Edit Course"
                   >
                     <LuPencil size={17} />

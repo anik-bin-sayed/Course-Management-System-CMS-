@@ -182,7 +182,7 @@ const RegisterComponent = ({ onRegistered, initialEmail = "" }) => {
   };
 
   return (
-    <div className="flex justify-center bg-linear-to-br from-gray-50 to-gray-100 py-8 px-4">
+    <div className="flex justify-center bg-transparent px-4 py-6 sm:py-8">
       <div className="w-full max-w-sm">
         {/* HEADER */}
         <div className="text-center mb-4">
@@ -258,7 +258,7 @@ const RegisterComponent = ({ onRegistered, initialEmail = "" }) => {
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -346,7 +346,7 @@ const RegisterComponent = ({ onRegistered, initialEmail = "" }) => {
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                 <div>
                   <label
                     htmlFor="name"
@@ -416,7 +416,7 @@ const RegisterComponent = ({ onRegistered, initialEmail = "" }) => {
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                 <form onSubmit={handleSubmit}>
                   {/* Password */}
                   <div>

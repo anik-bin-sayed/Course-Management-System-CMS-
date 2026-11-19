@@ -1,10 +1,12 @@
-import { FiBookOpen, FiClock, FiLayers, FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiBookOpen, FiClock, FiLayers, FiUser } from "react-icons/fi";
 import AppImage from "@/components/common/AppImage";
 import AppLink from "@/components/common/AppLink";
 
 function formatDate(value) {
   if (!value) return null;
-  return new Date(value).toLocaleDateString(undefined, {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -14,113 +16,153 @@ function formatDate(value) {
 function StatusBadge({ status }) {
   const map = {
     active: {
-      label: "Active",
-      className: "bg-emerald-50 text-emerald-700 ring-emerald-200/70",
+      label: "In progress",
+      className: "bg-emerald-50 text-emerald-800 ring-emerald-200/70",
       dot: "bg-emerald-500",
     },
     completed: {
       label: "Completed",
-      className: "bg-sky-50 text-sky-700 ring-sky-200/70",
+      className: "bg-sky-50 text-sky-800 ring-sky-200/70",
       dot: "bg-sky-500",
     },
     pending: {
       label: "Payment pending",
-      className: "bg-amber-50 text-amber-700 ring-amber-200/70",
+      className: "bg-amber-50 text-amber-800 ring-amber-200/70",
       dot: "bg-amber-500",
     },
   };
-
   const config = map[status] || {
-    label: status || "Unknown",
-    className: "bg-slate-100 text-slate-600 ring-slate-200",
+    label: status || "Enrolled",
+    className: "bg-slate-100 text-slate-700 ring-slate-200",
     dot: "bg-slate-400",
   };
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${config.className}`}
-    >
-      <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />
+    <span className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset ${config.className}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} aria-hidden="true" />
       {config.label}
     </span>
   );
 }
 
-const EnrolledCourseCard = ({ enrollment, index, onPay, paymentLoading }) => {
+const EnrolledCourseCard = ({ enrollment, onPay, paymentLoading }) => {
   const { course } = enrollment;
-
   const schedule = formatDate(course.start_date);
-
   const courseHref = `/dashboard/${encodeURIComponent(course.slug)}`;
+  const instructorNames = [
+    course.instructor?.name,
+    ...(course.instructors?.map((instructor) => instructor?.name) || []),
+  ].filter(Boolean);
+  const progressPercentage =
+    typeof enrollment.progress_percentage === "number" && enrollment.total_lessons > 0
+      ? Math.min(100, Math.max(0, enrollment.progress_percentage))
+      : null;
+  const needsPayment = enrollment.status === "pending";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-md border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-slate-900/10 sm:flex-row">
-      <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-slate-100 sm:aspect-auto sm:w-48 md:w-56 lg:w-64">
-        <AppLink
-          href={courseHref}
-          className="absolute inset-0 block"
-          aria-label={course.title}
-        >
-          {course.thumbnail ? (
-            <AppImage
-              src={course.thumbnail}
-              alt={course.title}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 224px, 256px"
-              className="h-full w-full object-cover transition-transform duration-700 ease-out "
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center bg-gradient-to-br from-amber-50 via-slate-50 to-slate-100 text-slate-400">
-              <FiBookOpen size={42} aria-hidden="true" />
+    <article className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_3px_14px_rgba(15,23,42,0.035)] transition duration-200 hover:border-emerald-200 hover:shadow-md sm:flex-row">
+      <AppLink href={courseHref} className="relative block h-36 shrink-0 overflow-hidden bg-slate-100 sm:h-auto sm:min-h-[190px] sm:w-52 lg:w-60" aria-label={`Open ${course.title}`}>
+        {course.thumbnail ? (
+          <AppImage
+            src={course.thumbnail}
+            alt={course.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-slate-100 text-slate-400">
+            <FiBookOpen size={38} aria-hidden="true" />
+          </div>
+        )}
+      </AppLink>
+
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-4 p-4 sm:flex-row sm:items-center sm:gap-6 sm:px-5 sm:py-4 lg:px-6">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={enrollment.status} />
+            {course.level && (
+              <span className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium capitalize text-slate-600">
+                {course.level}
+              </span>
+            )}
+          </div>
+
+          <h3 className="mt-2 line-clamp-1 text-base font-bold leading-6 text-slate-900 transition-colors group-hover:text-emerald-900 sm:text-lg">
+            <AppLink href={courseHref}>{course.title}</AppLink>
+          </h3>
+
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-slate-500">
+            {course.category?.name && (
+              <span className="inline-flex items-center gap-1.5">
+                <FiLayers className="text-slate-400" aria-hidden="true" />
+                {course.category.name}
+              </span>
+            )}
+            {instructorNames.length > 0 && (
+              <span className="inline-flex min-w-0 items-center gap-1.5">
+                <FiUser className="shrink-0 text-slate-400" aria-hidden="true" />
+                <span className="truncate">{[...new Set(instructorNames)].join(", ")}</span>
+              </span>
+            )}
+            {schedule && (
+              <span className="inline-flex items-center gap-1.5">
+                <FiClock className="text-slate-400" aria-hidden="true" />
+                Started {schedule}
+              </span>
+            )}
+          </div>
+
+          {progressPercentage !== null && (
+            <div className="mt-3 max-w-lg" aria-label={`${progressPercentage}% course progress`}>
+              <div className="mb-1.5 flex items-center justify-between text-xs">
+                <span className="font-medium text-slate-600">Course progress</span>
+                <span className="font-semibold tabular-nums text-slate-700">{progressPercentage}%</span>
+              </div>
+              <div
+                className="h-1.5 overflow-hidden rounded-full bg-slate-100"
+                role="progressbar"
+                aria-valuenow={progressPercentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Course progress"
+              >
+                <div
+                  className="h-full rounded-full bg-emerald-700 transition-[width] duration-500"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
+              {typeof enrollment.completed_lessons === "number" &&
+                typeof enrollment.total_lessons === "number" && (
+                  <p className="mt-1 text-[11px] text-slate-500">
+                    {enrollment.completed_lessons} of {enrollment.total_lessons} lessons completed
+                  </p>
+                )}
             </div>
           )}
-
-          <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/0 to-slate-950/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-          <span className="pointer-events-none absolute inset-0 flex items-end justify-start p-3 opacity-0 transition-all duration-300 group-hover:opacity-100">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-bold text-slate-900 shadow-sm backdrop-blur">
-              <FiArrowRight className="text-xs" />
-              View course
-            </span>
-          </span>
-        </AppLink>
-      </div>
-
-      {/* Content */}
-      <div className="flex min-w-0 flex-1 flex-col gap-3 p-4 sm:px-5 lg:px-6">
-        {/* Meta row */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
-          <StatusBadge status={enrollment.status} />
-
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-            <FiLayers
-              className="text-[11px] text-slate-400"
-              aria-hidden="true"
-            />
-            {course.category?.name || "Course"}
-          </span>
-
-          <span aria-hidden="true" className="text-slate-300">
-            ·
-          </span>
-
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-            {course.level || "All levels"}
-          </span>
         </div>
 
-        {/* Title */}
-        <h2 className="line-clamp-2 text-base font-bold leading-snug text-gray-600 transition-colors group-hover:text-black sm:text-lg">
-          <AppLink href={courseHref}>{course.title}</AppLink>
-        </h2>
-
-        {/* Schedule */}
-        {schedule && (
-          <p className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
-            <FiClock className="shrink-0 text-slate-400" aria-hidden="true" />
-            Started {schedule}
-          </p>
-        )}
+        <div className="shrink-0 sm:w-44">
+          {needsPayment ? (
+            <button
+              type="button"
+              onClick={onPay}
+              disabled={paymentLoading}
+              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg bg-amber-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {paymentLoading ? "Starting checkout…" : "Complete payment"}
+              {!paymentLoading && <FiArrowRight aria-hidden="true" />}
+            </button>
+          ) : (
+            <AppLink
+              href={courseHref}
+              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 text-sm font-semibold text-white transition hover:bg-emerald-900"
+            >
+              {enrollment.status === "completed" ? "Review course" : "Continue learning"}
+              <FiArrowRight aria-hidden="true" />
+            </AppLink>
+          )}
+        </div>
       </div>
     </article>
   );
